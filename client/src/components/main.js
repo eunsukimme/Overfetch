@@ -24,6 +24,13 @@ export class Main extends React.Component {
         request(url, (error, response, body) => {
             if(error) console.warn(error);
             const $ = cheerio.load(body);
+
+            // 만약 유저 프로필을 찾았다면 body의 클래스는 career-detail 이다
+            // 만약 유저 프로필을 못 찾았다면 body의 클래스는 ErrorPage 이다
+            if($('body').attr('class').includes('ErrorPage')){
+                alert('프로필을 찾을 수 없습니다. 닉네임과 배틀태그를 다시 확인하세요');
+                return;
+            }
             
             const champion = {};
             // 빠른대전의 현재 보이는 모든 기록을 가져온다
@@ -45,7 +52,6 @@ export class Main extends React.Component {
             });
             console.log(champion);
         })
-
     }
 
     handleChangeName(e){
