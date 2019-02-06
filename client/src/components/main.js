@@ -35,6 +35,10 @@ export class Main extends React.Component {
             const champion = {};
             // 빠른대전의 현재 보이는 모든 기록을 가져온다
             //console.log($('#quickplay').find('.is-active').text());
+            // 현재 플레이어 정보(티어, 레벨을 가져온다)
+            const rank = $('.masthead-player-progression').
+                            find('.competitive-rank > div').html();
+            console.log(rank);
 
             // 현재 기준(플레이시간) 상위 영웅 리스트를 가져온다
             const list = $('#quickplay').find($('.is-active')).find('.ProgressBar');
@@ -77,8 +81,9 @@ export class Main extends React.Component {
                     <button type='submit'>Submit</button>
                 </form>
                 <div id='data-field'>
-                    <h1>Most Champion</h1>
+                    <h1>영웅 정보</h1>
                     <div id='most-champion'>
+                        <h2>상위 영웅</h2>
                         <ol>
                             {this.state.most}
                         </ol>
