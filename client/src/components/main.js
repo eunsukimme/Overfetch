@@ -1,5 +1,4 @@
 import React from 'react';
-import request from 'request';
 import cheerio from 'cheerio';
 
 export class Main extends React.Component {
@@ -7,7 +6,7 @@ export class Main extends React.Component {
         super(props);
         this.state = {
             name: '기운찬곰',
-            tag: '311530',
+            tag: '36941',
             most: []
         }
         this.handleChangeName = this.handleChangeName.bind(this);
@@ -21,7 +20,17 @@ export class Main extends React.Component {
         const url = cors + 'https://playoverwatch.com/ko-kr/career/pc/'
                     +this.state.name+'-'+this.state.tag;
 
-        request(url, (error, response, body) => {
+
+        fetch(url)
+        .then(res => res.text())
+        .then(data => {
+            const $  = cheerio.load(data);
+
+            console.log($('.masthead-player-progression').find('.competitive-rank > div').html());
+        });
+        
+        
+        /*request(url, (error, response, body) => {
             if(error) console.warn(error);
             const $ = cheerio.load(body);
 
@@ -32,13 +41,52 @@ export class Main extends React.Component {
                 return;
             }
             
-            const champion = {};
+            const _most_champion = {};
             // 빠른대전의 현재 보이는 모든 기록을 가져온다
             //console.log($('#quickplay').find('.is-active').text());
             // 현재 플레이어 정보(티어, 레벨을 가져온다)
             const rank = $('.masthead-player-progression').
                             find('.competitive-rank > div').html();
             console.log(rank);
+
+            const quickplay_list = $('#quickplay').find($('hr')).nextUntil('button', '.progress-category');
+            console.log(quickplay_list);
+
+            quickplay_list.each( (i, el) => {
+                let category;
+                let category_result = {};
+                switch(i){
+                    case 0: 
+                        category = 'byPlaytime';
+                        break;
+                    case 1:
+                        category = 'byWinGame';
+                        break;
+                    case 2:
+                        category = 'byHitRate';
+                        break;
+                    case 3:
+                        category = 'byKD';
+                        break;
+                    case 4:
+                        category = 'byCriticalHitRate';
+                        break;
+                    case 5:
+                        category = 'byMultiKill';
+                        break;
+                    case 6:
+                        category = 'byMissionContributeKill';
+                        break;
+                }
+                $(el).find('.ProgressBar').each( (i, el) =>{
+                    const championName = $(el).find('div > div').find('.ProgressBar-title').text();
+                    const championValue = $(el).find('div > div').find('.ProgressBar-description').text();
+                    category_result[championName] = championValue;
+                });
+                _most_champion[category] = category_result;
+            });
+            console.log('most champion: ', _most_champion);
+
 
             // 현재 기준(플레이시간) 상위 영웅 리스트를 가져온다
             const list = $('#quickplay').find($('.is-active')).find('.ProgressBar');
@@ -56,6 +104,7 @@ export class Main extends React.Component {
             });
             console.log(champion);
         })
+        */
     }
 
     handleChangeName(e){

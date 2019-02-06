@@ -208,6 +208,10 @@ const userSchema = new Schema({
             byHitRate: {
     
             },
+            // 승률
+            byWinRate: {
+
+            },
             // 목숨당 처치
             byKD: {
     
