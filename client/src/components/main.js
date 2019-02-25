@@ -29,6 +29,11 @@ export class Main extends React.Component {
         fetch(url)
         .then(res => res.json())
         .then(user => {
+            if(user.error){
+                console.log(user.error);
+                alert(user.error);
+                return;
+            }
             console.log(user);
             console.log(user.quickplay);
             // 반환된 data는 DB에 저장된 혹은 갱신된 유저 정보 오브젝트이다

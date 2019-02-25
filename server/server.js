@@ -84,7 +84,11 @@ app.get('/users', asyncHandler( async (req, res, next) => {
             // 갱신된 유저 정보 전달
             if(_update == 'true'){
 
-                User.findOneAndUpdate({name: _name, tag: _tag}, userInfo, { new: true }, (err, user) => {
+                let userToUpdate = {};
+                userToUpdate = Object.assign(userToUpdate, userInfo._doc);
+                delete userToUpdate._id;
+
+                User.findOneAndUpdate({name: _name, tag: _tag}, userToUpdate, { new: true }, (err, user) => {
                     if(err){
                         console.log(err);
                         return res.json({ error: err });
