@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
+const cors = require('cors');
 const User = require('./models/user');
 
 const app = express();
@@ -22,6 +23,7 @@ mongoose.connect('mongodb://localhost/overfetch');
 app.use(morgan('tiny'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors());
 
 // GET user info
 app.get('/users', async (req, res, next) => {
@@ -37,6 +39,7 @@ app.get('/users', async (req, res, next) => {
 app.get('/users', (req, res, next) => {
     const _name = req.query.name;
     const _tag = req.query.tag;
+    const _update = req.query.update;
     // DB 내 유저 검색
     User.findOne({ name: _name, tag: _tag }, (err, user) => {
         if(err) return res.status(500).json({ error: err });
@@ -45,14 +48,21 @@ app.get('/users', (req, res, next) => {
             next();
         }
         if(user){
-            console.log('유저 찾음. 정보 전달 후 종료함');
-            return res.json(user);
+            if(_update == 'true'){
+                console.log('유저 정보 갱신 중...');
+                next();
+            }
+            else{
+                console.log('유저 찾음. 정보 전달 후 종료함');
+                return res.json(user);
+            }
         }
     });
 });
 app.get('/users', asyncHandler( async (req, res, next) => {
     const _name = req.query.name;
     const _tag = req.query.tag;
+    const _update = req.query.update;
 
     try{
         const userInfo = await FetchManager.fetchData(_name, _tag);
@@ -71,14 +81,27 @@ app.get('/users', asyncHandler( async (req, res, next) => {
             }
         }
         else{
-            // userInfo 오브젝트를 DB에 저장
-            userInfo.save( (err) => {
-                if(err){
-                    console.error(err);
-                    return res.json({ error: err });
-                }
-                return res.status(201).json({ success: '유저 정보를 갱신하였습니다!' });
-            });
+            // 갱신된 유저 정보 전달
+            if(_update == 'true'){
+
+                User.findOneAndUpdate({name: _name, tag: _tag}, userInfo, { new: true }, (err, user) => {
+                    if(err){
+                        console.log(err);
+                        return res.json({ error: err });
+                    }
+                    return res.status(201).json(user);
+                });
+            }
+            // 유저 정보 새롭게 저장
+            else{
+                userInfo.save( (err) => {
+                    if(err){
+                        console.error(err);
+                        return res.json({ error: err });
+                    }
+                    return res.status(201).json(userInfo);
+                });
+            }
         }
     }
     catch(error){

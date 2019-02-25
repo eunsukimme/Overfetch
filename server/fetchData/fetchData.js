@@ -10,6 +10,38 @@ const ERROR_RESULT = {
     UNKNOWN_ERROR: 5
 }
 
+const CHAMPION_DROPDOWN_VALUE = {
+    'byAllChampion': 0x02E00000FFFFFFFF,
+    'byAshe': '',
+    'byBastion': '',
+    'byBrigitte': '',
+    'byDva': 0x02E000000000007A,
+    'byDoomfist': '',
+    'byGenji': 0x02E0000000000029,
+    'byHanzo': '',
+    'byJunkrat': '',
+    'byLucio': '',
+    'byMccree': '',
+    'byMei': '',
+    'byMercy': '',
+    'byMoira': '',
+    'byOrisa': '',
+    'byPharah': '',
+    'byReaper': '',
+    'byReinhardt': '',
+    'byRoadhog': '',
+    'bySoldier': '',
+    'bySombra': '',
+    'bySymmetra': '',
+    'byTorbjorn': '',
+    'byTracer': '',
+    'byWidowmaker': '',
+    'byWinston': '',
+    'byWreckingBall': '',
+    'byZarya': '',
+    'byZenyatta': ''
+}
+
 const fetchData = async (_name, _tag) => {
 
     //const cors = 'https://cors-anywhere.herokuapp.com/';
@@ -133,8 +165,19 @@ const getQuickPlayData = (_$) => {
         _most_champion[category] = category_result;
     });
     console.log('quickplay data 수집 완료');
+
+    // 빠른대전 Stats 크롤링 시작
+    /*const allStats = $('#quickplay' > 'section').next().find('hr').nextAll();
+    console.log(allStats);*/
+
     return _most_champion;
 }
+
+const getQuickPlayStats = (_$) => {
+
+}
+
+
 
 const getRankPlayData = (_$) => {
     console.log('fetch rankplay data...');

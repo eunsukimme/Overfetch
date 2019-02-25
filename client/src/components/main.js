@@ -1,5 +1,4 @@
 import React from 'react';
-import cheerio from 'cheerio';
 
 export class Main extends React.Component {
     constructor(props){
@@ -7,116 +6,94 @@ export class Main extends React.Component {
         this.state = {
             name: '기운찬곰',
             tag: '36941',
-            most: []
+            data: { quickplay: { mostChampion: {} }, rankplay: { mostChampion: {} } }
         }
-        this.handleChangeName = this.handleChangeName.bind(this);
-        this.handleChangeTag = this.handleChangeTag.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
     async handleSubmit(e){
         e.preventDefault();
-        const cors = 'https://cors-anywhere.herokuapp.com/';
-        const url = cors + 'https://playoverwatch.com/ko-kr/career/pc/'
-                    +this.state.name+'-'+this.state.tag;
+        //const cors = 'https://cors-anywhere.herokuapp.com/';
+        //const url = cors + 'https://playoverwatch.com/ko-kr/career/pc/'
+        //            +this.state.name+'-'+this.state.tag;
+        const name = this.state.name;
+        const tag = this.state.tag;
+        const url = 'http://localhost:5000/users?name='+name+'&tag='+tag;        
+        this.fetchData(url);
+    }
 
+    fetchData(url){
 
         fetch(url)
-        .then(res => res.text())
-        .then(data => {
-            const $  = cheerio.load(data);
+        .then(res => res.json())
+        .then(user => {
+            console.log(user);
+            console.log(user.quickplay);
+            // 반환된 data는 DB에 저장된 혹은 갱신된 유저 정보 오브젝트이다
+            // Object.keys(obj)를 활용하여 각 속성을 iterate 하자
+            //console.log(Object.keys(user));
+            // 각각 빠른대전/경쟁전 모스트 챔피언 정보 오브젝트
+            const quick_most = user.quickplay.mostChampion;
+            const rank_most = user.rankplay.mostChampion;
+            // 리스트로 뿌려주기 쉽게 배열로 저장된 데이터를 저장하는 정보 오브젝트
+            const _quickplay = {};
+            const _rankplay = {};
 
-            console.log($('.masthead-player-progression').find('.competitive-rank > div').html());
-        });
-        
-        
-        /*request(url, (error, response, body) => {
-            if(error) console.warn(error);
-            const $ = cheerio.load(body);
+            const _quickplay_mostChampion = {};
+            const _rankplay_mostChampion = {};
 
-            // 만약 유저 프로필을 찾았다면 body의 클래스는 career-detail 이다
-            // 만약 유저 프로필을 못 찾았다면 body의 클래스는 ErrorPage 이다
-            if($('body').attr('class').includes('ErrorPage')){
-                alert('프로필을 찾을 수 없습니다. 닉네임과 배틀태그를 다시 확인하세요');
-                return;
-            }
-            
-            const _most_champion = {};
-            // 빠른대전의 현재 보이는 모든 기록을 가져온다
-            //console.log($('#quickplay').find('.is-active').text());
-            // 현재 플레이어 정보(티어, 레벨을 가져온다)
-            const rank = $('.masthead-player-progression').
-                            find('.competitive-rank > div').html();
-            console.log(rank);
+            Object.keys(quick_most).forEach( (el, i) => {
+                const criteria_name = el;       // string
+                const criteria_obj = quick_most[el];    // object
+                const criteria_value = Object.keys(criteria_obj).map( (_el, _i) => {    // array
+                    return <li>{_el + ' - ' + criteria_obj[_el]}</li>;
+                    // 위 로직은 [ '아나 - 20%', 'D-va - 15%' ... ] 와 같은 배열을 만든다
+                });
+                _quickplay_mostChampion[criteria_name] = criteria_value;
+            });
+            console.log(_quickplay_mostChampion);
 
-            const quickplay_list = $('#quickplay').find($('hr')).nextUntil('button', '.progress-category');
-            console.log(quickplay_list);
+            Object.keys(rank_most).forEach( (el, i) => {
+                const criteria_name = el;       // string
+                const criteria_obj = rank_most[el];    // object
+                const criteria_value = Object.keys(criteria_obj).map( (_el, _i) => {    // array
+                    return <li>{_el + ' - ' + criteria_obj[_el]}</li>;
+                    // 위 로직은 [ '아나 - 20%', 'D-va - 15%' ... ] 와 같은 배열을 만든다
+                });
+                _rankplay_mostChampion[criteria_name] = criteria_value;
+            });
+            console.log(_rankplay_mostChampion);
 
-            quickplay_list.each( (i, el) => {
-                let category;
-                let category_result = {};
-                switch(i){
-                    case 0: 
-                        category = 'byPlaytime';
-                        break;
-                    case 1:
-                        category = 'byWinGame';
-                        break;
-                    case 2:
-                        category = 'byHitRate';
-                        break;
-                    case 3:
-                        category = 'byKD';
-                        break;
-                    case 4:
-                        category = 'byCriticalHitRate';
-                        break;
-                    case 5:
-                        category = 'byMultiKill';
-                        break;
-                    case 6:
-                        category = 'byMissionContributeKill';
-                        break;
+            _quickplay['mostChampion'] = _quickplay_mostChampion;
+            //_quickplay['record'] = ???
+            _rankplay['mostChampion'] = _rankplay_mostChampion;
+            // _rankplay['record'] = ???
+
+            this.setState({
+                data: { 
+                    rank: user.rank,
+                    name: user.name,
+                    tag: user.tag,
+                    quickplay: _quickplay,
+                    rankplay: _rankplay
                 }
-                $(el).find('.ProgressBar').each( (i, el) =>{
-                    const championName = $(el).find('div > div').find('.ProgressBar-title').text();
-                    const championValue = $(el).find('div > div').find('.ProgressBar-description').text();
-                    category_result[championName] = championValue;
-                });
-                _most_champion[category] = category_result;
             });
-            console.log('most champion: ', _most_champion);
-
-
-            // 현재 기준(플레이시간) 상위 영웅 리스트를 가져온다
-            const list = $('#quickplay').find($('.is-active')).find('.ProgressBar');
-            list.each((i, el) =>{
-                const championName = $(el).find('div > div').find('.ProgressBar-title').text();
-                const championValue = $(el).find('div > div').find('.ProgressBar-description').text();
-                champion[championName] = championValue;
-
-                const temp = this.state.most;
-                temp.push(<li>{championName}  -  {championValue}</li>);
-                this.setState({
-                    most: temp
-                });
-
-            });
-            console.log(champion);
-        })
-        */
+        });
     }
 
-    handleChangeName(e){
+    handleChange(e){
         this.setState({
-            name: e.target.value
+            [e.target.name]: e.target.value
         })
     }
 
-    handleChangeTag(e){
-        this.setState({
-            tag: e.target.value
-        })
+    handleUpdate(e){
+        const name = this.state.name;
+        const tag = this.state.tag;
+        const url = 'http://localhost:5000/users?name='+name+'&tag='+tag+'&update=true';
+        this.fetchData(url);
     }
 
     render(){
@@ -124,18 +101,38 @@ export class Main extends React.Component {
             <div>
                 <form onSubmit={this.handleSubmit} >
                     <h1>닉네임</h1>
-                    <input placeholder="닉네임" type='text' onChange={this.handleChangeName}/>
+                    <input placeholder="닉네임" type='text' name='name' onChange={this.handleChange}/>
                     <h1>배틀태그</h1>
-                    <input placeholder="배틀태그" type='text' onChange={this.handleChangeTag}/>
+                    <input placeholder="배틀태그" type='text' name='tag' onChange={this.handleChange}/>
                     <button type='submit'>Submit</button>
                 </form>
+                <button onClick={this.handleUpdate}>갱신</button>
+
                 <div id='data-field'>
                     <h1>영웅 정보</h1>
-                    <div id='most-champion'>
-                        <h2>상위 영웅</h2>
-                        <ol>
-                            {this.state.most}
-                        </ol>
+                    <div>
+                        <h2>Name: {this.state.data.name}</h2>
+                        <h2>Rating: {this.state.data.rank}</h2>
+                    </div>
+                    <div id='quickplay'>
+                        <h1>빠른대전</h1>
+                        <div className='champion-list'>
+                            <h2>Most Champion</h2>
+                            <h3>명중률</h3>
+                            <ol>
+                                {this.state.data.quickplay.mostChampion.byHitRate}
+                            </ol>
+                        </div>
+                    </div>
+                    <div id='competitive'>
+                        <h1>경쟁전</h1>
+                        <div className='champion-list'>
+                            <h2>Most Champion</h2>
+                            <h3>명중률</h3>
+                            <ol>
+                                {this.state.data.rankplay.mostChampion.byHitRate}
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </div>

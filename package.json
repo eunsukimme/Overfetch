@@ -1,0 +1,14 @@
+{
+  "name": "overfetch",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/eunsukimme/Overfetch",
+  "author": "eunsukimme <eunsu.dev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^4.1.0"
+  },
+  "scripts": {
+    "start": "concurrently -k \"cd server && nodemon server.js\" \"cd client && yarn start\""
+  }
+}
