@@ -83,7 +83,6 @@ app.get('/users', asyncHandler( async (req, res, next) => {
         else{
             // 갱신된 유저 정보 전달
             if(_update == 'true'){
-
                 let userToUpdate = {};
                 userToUpdate = Object.assign(userToUpdate, userInfo._doc);
                 delete userToUpdate._id;

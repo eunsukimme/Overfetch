@@ -1,4 +1,38 @@
 import React from 'react';
+import cheerio from 'cheerio';
+
+const CHAMPION_DROPDOWN_VALUE = {
+    '0x02E00000FFFFFFFF' : '모든영웅',
+    '0x02E000000000013B' : '아나',
+    '0x02E0000000000200' : '애쉬',
+    '0x02E0000000000015' : '바스티온',
+    '0x02E0000000000195' : '브리기테',
+    '0x02E000000000007A' : 'D-Va',
+    '0x02E000000000012F': '둠피스트',
+    '0x02E0000000000029' : '겐지' ,
+    '0x02E0000000000005' : '한조',
+    '0x02E0000000000065' : '정크랫',
+    '0x02E0000000000079' : '루시우',
+    '0x02E0000000000042' : '맥크리',
+    '0x02E00000000000DD' : '메이',
+    '0x02E0000000000004' : '메르시',
+    '0x02E00000000001A2' : '모이라',
+    '0x02E000000000013E' : '오리사',
+    '0x02E0000000000008' : '파라',
+    '0x02E0000000000002' : '리퍼',
+    '0x02E0000000000007' : '라인하르트',
+    '0x02E0000000000040' : '로드호그',
+    '0x02E000000000006E' : '솔저',
+    '0x02E000000000012E' : '솜브라',
+    '0x02E0000000000016' : '시메트라',
+    '0x02E0000000000006' : '토리비욘',
+    '0x02E0000000000003' : '트레이서',
+    '0x02E000000000000A': '위도웨이커',
+    '0x02E0000000000009' : '윈스턴',
+    '0x02E00000000001CA' : '레킹볼',
+    '0x02E0000000000068' : '자리야',
+    '0x02E0000000000020' : '젠야타'
+}
 
 export class Main extends React.Component {
     constructor(props){
@@ -11,6 +45,7 @@ export class Main extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
+        this.test = this.test.bind(this);
     }
 
     async handleSubmit(e){
@@ -35,7 +70,6 @@ export class Main extends React.Component {
                 return;
             }
             console.log(user);
-            console.log(user.quickplay);
             // 반환된 data는 DB에 저장된 혹은 갱신된 유저 정보 오브젝트이다
             // Object.keys(obj)를 활용하여 각 속성을 iterate 하자
             //console.log(Object.keys(user));
@@ -58,7 +92,6 @@ export class Main extends React.Component {
                 });
                 _quickplay_mostChampion[criteria_name] = criteria_value;
             });
-            console.log(_quickplay_mostChampion);
 
             Object.keys(rank_most).forEach( (el, i) => {
                 const criteria_name = el;       // string
@@ -69,7 +102,6 @@ export class Main extends React.Component {
                 });
                 _rankplay_mostChampion[criteria_name] = criteria_value;
             });
-            console.log(_rankplay_mostChampion);
 
             _quickplay['mostChampion'] = _quickplay_mostChampion;
             //_quickplay['record'] = ???
@@ -101,6 +133,45 @@ export class Main extends React.Component {
         this.fetchData(url);
     }
 
+    test(){
+        const cors = 'https://cors-anywhere.herokuapp.com/';
+        const _name = this.state.name;
+        const _tag = this.state.tag;
+        const url = cors + 'https://playoverwatch.com/ko-kr/career/pc/'
+        +_name+'-'+_tag;
+        const urlencoded = encodeURI(url);
+
+        fetch(url)
+        .then(res => res.text())
+        .then(body => {
+            const $ = cheerio.load(body);
+
+            const allStats = $('#quickplay').find('section').next().find('hr').nextAll();
+            console.log(allStats);
+
+            const _quickplay_record = {};
+            allStats.each( (i, el) => {
+                const category_id = $(el).data('category-id');
+                const table = $(el).children();
+                const stats = {};
+                table.each( (i, el) => {
+                    const title = $(el).find('table > thead').text();
+                    const body = $(el).find('table > tbody').children();
+                    const title_table = {};
+                    body.each( (i, el) => {
+                        const key = $(el).find('td').first().text();
+                        const value = $(el).find('td').next().text();
+                        title_table[key] = value;
+                    });
+                    stats[title] = title_table;
+                });
+                _quickplay_record[CHAMPION_DROPDOWN_VALUE[category_id]] = stats;
+            });
+            console.log(_quickplay_record);
+        });
+
+    }
+
     render(){
         return (
             <div>
@@ -112,7 +183,7 @@ export class Main extends React.Component {
                     <button type='submit'>Submit</button>
                 </form>
                 <button onClick={this.handleUpdate}>갱신</button>
-
+                <button onClick={this.test}>테스트버튼</button>
                 <div id='data-field'>
                     <h1>영웅 정보</h1>
                     <div>

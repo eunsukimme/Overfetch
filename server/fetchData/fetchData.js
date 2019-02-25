@@ -11,35 +11,35 @@ const ERROR_RESULT = {
 }
 
 const CHAMPION_DROPDOWN_VALUE = {
-    'byAllChampion': 0x02E00000FFFFFFFF,
-    'byAshe': '',
-    'byBastion': '',
-    'byBrigitte': '',
-    'byDva': 0x02E000000000007A,
-    'byDoomfist': '',
-    'byGenji': 0x02E0000000000029,
-    'byHanzo': '',
-    'byJunkrat': '',
-    'byLucio': '',
-    'byMccree': '',
-    'byMei': '',
-    'byMercy': '',
-    'byMoira': '',
-    'byOrisa': '',
-    'byPharah': '',
-    'byReaper': '',
-    'byReinhardt': '',
-    'byRoadhog': '',
-    'bySoldier': '',
-    'bySombra': '',
-    'bySymmetra': '',
-    'byTorbjorn': '',
-    'byTracer': '',
-    'byWidowmaker': '',
-    'byWinston': '',
-    'byWreckingBall': '',
-    'byZarya': '',
-    'byZenyatta': ''
+    '0x02E00000FFFFFFFF' : '모든영웅',
+    '애쉬' : '',
+    '바스티온' : '',
+    '브리기테' : '',
+    '0x02E000000000007A' : 'D-Va',
+    '둠피스트' : '',
+    '0x02E0000000000029' : '겐지' ,
+    '한조' : '',
+    '정크랫' : '',
+    '루시우' : '',
+    '맥크리' : '',
+    '메이' : '',
+    '메르시' : '',
+    '모이라' : '',
+    '오리사' : '',
+    '파라' : '',
+    '리퍼' : '',
+    '라인하르트' : '',
+    '로드호그' : '',
+    '솔저' : '',
+    '솜브라' : '',
+    '시메트라' : '',
+    '토리비욘' : '',
+    '트레이서' : '',
+    '위도웨이커' : '',
+    '윈스턴' : '',
+    '레킹볼' : '',
+    '자리야' : '',
+    '젠야타' : ''
 }
 
 const fetchData = async (_name, _tag) => {
@@ -167,17 +167,11 @@ const getQuickPlayData = (_$) => {
     console.log('quickplay data 수집 완료');
 
     // 빠른대전 Stats 크롤링 시작
-    /*const allStats = $('#quickplay' > 'section').next().find('hr').nextAll();
-    console.log(allStats);*/
+    const allStats = $('#quickplay' > 'section').next().find('hr').nextAll();
+    console.log(allStats);
 
     return _most_champion;
 }
-
-const getQuickPlayStats = (_$) => {
-
-}
-
-
 
 const getRankPlayData = (_$) => {
     console.log('fetch rankplay data...');

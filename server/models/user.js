@@ -74,7 +74,7 @@ const userSchema = new Schema({
 
                 }
             },
-            byAna: {
+            '아나': {
                 // 전투
                 combat: {
 
@@ -108,88 +108,88 @@ const userSchema = new Schema({
 
                 }
             },
-            byAshe: {
+            '애쉬': {
 
             },
-            byBastion: {
+            '바스티온': {
 
             },
-            byBrigitte: {
+            '브리기테': {
 
             },
-            byDva: {
+            'D-Va': {
 
             },
-            byDoomfist: {
+            '둠피스트': {
 
             },
-            byGenji: {
+            '겐지': {
 
             },
-            byHanzo: {
+            '한조': {
 
             },
-            byJunkrat: {
+            '정크랫': {
 
             },
-            byLucio: {
+            '루시우': {
 
             },
-            byMccree: {
+            '맥크리': {
 
             },
-            byMei: {
+            '메이': {
 
             },
-            byMercy: {
+            '메르시': {
 
             },
-            byMoira: {
+            '모이라': {
 
             },
-            byOrisa: {
+            '오리사': {
 
             },
-            byPharah: {
+            '파라': {
 
             },
-            byReaper: {
+            '리퍼': {
 
             },
-            byReinhardt: {
+            '라인하르트': {
 
             },
-            byRoadhog: {
+            '로드호그': {
 
             },
-            bySoldier: {
+            '솔저': {
 
             },
-            bySombra: {
+            '솜브라': {
 
             },
-            bySymmetra: {
+            '시메트라': {
 
             },
-            byTorbjorn: {
+            '토르비욘': {
 
             },
-            byTracer: {
+            '트레이서': {
 
             },
-            byWidowmaker: {
+            '위도우메이커': {
 
             },
-            byWinston: {
+            '윈스턴': {
 
             },
-            byWreckingBall: {
+            '레킹볼': {
 
             },
-            byZarya: {
+            '자리야': {
 
             },
-            byZenyatta: {
+            '젠야타': {
 
             }
         }
@@ -260,92 +260,92 @@ const userSchema = new Schema({
 
                 }
             },
-            byAna: {
+            '아나': {
 
             },
-            byAshe: {
+            '애쉬': {
 
             },
-            byBastion: {
+            '바스티온': {
 
             },
-            byBrigitte: {
+            '브리기테': {
 
             },
-            byDva: {
+            'D-Va': {
 
             },
-            byDoomfist: {
+            '둠피스트': {
 
             },
-            byGenji: {
+            '겐지': {
 
             },
-            byHanzo: {
+            '한조': {
 
             },
-            byJunkrat: {
+            '정크랫': {
 
             },
-            byLucio: {
+            '루시우': {
 
             },
-            byMccree: {
+            '맥크리': {
 
             },
-            byMei: {
+            '메이': {
 
             },
-            byMercy: {
+            '메르시': {
 
             },
-            byMoira: {
+            '모이라': {
 
             },
-            byOrisa: {
+            '오리사': {
 
             },
-            byPharah: {
+            '파라': {
 
             },
-            byReaper: {
+            '리퍼': {
 
             },
-            byReinhardt: {
+            '라인하르트': {
 
             },
-            byRoadhog: {
+            '로드호그': {
 
             },
-            bySoldier: {
+            '솔저': {
 
             },
-            bySombra: {
+            '솜브라': {
 
             },
-            bySymmetra: {
+            '시메트라': {
 
             },
-            byTorbjorn: {
+            '토르비욘': {
 
             },
-            byTracer: {
+            '트레이서': {
 
             },
-            byWidowmaker: {
+            '위도우메이커': {
 
             },
-            byWinston: {
+            '윈스턴': {
 
             },
-            byWreckingBall: {
+            '레킹볼': {
 
             },
-            byZarya: {
+            '자리야': {
 
             },
-            byZenyatta: {
-                
+            '젠야타': {
+
             }
         }
     }
