@@ -73,11 +73,11 @@ app.get('/users', asyncHandler( async (req, res, next) => {
                 case FetchManager.ERROR_RESULT.INTERNALL_SERVER_ERROR:
                     return res.status(500).json({ error: '블리자드 내부 서버 오류로 사용자 정보를 불러올 수 없습니다. 잠시 뒤 시도하세요 '}); break;
                 case FetchManager.ERROR_RESULT.REQUEST_FAILED:
-                    return res.json({ error: '페이지 요청 오류' }); 
+                    return res.status(400).json({ error: '페이지 요청 오류' }); 
                 case FetchManager.ERROR_RESULT.API_SERVER_ERROR:
-                    return res.json({ error: 'API서버 오류' });
+                    return res.status(500).json({ error: 'API서버 오류' });
                 case FetchManager.ERROR_RESULT.UNKNOWN_ERROR:
-                    return res.json({ error: '알 수 없는 오류' });
+                    return res.status(520).json({ error: '알 수 없는 오류' });
             }
         }
         else{
@@ -85,7 +85,7 @@ app.get('/users', asyncHandler( async (req, res, next) => {
             if(_update == 'true'){
                 let userToUpdate = {};
                 userToUpdate = Object.assign(userToUpdate, userInfo._doc);
-                delete userToUpdate._id;
+                delete userToUpdate._id;    // id 중복 방지를 위한 오브젝트 재할당
 
                 User.findOneAndUpdate({name: _name, tag: _tag}, userToUpdate, { new: true }, (err, user) => {
                     if(err){

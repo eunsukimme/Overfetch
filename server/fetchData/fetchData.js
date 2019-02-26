@@ -12,34 +12,35 @@ const ERROR_RESULT = {
 
 const CHAMPION_DROPDOWN_VALUE = {
     '0x02E00000FFFFFFFF' : '모든영웅',
-    '애쉬' : '',
-    '바스티온' : '',
-    '브리기테' : '',
+    '0x02E000000000013B' : '아나',
+    '0x02E0000000000200' : '애쉬',
+    '0x02E0000000000015' : '바스티온',
+    '0x02E0000000000195' : '브리기테',
     '0x02E000000000007A' : 'D-Va',
-    '둠피스트' : '',
+    '0x02E000000000012F': '둠피스트',
     '0x02E0000000000029' : '겐지' ,
-    '한조' : '',
-    '정크랫' : '',
-    '루시우' : '',
-    '맥크리' : '',
-    '메이' : '',
-    '메르시' : '',
-    '모이라' : '',
-    '오리사' : '',
-    '파라' : '',
-    '리퍼' : '',
-    '라인하르트' : '',
-    '로드호그' : '',
-    '솔저' : '',
-    '솜브라' : '',
-    '시메트라' : '',
-    '토리비욘' : '',
-    '트레이서' : '',
-    '위도웨이커' : '',
-    '윈스턴' : '',
-    '레킹볼' : '',
-    '자리야' : '',
-    '젠야타' : ''
+    '0x02E0000000000005' : '한조',
+    '0x02E0000000000065' : '정크랫',
+    '0x02E0000000000079' : '루시우',
+    '0x02E0000000000042' : '맥크리',
+    '0x02E00000000000DD' : '메이',
+    '0x02E0000000000004' : '메르시',
+    '0x02E00000000001A2' : '모이라',
+    '0x02E000000000013E' : '오리사',
+    '0x02E0000000000008' : '파라',
+    '0x02E0000000000002' : '리퍼',
+    '0x02E0000000000007' : '라인하르트',
+    '0x02E0000000000040' : '로드호그',
+    '0x02E000000000006E' : '솔저',
+    '0x02E000000000012E' : '솜브라',
+    '0x02E0000000000016' : '시메트라',
+    '0x02E0000000000006' : '토리비욘',
+    '0x02E0000000000003' : '트레이서',
+    '0x02E000000000000A': '위도웨이커',
+    '0x02E0000000000009' : '윈스턴',
+    '0x02E00000000001CA' : '레킹볼',
+    '0x02E0000000000068' : '자리야',
+    '0x02E0000000000020' : '젠야타'
 }
 
 const fetchData = async (_name, _tag) => {
@@ -70,8 +71,6 @@ const fetchData = async (_name, _tag) => {
     
         // 사용자 게임 데이터 생성
         const userInfo = new User();
-        let _quick_play = {};
-        let _rank_play = {};
 
         /* 크롤링 시작 */
         // 유저 랭크 가져옴
@@ -79,17 +78,11 @@ const fetchData = async (_name, _tag) => {
         find('.competitive-rank > div').html();
         console.log('해당 유저 랭크: ', _rank);
         
-        // 빠른대전 상위영웅 정보 가져옴
-        const _quickplay_most_champion =  getQuickPlayData($);
-        _quick_play['mostChampion'] = _quickplay_most_champion;
-        // 빠른대전 통계 정보 가져옴
-        // TODO
+        // 빠른대전 정보 가져옴
+        const _quick_play =  getQuickPlayData($);
 
-        // 경쟁전 상위영웅 정보 가져옴
-        const _rankplay_most_champion =  getRankPlayData($);
-        _rank_play['mostChampion'] = _rankplay_most_champion;
-        // 경쟁전 통계 정보 가져옴
-        // TODO
+        // 경쟁전 정보 가져옴
+        const _rank_play =  getRankPlayData($);
 
         // 크롤링 데이터를 DB 스키마에 저장
         userInfo.quickplay = _quick_play;
@@ -130,9 +123,13 @@ const getQuickPlayData = (_$) => {
     const $ = _$;
 
     // 빠른대전 정보 크롤링 시작
+    let _quickplay = {};
     // 빠른대전 상위영웅에 해당되는 오브젝트 생성
-    const _most_champion = {};
+    let _most_champion = {};
+    // 빠른대전 Stats를 저장하는 오브젝트 생성
+    let _quickplay_record = {};
     
+    // 빠른대전 상위영웅 크롤링 시작
     const quickplay_list = $('#quickplay').find($('hr')).nextUntil('button', '.progress-category');
 
     quickplay_list.each( (i, el) => {
@@ -164,22 +161,45 @@ const getQuickPlayData = (_$) => {
         });
         _most_champion[category] = category_result;
     });
-    console.log('quickplay data 수집 완료');
+    _quickplay['mostChampion'] = _most_champion;
+    console.log('quickplay most champion data 수집 완료');
 
     // 빠른대전 Stats 크롤링 시작
-    const allStats = $('#quickplay' > 'section').next().find('hr').nextAll();
-    console.log(allStats);
+    const quickplay_allStats = $('#quickplay').find('section').next().find('hr').nextAll();
+    
+    quickplay_allStats.each( (i, el) => {
+        const category_id = $(el).data('category-id');
+        const table = $(el).children();
+        const stats = {};
+        table.each( (i, el) => {
+            const title = $(el).find('table > thead').text();
+            const body = $(el).find('table > tbody').children();
+            const title_table = {};
+            body.each( (i, el) => {
+                const key = $(el).find('td').first().text();
+                const value = $(el).find('td').next().text();
+                title_table[key] = value;
+            });
+            stats[title] = title_table;
+        });
+        _quickplay_record[CHAMPION_DROPDOWN_VALUE[category_id]] = stats;
+    });
+    _quickplay['record'] = _quickplay_record;
+    console.log('quickplay record data 수집 완료');
 
-    return _most_champion;
+    return _quickplay;
 }
 
 const getRankPlayData = (_$) => {
     console.log('fetch rankplay data...');
     const $ = _$;
 
-    // 빠른대전 정보 크롤링 시작
-    // 빠른대전 상위영웅에 해당되는 오브젝트 생성
-    const _most_champion = {};
+    // 경쟁전 정보 크롤링 시작
+    let _rankplay = {};
+    // 경쟁전 상위영웅에 해당되는 오브젝트 생성
+    let _most_champion = {};
+    // 경쟁전 Stats를 저장하는 오브젝트 생성
+    let _rankplay_record = {};
     
     const competitive_list = $('#competitive').find($('hr')).nextUntil('button', '.progress-category');
 
@@ -214,8 +234,33 @@ const getRankPlayData = (_$) => {
         });
         _most_champion[category] = category_result;
     });
-    console.log('rankplay data 수집완료');
-    return _most_champion;
+    _rankplay['mostChampion'] = _most_champion;
+    console.log('rankplay most champion data 수집 완료');
+
+    // 경쟁전 Stats 크롤링 시작
+    const rankplay_allStats = $('#competitive').find('section').next().find('hr').nextAll();
+
+    rankplay_allStats.each( (i, el) => {
+        const category_id = $(el).data('category-id');
+        const table = $(el).children();
+        const stats = {};
+        table.each( (i, el) => {
+            const title = $(el).find('table > thead').text();
+            const body = $(el).find('table > tbody').children();
+            const title_table = {};
+            body.each( (i, el) => {
+                const key = $(el).find('td').first().text();
+                const value = $(el).find('td').next().text();
+                title_table[key] = value;
+            });
+            stats[title] = title_table;
+        });
+        _rankplay_record[CHAMPION_DROPDOWN_VALUE[category_id]] = stats;
+    });
+    _rankplay['record'] = _rankplay_record;
+    console.log('rankplay reocrd data 수집 완료');
+
+    return _rankplay;
 }
 
 module.exports = { fetchData, ERROR_RESULT };

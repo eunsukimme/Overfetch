@@ -44,34 +44,36 @@ const userSchema = new Schema({
             }
         },
         record: {
+            type: Object,
             byAllChampion: {
+                type: Object,
                 // 최고
                 best:{
-
+                    type: Object
                 },
                 // 지원
                 assists: {
-
+                    type: Object
                 },
                 // 전투
                 combat: {
-
+                    type: Object
                 },
                 // 게임
                 game: {
-
+                    type: Object
                 },
                 // 평균
                 average: {
-
+                    type: Object
                 },
                 // 기타
                 miscellaneous: {
-
+                    type: Object
                 },
                 // 경기 보상
                 award: {
-
+                    type: Object
                 }
             },
             '아나': {
