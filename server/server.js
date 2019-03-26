@@ -69,13 +69,15 @@ app.get('/users', asyncHandler( async (req, res, next) => {
         if(typeof userInfo == 'number'){
             switch(userInfo){
                 case FetchManager.ERROR_RESULT.PROFILE_NOT_FOUND:
-                    return res.status(404).json({ error: '해당 닉네임과 배틀태그의 유저가 존재하지 않습니다' }); break;
+                    return res.status(404).json({ error: '해당 닉네임과 배틀태그의 유저가 존재하지 않습니다' });
                 case FetchManager.ERROR_RESULT.INTERNALL_SERVER_ERROR:
-                    return res.status(500).json({ error: '블리자드 내부 서버 오류로 사용자 정보를 불러올 수 없습니다. 잠시 뒤 시도하세요 '}); break;
+                    return res.status(500).json({ error: '블리자드 내부 서버 오류로 사용자 정보를 불러올 수 없습니다. 잠시 뒤 시도하세요 '});
                 case FetchManager.ERROR_RESULT.REQUEST_FAILED:
                     return res.status(400).json({ error: '페이지 요청 오류' }); 
                 case FetchManager.ERROR_RESULT.API_SERVER_ERROR:
                     return res.status(500).json({ error: 'API서버 오류' });
+                case FetchManager.ERROR_RESULT.PRIVATE_USER:
+                    return res.status(403).json({ error: "비공개 사용자 입니다. 오버워치 인게임 [설정> 소셜> 프로필 공개설정] 에서 '공개'로 설정하셔야 전적 확인이 가능 합니다"});
                 case FetchManager.ERROR_RESULT.UNKNOWN_ERROR:
                     return res.status(520).json({ error: '알 수 없는 오류' });
             }

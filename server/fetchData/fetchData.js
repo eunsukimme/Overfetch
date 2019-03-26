@@ -8,7 +8,8 @@ const ERROR_RESULT = {
     INTERNALL_SERVER_ERROR: 2,
     REQUEST_FAILED: 3,
     API_SERVER_ERROR: 4,
-    UNKNOWN_ERROR: 5
+    PRIVATE_USER: 5,
+    UNKNOWN_ERROR: 6
 }
 
 const CHAMPION_DROPDOWN_VALUE = {
@@ -68,6 +69,11 @@ const fetchData = async (_name, _tag) => {
         // table 내에 h5 내용이 'overwatch.page.career.stats.undefined' 이다
         if($('body').find('.card-stat-block > table').find('h5').text().includes('overwatch.page.career.stats.undefined')){
             return ERROR_RESULT.INTERNALL_SERVER_ERROR//res.status(404).json({ error: '블리자드 내부 서버 오류로 프로필을 찾을 수 없습니다. 잠시 뒤 시도하세요' });
+        }
+        // 만약 사용자의 프로필이 비공개인 경우
+        // 클래스가 masthead-permission-level-text 인 p 태그의 내용은 '비공개 프로필' 이다.
+        if($('body').find('.masthead-permission-level-text').text().includes('비공개')){
+            return ERROR_RESULT.PRIVATE_USER;
         }
     
         // 사용자 게임 데이터 생성

@@ -31,6 +31,7 @@ export class Main extends React.Component {
         .then(res => res.json())
         .then(user => {
             if(user.error){
+                console.log(user);
                 console.log(user.error);
                 alert(user.error);
                 return;
