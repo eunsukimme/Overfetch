@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    name: String, 
-    tag: String,
+    name: String!, 
+    tag: String!,
     level: {
         imageURL: String,
         value: Number
     },
-    rank: Number,
+    rank: Number!,
     quickplay: {
         type: Object,
         mostChampion: {

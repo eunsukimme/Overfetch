@@ -36,7 +36,6 @@ export class Main extends React.Component {
                 return;
             }
             console.log(user);
-            console.log(JSON.stringify(user));
             // 반환된 data는 DB에 저장된 혹은 갱신된 유저 정보 오브젝트이다
             // Object.keys(obj)를 활용하여 각 속성을 iterate 하자
             //console.log(Object.keys(user));

@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
 const User = require('../models/user');
+const Average = require('../models/avg.js');
 
 const ERROR_RESULT = {
     PROFILE_NOT_FOUND: 1,
