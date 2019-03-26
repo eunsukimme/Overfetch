@@ -1,4 +1,5 @@
 const FetchManager = require('./fetchData/fetchData');
+const GenesisManager = require('./fetchData/genesis');
 
 // Express 라이브러리
 const express = require('express');
@@ -40,6 +41,7 @@ app.get('/users', (req, res, next) => {
     const _name = req.query.name;
     const _tag = req.query.tag;
     const _update = req.query.update;
+    const _genesis = req.query.genesis;
     // DB 내 유저 검색
     User.findOne({ name: _name, tag: _tag }, (err, user) => {
         if(err) return res.status(500).json({ error: err });
@@ -48,7 +50,7 @@ app.get('/users', (req, res, next) => {
             next();
         }
         if(user){
-            if(_update == 'true'){
+            if(_update == 'true' || _genesis == 'true'){
                 console.log('유저 정보 갱신 중...');
                 next();
             }
@@ -63,6 +65,13 @@ app.get('/users', asyncHandler( async (req, res, next) => {
     const _name = req.query.name;
     const _tag = req.query.tag;
     const _update = req.query.update;
+    const _genesis = req.query.genesis;
+
+    if(_genesis == 'true'){
+        console.log('초기 DB 구축 중 ...');
+        const data = await GenesisManager.genesisData();
+        return res.json(data);
+    }
 
     try{
         const userInfo = await FetchManager.fetchData(_name, _tag);

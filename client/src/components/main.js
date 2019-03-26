@@ -12,6 +12,7 @@ export class Main extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
+        this.handleGenesis = this.handleGenesis.bind(this);
     }
 
     async handleSubmit(e){
@@ -100,6 +101,66 @@ export class Main extends React.Component {
         this.fetchData(url);
     }
 
+    async handleGenesis(e) {
+        const name = this.state.name;
+        const tag = this.state.tag;
+        let page = 1;
+        const cors = 'https://cors-anywhere.herokuapp.com/';
+        //const url = 'http://localhost:5000/users?name='+name+'&tag='+tag+'&genesis=true';
+        /* data = fetch(url)
+                    .then((res) => { console.log(res); return res.data})
+                    .then(data => {
+                        console.log(data);
+                    });*/
+        const url = cors + 'https://overwatch.op.gg/leaderboards/global/rank/' + page;
+        const urlencoded = encodeURI(url);
+    
+        // OP.GG 로부터 플레이어 정보를 fetch 해온다
+        const result = await fetch(urlencoded, {
+            origin: ''
+        })
+        .then(res => res.text())
+        .then(body => {
+            console.log('fetching data...');
+            const $ = cheerio.load(body);
+    
+            // 100 명의 유저 정보가 담긴 cheerio object 배열
+            const userList = $('body').find('.l-container').find('#LeaderBoardsLayout')
+                            .find('table > tbody').children();
+            // 각각의 유저블록에 대해 이름 접근
+            userList.each( (i, el) => {
+                const name = $(el).find('.ContentCell-Player').find('b').text();
+                this.findUsersAtHomepage(name);
+            })
+        })
+    }
+
+    // 주어진 이름으로 playoverwatch.com 에 검색
+    async findUsersAtHomepage(name){
+        const cors = 'https://cors-anywhere.herokuapp.com/';
+        const token = 'KR6Q1Kx3Fs16Y26GD0jcknmbjqnDZZcjeh';
+        const url = cors + 'https://playoverwatch.com/search/account-by-name/'+name
+                    +'?access_token='+token;
+
+        const result = await fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                console.log(name+'의 다른 태그: ');
+                if(data.error){
+                    console.log('내부 서버 오류로 '+name+'의 다른 태그 목록을 불러올 수 없습니다.');
+                }
+                else{
+                    data.forEach( (el) => {
+                        if(el.isPublic == true){
+                            console.log(el);
+                        }
+                    })
+                }
+                //console.log(data);
+            })
+    }
+    
+
     render(){
         return (
             <div>
@@ -111,6 +172,7 @@ export class Main extends React.Component {
                     <button type='submit'>Submit</button>
                 </form>
                 <button onClick={this.handleUpdate}>갱신</button>
+                <button onClick={this.handleGenesis}>DB초기화</button>
                 <div id='data-field'>
                     <h1>영웅 정보</h1>
                     <div>
