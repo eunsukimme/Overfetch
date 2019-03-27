@@ -81,14 +81,17 @@ const getLevel = async(_name, _tag) => {
     })
 }
 
-const fetchData = async (_name, _tag) => {
+const fetchData = async (_name, _tag, _level = -1) => {
 
-    let _level = await getLevel(_name, _tag);
-    if(_level == ERROR_RESULT.PROFILE_NOT_FOUND){
-        return ERROR_RESULT.PROFILE_NOT_FOUND;
-    }
-    if(_level == ERROR_RESULT.INTERNALL_SERVER_ERROR){
-        return ERROR_RESULT.INTERNALL_SERVER_ERROR;
+    // level이 주어지지 않으면 가져온다
+    if(_level == -1){
+        let _level = await getLevel(_name, _tag);
+        if(_level == ERROR_RESULT.PROFILE_NOT_FOUND){
+            return ERROR_RESULT.PROFILE_NOT_FOUND;
+        }
+        if(_level == ERROR_RESULT.INTERNALL_SERVER_ERROR){
+            return ERROR_RESULT.INTERNALL_SERVER_ERROR;
+        }
     }
     //const cors = 'https://cors-anywhere.herokuapp.com/';
     const url = /*cors +*/ 'https://playoverwatch.com/ko-kr/career/pc/'
@@ -127,7 +130,6 @@ const fetchData = async (_name, _tag) => {
         // 유저 랭크 가져옴
         const _rank = $('.masthead-player-progression').
         find('.competitive-rank > div').html();
-        console.log('해당 유저 랭크: ', _rank);
         
         // 빠른대전 정보 가져옴
         const _quick_play =  getQuickPlayData($);
@@ -142,7 +144,7 @@ const fetchData = async (_name, _tag) => {
         userInfo.tag = _tag;
         userInfo.rank = _rank;
         userInfo.level = _level;
-        console.log('유저정보 수집 완료. API 서버에게 넘겨준다');
+        console.log(_name+' 의 유저정보 수집 완료');
         return userInfo;
     })
     .catch((error) => {
@@ -171,7 +173,7 @@ const fetchData = async (_name, _tag) => {
 }
 
 const getQuickPlayData = (_$) => {
-    console.log('fetching quickplay data...');
+    //console.log('fetching quickplay data...');
     const $ = _$;
 
     // 빠른대전 정보 크롤링 시작
@@ -214,7 +216,7 @@ const getQuickPlayData = (_$) => {
         _most_champion[category] = category_result;
     });
     _quickplay['mostChampion'] = _most_champion;
-    console.log('quickplay most champion data 수집 완료');
+    //console.log('quickplay most champion data 수집 완료');
 
     // 빠른대전 Stats 크롤링 시작
     const quickplay_allStats = $('#quickplay').find('section').next().find('hr').nextAll();
@@ -237,13 +239,13 @@ const getQuickPlayData = (_$) => {
         _quickplay_record[CHAMPION_DROPDOWN_VALUE[category_id]] = stats;
     });
     _quickplay['record'] = _quickplay_record;
-    console.log('quickplay record data 수집 완료');
+    //console.log('quickplay record data 수집 완료');
 
     return _quickplay;
 }
 
 const getRankPlayData = (_$) => {
-    console.log('fetch rankplay data...');
+    //console.log('fetch rankplay data...');
     const $ = _$;
 
     // 경쟁전 정보 크롤링 시작
@@ -287,7 +289,7 @@ const getRankPlayData = (_$) => {
         _most_champion[category] = category_result;
     });
     _rankplay['mostChampion'] = _most_champion;
-    console.log('rankplay most champion data 수집 완료');
+    //console.log('rankplay most champion data 수집 완료');
 
     // 경쟁전 Stats 크롤링 시작
     const rankplay_allStats = $('#competitive').find('section').next().find('hr').nextAll();
@@ -310,7 +312,7 @@ const getRankPlayData = (_$) => {
         _rankplay_record[CHAMPION_DROPDOWN_VALUE[category_id]] = stats;
     });
     _rankplay['record'] = _rankplay_record;
-    console.log('rankplay reocrd data 수집 완료');
+    //console.log('rankplay reocrd data 수집 완료');
 
     return _rankplay;
 }
