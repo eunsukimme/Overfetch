@@ -145,7 +145,7 @@ export class Main extends React.Component {
         const result = await fetch(url)
             .then(res => res.json())
             .then(data => {
-                console.log(name+'의 다른 태그: ');
+                console.log(name+'을 포함한 유저들: ');
                 if(data.error){
                     console.log('내부 서버 오류로 '+name+'의 다른 태그 목록을 불러올 수 없습니다.');
                 }
@@ -156,7 +156,6 @@ export class Main extends React.Component {
                         }
                     })
                 }
-                //console.log(data);
             })
     }
     

@@ -4,10 +4,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     name: { type: String, required: true }, 
     tag: { type: String, required: true },
-    level: {
-        imageURL: String,
-        value: Number
-    },
+    level: Number,
     rank: Number,
     quickplay: {
         type: Object,

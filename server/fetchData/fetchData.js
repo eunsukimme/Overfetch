@@ -1,15 +1,15 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
 const User = require('../models/user');
-const Average = require('../models/avg.js');
+const token = 'KR6Q1Kx3Fs16Y26GD0jcknmbjqnDZZcjeh';
 
 const ERROR_RESULT = {
-    PROFILE_NOT_FOUND: 1,
-    INTERNALL_SERVER_ERROR: 2,
-    REQUEST_FAILED: 3,
-    API_SERVER_ERROR: 4,
-    PRIVATE_USER: 5,
-    UNKNOWN_ERROR: 6
+    PROFILE_NOT_FOUND: -1,
+    INTERNALL_SERVER_ERROR: -2,
+    REQUEST_FAILED: -3,
+    API_SERVER_ERROR: -4,
+    PRIVATE_USER: -5,
+    UNKNOWN_ERROR: -6
 }
 
 const CHAMPION_DROPDOWN_VALUE = {
@@ -45,8 +45,51 @@ const CHAMPION_DROPDOWN_VALUE = {
     '0x02E0000000000020' : '젠야타'
 }
 
+const getLevel = async(_name, _tag) => {
+    /* 레벨 정보 가져오기 */
+    let url = 'https://playoverwatch.com/ko-kr/search/account-by-name/'+_name
+              +'?access_token='+token;
+    let urlencoded = encodeURI(url);
+    const result = await axios.get(urlencoded, {
+        origin: ''
+    })
+    .then((res) => { if(res.error || res.data.error) console.log('error!!!!'); return res.data; })
+    .then(users => {
+        if(users.error){
+            return ERROR_RESULT.INTERNALL_SERVER_ERROR;
+        }
+        else{
+            // 주어지 이름으로 찾은 users 중 tag에 해당하는 유저를 식별한다
+            let level = ERROR_RESULT.PROFILE_NOT_FOUND;
+            users.some( (el) => {
+                // tag에 해당하는 유저 찾았으면
+                if(el.name.includes(_tag)){
+                    // 만약 그 유저가 비공개라면
+                    if(el.isPublic == false){
+                        level = ERROR_RESULT.PRIVATE_USER;
+                    }
+                    else level = el.level;
+                }
+                return (el.name.includes(_tag));
+            })
+            // 여기까지 오면 유저를 못 찾은 거임
+            return level;
+        }
+    });
+    return new Promise( (resolve) => {
+        resolve(result);
+    })
+}
+
 const fetchData = async (_name, _tag) => {
 
+    let _level = await getLevel(_name, _tag);
+    if(_level == ERROR_RESULT.PROFILE_NOT_FOUND){
+        return ERROR_RESULT.PROFILE_NOT_FOUND;
+    }
+    if(_level == ERROR_RESULT.INTERNALL_SERVER_ERROR){
+        return ERROR_RESULT.INTERNALL_SERVER_ERROR;
+    }
     //const cors = 'https://cors-anywhere.herokuapp.com/';
     const url = /*cors +*/ 'https://playoverwatch.com/ko-kr/career/pc/'
         +_name+'-'+_tag;
@@ -57,6 +100,7 @@ const fetchData = async (_name, _tag) => {
         origin: ''
     })
     .then(res => res.data)
+    .catch((error) => console.log(error))
     .then(body => {
         console.log('fetching data ...');
         const $ = cheerio.load(body);
@@ -97,6 +141,7 @@ const fetchData = async (_name, _tag) => {
         userInfo.name = _name;
         userInfo.tag = _tag;
         userInfo.rank = _rank;
+        userInfo.level = _level;
         console.log('유저정보 수집 완료. API 서버에게 넘겨준다');
         return userInfo;
     })
