@@ -51,7 +51,8 @@ const getLevel = async(_name, _tag) => {
               +'?access_token='+token;
     let urlencoded = encodeURI(url);
     const result = await axios.get(urlencoded, {
-        origin: ''
+        origin: '',
+        validateStatus: status => true,
     })
     .then((res) => { if(res.error || res.data.error) console.log('error!!!!'); return res.data; })
     .then(users => {
@@ -75,6 +76,24 @@ const getLevel = async(_name, _tag) => {
             // 여기까지 오면 유저를 못 찾은 거임
             return level;
         }
+    })
+    .catch((error) => {
+        if(error.response){
+            console.log('에러 response 필드');
+            console.log(error.response.data);
+            console.log(error.resopnse.status);
+            console.log(error.response.headers);
+            return ERROR_RESULT.API_SERVER_ERROR;
+        }
+        else if(error.request){
+            console.log('에러 request 필드');
+            console.log(error.request);
+            return ERROR_RESULT.REQUEST_FAILED;
+        }
+        else{
+            console.log('Error', error.message);
+            return ERROR_RESULT.UNKNOWN_ERROR;
+        }
     });
     return new Promise( (resolve) => {
         resolve(result);
@@ -86,11 +105,22 @@ const fetchData = async (_name, _tag, _level = -1) => {
     // level이 주어지지 않으면 가져온다
     if(_level == -1){
         let _level = await getLevel(_name, _tag);
-        if(_level == ERROR_RESULT.PROFILE_NOT_FOUND){
-            return ERROR_RESULT.PROFILE_NOT_FOUND;
-        }
-        if(_level == ERROR_RESULT.INTERNALL_SERVER_ERROR){
-            return ERROR_RESULT.INTERNALL_SERVER_ERROR;
+        // level을 가져오는 중 오류가 발생하였다면 그대로 돌려준다
+        if(typeof _level == 'number'){
+            switch(_level){
+                case ERROR_RESULT.PROFILE_NOT_FOUND:
+                    return ERROR_RESULT.PROFILE_NOT_FOUND;
+                case ERROR_RESULT.INTERNALL_SERVER_ERROR:
+                    return ERROR_RESULT.INTERNALL_SERVER_ERROR;
+                case ERROR_RESULT.REQUEST_FAILED:
+                    return ERROR_RESULT.REQUEST_FAILED; 
+                case ERROR_RESULT.API_SERVER_ERROR:
+                    return ERROR_RESULT.API_SERVER_ERROR;
+                case ERROR_RESULT.PRIVATE_USER:
+                    return ERROR_RESULT.PRIVATE_USER;
+                case ERROR_RESULT.UNKNOWN_ERROR:
+                    return ERROR_RESULT.UNKNOWN_ERROR;
+            }
         }
     }
     //const cors = 'https://cors-anywhere.herokuapp.com/';
@@ -100,7 +130,8 @@ const fetchData = async (_name, _tag, _level = -1) => {
 
     const result = await axios.get(urlencoded, 
     {
-        origin: ''
+        origin: '',
+        validateStatus: status => true,
     })
     .then(res => res.data)
     .catch((error) => console.log(error))

@@ -8,6 +8,7 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 const mongoose = require('mongoose');
 const FetchManager = require('./fetchData');
+const User = require('../models/user');
 const Error = require('../models/error');
 
 ///////               몽고 DB 연결                 /////
@@ -21,7 +22,8 @@ mongoose.connect('mongodb://localhost/overfetch');
 
 const genesisData = async () => {
     // page는 OP.GG의 순위표의 각 페이지를 말함
-    for(let page = 1; page < 2 ; page++){
+    for(let page = 2; page < 5; page++) {
+        console.log('page#'+page+' 크롤링 시작...');
         const url = 'https://overwatch.op.gg/leaderboards/global/rank/' + page;
         const urlencoded = encodeURI(url);
 
@@ -29,7 +31,7 @@ const genesisData = async () => {
             origin: ''
         })
         .then(res => res.data)
-        .then(body => {
+        .then(async (body) => {
             console.log('fetching data...');
             const $ = cheerio.load(body);
     
@@ -40,12 +42,14 @@ const genesisData = async () => {
             userList.each( (i, el) => {
                 const name = $(el).find('.ContentCell-Player').find('b').text();
                 findUsersAtHomepage(name);
-            })
-        })
-        return new Promise( (resolve) => {
-            resolve(result);
-        })
+            });
+            return new Promise((resolve) => {
+                resolve(true);
+            });
+        });
+        console.log('page#'+page+' 크롤링 완료!');
     }
+    console.log('데이터 초기화가 완료되었습니다!');
 }
 
 const findUsersAtHomepage = async (name) => {
@@ -56,7 +60,8 @@ const findUsersAtHomepage = async (name) => {
     const urlencoded = encodeURI(url);
 
     await axios.get(urlencoded, {
-        origin: ''
+        origin: '',
+        validateStatus: status => true,
     })
     .then(res => res.data)
     .then(data => {
@@ -79,6 +84,7 @@ const findUsersAtHomepage = async (name) => {
                     const tag = token[1];
                     // 유저 데이터를 playoverwatch.com 으로부터 긁어온다
                     const userInfo = await FetchManager.fetchData(name, tag, el.level);
+                    // 만약 오류가 발생하였다면, 그러나 이미 공개 유저이므로 비공개, 검색 실패 오류는 배제한다
                     if(typeof userInfo == 'number'){
                         const newError = new Error();
                         switch(userInfo){
@@ -98,24 +104,39 @@ const findUsersAtHomepage = async (name) => {
                                 newError.message = '알 수 없는 오류';
                                 break;
                             }
+                            default: {
+                                newError.message = newError;
+                                break;
+                            }
                         }
                         newError.save( (err) => {
                             if(err){
                                 console.log(err);
                                 return;
                             }
-                            console.log(name+'의 데이터를 가져오는데 발생한 에러를 기록했습니다...');
+                            console.log(name+'#'+tag+'의 데이터를 가져오는데 발생한 에러를 기록했습니다...');
                         });
                     }
                     // 정상적으로 긁어왔다면 DB에 저장한다
                     else{
-                        userInfo.save( (err) => {
-                            if(err){
-                                console.error(err);
-                                return;
+                        // 먼저 중복 여부 검사
+                        User.findOne({ name: name, tag: tag }, (err, user) => {
+                            if(err) return console.log(err);
+                            // 기존에 저장되 있지 않다면 저장
+                            if(!user) {
+                                userInfo.save( (err) => {
+                                    if(err){
+                                        console.error(err);
+                                        return;
+                                    }
+                                    console.log(name+'#'+tag+' 의 데이터를 성공적으로 저장했습니다!');
+                                });      
                             }
-                            console.log(name+'의 데이터를 성공적으로 저장했습니다!');
-                        });
+                            // 기존에 DB에 저장된 유저라면 알려주고 넘어간다
+                            else{
+                                return console.log(name+'#'+tag+' 의 유저가 이미 DB에 존재하여 넘어갑니다.');
+                            }
+                        })
                     }
                 }   // 비공개 유저는 무시한다
             })  // end of data.forEach()
