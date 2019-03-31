@@ -392,10 +392,10 @@ const getRankPlayData = (_$) => {
             const title = $(el).find('table > thead').text();
             const body = $(el).find('table > tbody').children();
             const title_table = {};
-            body.each( (i, el) => {
+            body.each( async (i, el) => {
                 const key = $(el).find('td').first().text();
                 let value = $(el).find('td').next().text();
-                value = makeValueNumeric(value);
+                value = await makeValueNumeric(value);
                 title_table[key] = value;
             });
             stats[title] = title_table;

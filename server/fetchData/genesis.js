@@ -157,5 +157,5 @@ const findUsersAtHomepage = async (name) => {
 }
 
 console.log('genesis data...');
-( async () => await genesisData())();
+//( async () => await genesisData())();
 console.log('genesis data done!');
