@@ -4,8 +4,12 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     name: { type: String, required: true }, 
     tag: { type: String, required: true },
+    icon: String,
     level: Number,
-    rank: Number,
+    rank: {
+        val: Number,
+        imageSrc: String
+    },
     quickplay: {
         type: Object,
         mostChampion: {

@@ -69,7 +69,9 @@ const getLevel = async(_name, _tag) => {
                     if(el.isPublic == false){
                         level = ERROR_RESULT.PRIVATE_USER;
                     }
-                    else level = el.level;
+                    else {
+                        level = el.level;
+                    }
                 }
                 return (el.name.includes(_tag));
             })
@@ -95,6 +97,7 @@ const getLevel = async(_name, _tag) => {
             return ERROR_RESULT.UNKNOWN_ERROR;
         }
     });
+    console.log('level Promise result : ' + result);
     return new Promise( (resolve) => {
         resolve(result);
     })
@@ -104,9 +107,9 @@ const fetchData = async (_name, _tag, _level = -1) => {
 
     // level이 주어지지 않으면 가져온다
     if(_level == -1){
-        let _level = await getLevel(_name, _tag);
+        _level = await getLevel(_name, _tag);
         // level을 가져오는 중 오류가 발생하였다면 그대로 돌려준다
-        if(typeof _level == 'number'){
+        if(_level < 0){
             switch(_level){
                 case ERROR_RESULT.PROFILE_NOT_FOUND:
                     return ERROR_RESULT.PROFILE_NOT_FOUND;
@@ -136,7 +139,7 @@ const fetchData = async (_name, _tag, _level = -1) => {
     .then(res => res.data)
     .catch((error) => console.log(error))
     .then(body => {
-        console.log('fetching data ...');
+        console.log(_name+'#'+_tag+' 의 전적을 가져오는 중...');
         const $ = cheerio.load(body);
         // 만약 유저 프로필을 찾았다면 body의 클래스는 career-detail 이다
         // 만약 유저 프로필을 못 찾았다면 body의 클래스는 ErrorPage 이다
@@ -161,6 +164,11 @@ const fetchData = async (_name, _tag, _level = -1) => {
         // 유저 랭크 가져옴
         const _rank = $('.masthead-player-progression').
         find('.competitive-rank > div').html();
+        // 유저 랭크 아이콘 링크 가져옴
+        const _rankImage = $('.masthead-player-progression').
+        find('.competitive-rank > img').attr('src');
+        // 유저 아이콘 링크 가져옴
+        const _icon = $('.masthead-player').find('img').attr('src');
         
         // 빠른대전 정보 가져옴
         const _quick_play =  getQuickPlayData($);
@@ -173,9 +181,14 @@ const fetchData = async (_name, _tag, _level = -1) => {
         userInfo.rankplay = _rank_play;
         userInfo.name = _name;
         userInfo.tag = _tag;
-        userInfo.rank = _rank;
+        userInfo.icon = _icon;
+        let rank = {};
+            rank.val = _rank;
+            rank.imageSrc = _rankImage;
+        userInfo.rank = rank;
         userInfo.level = _level;
-        console.log(_name+' 의 유저정보 수집 완료');
+        console.log('profile - '+url);
+        console.log(_name+'#'+_tag+' 의 전적 수집 완료');
         return userInfo;
     })
     .catch((error) => {
@@ -201,6 +214,48 @@ const fetchData = async (_name, _tag, _level = -1) => {
     return new Promise( (resolve) => {
         resolve(result);
     })
+}
+
+
+const makeValueNumeric = async (championValue) => {
+    /* non-numeric value들(시간, 백분율)을 numeric value로 바꿔준다 */
+    // 1. 시간 (00:00:00) 값을 초(sec)으로 합산한 값을 저장한다(1분 = 60초, 1시간 = 60분 = 3600초)
+    //    즉, ':'로 값들을 파싱한 후 시간 값에 3600을 곱한 값과 분 값에 60을 곱한 값과 초 값을 모두 더한 값을 저장
+    if(championValue.includes(":")){
+        championValue = await convertTimeToSec(championValue);
+    }
+    // 2. 백분율 (00%)값을 순수 정수 값으로 바꿔준다
+    //    즉, %를 제거하고 number로 바꿔준다
+    else if(championValue.includes("%")){
+        const percentage = championValue.split("%");
+        championValue = percentage[0];
+    }
+    // 이 외에 값은 모두 일반 정수의 스트링 표현이므로 Number 래퍼를 씌워서 정수로 바꿔준다
+    championValue = Number(championValue);
+    return new Promise((resolve) => {
+        resolve(championValue);
+    });
+}
+
+const convertTimeToSec = (time) => {
+    let totalSec = 0;
+    const times = time.split(":");
+    // 1시간 이상이라면 00:00:00 형태고, 1시간 미만은 00:00 형태로 저장됨
+    // 즉, times의 length가 3이라면 1시간 이상이고 2라면 1시간 미만이다
+    if(times.length == 3){
+        const hour = Number(times[0]);
+        const min = Number(times[1]);
+        const sec = Number(times[2]);
+        totalSec = (hour * 3600) + (min * 60) + sec;
+    }
+    else{
+        const min = Number(times[0]);
+        const sec = Number(times[1]);
+        totalSec = (min * 60) + sec;
+    }
+    return new Promise((resolve) => {
+        resolve(totalSec);
+    });
 }
 
 const getQuickPlayData = (_$) => {
@@ -237,11 +292,13 @@ const getQuickPlayData = (_$) => {
             case 6: // 0x086000000000031C = 임무 기여 처치
                 category = 'byMissionContributeKill'; break;
         }
-        $(el).find('.ProgressBar').each( (i, el) =>{
+        $(el).find('.ProgressBar').each( async (i, el) =>{
             let championName = $(el).find('div > div').find('.ProgressBar-title').text();
             // 챔피언 이름이 D.Va 인 경우 '.'이 들어가면 안됨. '-'으로 변경
             if(championName == "D.Va") championName = 'D-Va';
-            const championValue = $(el).find('div > div').find('.ProgressBar-description').text();
+            let championValue = $(el).find('div > div').find('.ProgressBar-description').text();
+            // 시간과 백분율, 스트링 값들을 다 numeric하게 바꿔준다(DB aggregation을 위하여)
+            championValue = await makeValueNumeric(championValue);
             category_result[championName] = championValue;
         });
         _most_champion[category] = category_result;
@@ -260,9 +317,10 @@ const getQuickPlayData = (_$) => {
             const title = $(el).find('table > thead').text();
             const body = $(el).find('table > tbody').children();
             const title_table = {};
-            body.each( (i, el) => {
+            body.each( async (i, el) => {
                 const key = $(el).find('td').first().text();
-                const value = $(el).find('td').next().text();
+                let value = $(el).find('td').next().text();
+                value = await makeValueNumeric(value);
                 title_table[key] = value;
             });
             stats[title] = title_table;
@@ -310,11 +368,12 @@ const getRankPlayData = (_$) => {
             case 7: // 0x086000000000031C = 임무 기여 처치
                 category = 'byMissionContributeKill'; break;
         }
-        $(el).find('.ProgressBar').each( (i, el) =>{
+        $(el).find('.ProgressBar').each( async (i, el) =>{
             let championName = $(el).find('div > div').find('.ProgressBar-title').text();
             // 챔피언 이름이 D.Va 인 경우 '.'이 들어가면 안됨. '-'으로 변경
             if(championName == "D.Va") championName = 'D-Va';
-            const championValue = $(el).find('div > div').find('.ProgressBar-description').text();
+            let championValue = $(el).find('div > div').find('.ProgressBar-description').text();
+            championValue = await makeValueNumeric(championValue);
             category_result[championName] = championValue;
         });
         _most_champion[category] = category_result;
@@ -335,7 +394,8 @@ const getRankPlayData = (_$) => {
             const title_table = {};
             body.each( (i, el) => {
                 const key = $(el).find('td').first().text();
-                const value = $(el).find('td').next().text();
+                let value = $(el).find('td').next().text();
+                value = makeValueNumeric(value);
                 title_table[key] = value;
             });
             stats[title] = title_table;

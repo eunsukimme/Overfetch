@@ -22,17 +22,19 @@ mongoose.connect('mongodb://localhost/overfetch');
 
 const genesisData = async () => {
     // page는 OP.GG의 순위표의 각 페이지를 말함
-    for(let page = 2; page < 5; page++) {
+    for(let page = 1; page < 2; page++) {
         console.log('page#'+page+' 크롤링 시작...');
         const url = 'https://overwatch.op.gg/leaderboards/global/rank/' + page;
+        console.log('GET '+url);
         const urlencoded = encodeURI(url);
 
         const result = await axios.get(urlencoded, {
-            origin: ''
+            origin: '',
+            validateStatus: status => true,
         })
         .then(res => res.data)
-        .then(async (body) => {
-            console.log('fetching data...');
+        .then((body) => {
+            console.log('OP.GG page#'+page+' 의 유저 이름을 가져옵니다...');
             const $ = cheerio.load(body);
     
             // 100 명의 유저 정보가 담긴 cheerio object 배열
@@ -43,13 +45,8 @@ const genesisData = async () => {
                 const name = $(el).find('.ContentCell-Player').find('b').text();
                 findUsersAtHomepage(name);
             });
-            return new Promise((resolve) => {
-                resolve(true);
-            });
         });
-        console.log('page#'+page+' 크롤링 완료!');
     }
-    console.log('데이터 초기화가 완료되었습니다!');
 }
 
 const findUsersAtHomepage = async (name) => {
@@ -59,7 +56,7 @@ const findUsersAtHomepage = async (name) => {
                 +'?access_token='+token;
     const urlencoded = encodeURI(url);
 
-    await axios.get(urlencoded, {
+    axios.get(urlencoded, {
         origin: '',
         validateStatus: status => true,
     })
@@ -73,7 +70,7 @@ const findUsersAtHomepage = async (name) => {
                     console.log(err);
                     return;
                 }
-                console.log('saved error of'+name+': '+data.error);
+                console.log('saved error of '+name+': '+data.error);
             });
         }
         else{
@@ -81,13 +78,20 @@ const findUsersAtHomepage = async (name) => {
                     // 만약 그 유저가 공개유저라면 저장
                 if(el.isPublic == true){
                     const token = el.name.split('#');
+                    const _name = token[0]; // 대소문자 구분위해 이름 새로 저장
                     const tag = token[1];
                     // 유저 데이터를 playoverwatch.com 으로부터 긁어온다
-                    const userInfo = await FetchManager.fetchData(name, tag, el.level);
+                    const userInfo = await FetchManager.fetchData(_name, tag, el.level);
                     // 만약 오류가 발생하였다면, 그러나 이미 공개 유저이므로 비공개, 검색 실패 오류는 배제한다
                     if(typeof userInfo == 'number'){
                         const newError = new Error();
+                        newError.name = _name;
+                        newError.tag = tag;
                         switch(userInfo){
+                            case FetchManager.ERROR_RESULT.PROFILE_NOT_FOUND: {
+                                newError.message = '프로필을 찾을 수 없습니다. 닉네임과 배틀태그를 확인해 주세요';
+                                break;
+                            }
                             case FetchManager.ERROR_RESULT.INTERNALL_SERVER_ERROR: {
                                 newError.message = '블리자드 내부 서버 오류로 사용자 정보를 불러올 수 없습니다. 잠시 뒤 시도하세요 ';
                                 break;
@@ -100,27 +104,35 @@ const findUsersAtHomepage = async (name) => {
                                 newError.message = 'API 서버 오류';
                                 break;
                             }
+                            case FetchManager.ERROR_RESULT.PRIVATE_USER:{
+                                newError.message = "비공개 사용자 입니다. 오버워치 인게임 [설정> 소셜> 프로필 공개설정] 에서 '공개'로 설정하셔야 전적 확인이 가능 합니다";
+                            }
                             case FetchManager.ERROR_RESULT.UNKNOWN_ERROR: {
                                 newError.message = '알 수 없는 오류';
                                 break;
                             }
                             default: {
-                                newError.message = newError;
+                                newError.message = userInfo;
                                 break;
                             }
                         }
-                        newError.save( (err) => {
-                            if(err){
-                                console.log(err);
-                                return;
+                        Error.find({ name: _name, tag: tag }, (err, errorDoc) => {
+                            if(err) return console.log(err);
+                            if(!errorDoc){
+                                newError.save( (err) => {
+                                    if(err){
+                                        console.log(err);
+                                        return;
+                                    }
+                                    console.log(_name+'#'+tag+'의 데이터를 가져오는데 발생한 에러를 기록했습니다...');
+                                });      
                             }
-                            console.log(name+'#'+tag+'의 데이터를 가져오는데 발생한 에러를 기록했습니다...');
-                        });
+                        })
                     }
                     // 정상적으로 긁어왔다면 DB에 저장한다
                     else{
                         // 먼저 중복 여부 검사
-                        User.findOne({ name: name, tag: tag }, (err, user) => {
+                        User.findOne({ name: _name, tag: tag }, (err, user) => {
                             if(err) return console.log(err);
                             // 기존에 저장되 있지 않다면 저장
                             if(!user) {
@@ -129,13 +141,10 @@ const findUsersAtHomepage = async (name) => {
                                         console.error(err);
                                         return;
                                     }
-                                    console.log(name+'#'+tag+' 의 데이터를 성공적으로 저장했습니다!');
+                                    console.log(_name+'#'+tag+' 의 데이터를 성공적으로 저장했습니다!');
                                 });      
                             }
-                            // 기존에 DB에 저장된 유저라면 알려주고 넘어간다
-                            else{
-                                return console.log(name+'#'+tag+' 의 유저가 이미 DB에 존재하여 넘어갑니다.');
-                            }
+                            // 기존에 DB에 저장된 유저라면 넘어간다
                         })
                     }
                 }   // 비공개 유저는 무시한다
@@ -148,4 +157,5 @@ const findUsersAtHomepage = async (name) => {
 }
 
 console.log('genesis data...');
-genesisData();
+( async () => await genesisData())();
+console.log('genesis data done!');
