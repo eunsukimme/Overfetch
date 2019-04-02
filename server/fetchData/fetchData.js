@@ -9,7 +9,8 @@ const ERROR_RESULT = {
     REQUEST_FAILED: -3,
     API_SERVER_ERROR: -4,
     PRIVATE_USER: -5,
-    UNKNOWN_ERROR: -6
+    TCP_CONNECTION_ERROR: -6,
+    UNKNOWN_ERROR: -7
 }
 
 const CHAMPION_DROPDOWN_VALUE = {
@@ -137,19 +138,22 @@ const fetchData = async (_name, _tag, _level = -1) => {
         validateStatus: status => true,
     })
     .then(res => res.data)
-    .catch((error) => console.log(error))
+    .catch((error) => { 
+        console.log(_name+'#'+_tag+' TCP ERROR');
+        return ERROR_RESULT.TCP_CONNECTION_ERROR;
+     })
     .then(body => {
         console.log(_name+'#'+_tag+' 의 전적을 가져오는 중...');
         const $ = cheerio.load(body);
         // 만약 유저 프로필을 찾았다면 body의 클래스는 career-detail 이다
         // 만약 유저 프로필을 못 찾았다면 body의 클래스는 ErrorPage 이다
         if($('body').attr('class').includes('ErrorPage')){
-            return ERROR_RESULT.PROFILE_NOT_FOUND;//res.status(404).json({ error: '프로필을 찾을 수 없습니다. 닉네임과 배틀태그를 확인해 주세요' });
+            return ERROR_RESULT.PROFILE_NOT_FOUND;
         }
         // 블리자드 내부 서버 오류로 인해 안 보여지는 경우
         // table 내에 h5 내용이 'overwatch.page.career.stats.undefined' 이다
         if($('body').find('.card-stat-block > table').find('h5').text().includes('overwatch.page.career.stats.undefined')){
-            return ERROR_RESULT.INTERNALL_SERVER_ERROR//res.status(404).json({ error: '블리자드 내부 서버 오류로 프로필을 찾을 수 없습니다. 잠시 뒤 시도하세요' });
+            return ERROR_RESULT.INTERNALL_SERVER_ERROR;
         }
         // 만약 사용자의 프로필이 비공개인 경우
         // 클래스가 masthead-permission-level-text 인 p 태그의 내용은 '비공개 프로필' 이다.
@@ -187,7 +191,6 @@ const fetchData = async (_name, _tag, _level = -1) => {
             rank.imageSrc = _rankImage;
         userInfo.rank = rank;
         userInfo.level = _level;
-        console.log('profile - '+url);
         console.log(_name+'#'+_tag+' 의 전적 수집 완료');
         return userInfo;
     })
