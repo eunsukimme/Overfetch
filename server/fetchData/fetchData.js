@@ -55,20 +55,24 @@ const getLevel = async(_name, _tag) => {
         origin: '',
         validateStatus: status => true,
     })
-    .then((res) => { if(res.error || res.data.error) console.log('error!!!!'); return res.data; })
+    .then((res) => { 
+        if(res.error || res.data.error) { 
+            throw "INTERNALL_SERVER_ERROR";
+        } 
+    })
     .then(users => {
         if(users.error){
-            return ERROR_RESULT.INTERNALL_SERVER_ERROR;
+            return "INTERNALL_SERVER_ERROR";
         }
         else{
             // 주어지 이름으로 찾은 users 중 tag에 해당하는 유저를 식별한다
-            let level = ERROR_RESULT.PROFILE_NOT_FOUND;
+            let level = "PROFILE_NOT_FOUND";
             users.some( (el) => {
                 // tag에 해당하는 유저 찾았으면
                 if(el.name.includes(_tag)){
                     // 만약 그 유저가 비공개라면
                     if(el.isPublic == false){
-                        level = ERROR_RESULT.PRIVATE_USER;
+                        level = "PRIVATE_USER";
                     }
                     else {
                         level = el.level;
@@ -81,7 +85,10 @@ const getLevel = async(_name, _tag) => {
         }
     })
     .catch((error) => {
-        if(error.response){
+        if(error in ERROR_RESULT){
+            return error;
+        }
+        else if(error.response){
             console.log('에러 response 필드');
             console.log(error.response.data);
             console.log(error.resopnse.status);
@@ -110,25 +117,11 @@ const fetchData = async (_name, _tag, _level = -1) => {
     if(_level == -1){
         _level = await getLevel(_name, _tag);
         // level을 가져오는 중 오류가 발생하였다면 그대로 돌려준다
-        if(_level < 0){
-            switch(_level){
-                case ERROR_RESULT.PROFILE_NOT_FOUND:
-                    return ERROR_RESULT.PROFILE_NOT_FOUND;
-                case ERROR_RESULT.INTERNALL_SERVER_ERROR:
-                    return ERROR_RESULT.INTERNALL_SERVER_ERROR;
-                case ERROR_RESULT.REQUEST_FAILED:
-                    return ERROR_RESULT.REQUEST_FAILED; 
-                case ERROR_RESULT.API_SERVER_ERROR:
-                    return ERROR_RESULT.API_SERVER_ERROR;
-                case ERROR_RESULT.PRIVATE_USER:
-                    return ERROR_RESULT.PRIVATE_USER;
-                case ERROR_RESULT.UNKNOWN_ERROR:
-                    return ERROR_RESULT.UNKNOWN_ERROR;
-            }
+        if(_level in ERROR_RESULT){
+            return ERROR_RESULT[_level];
         }
     }
-    //const cors = 'https://cors-anywhere.herokuapp.com/';
-    const url = /*cors +*/ 'https://playoverwatch.com/ko-kr/career/pc/'
+    const url = 'https://playoverwatch.com/ko-kr/career/pc/'
         +_name+'-'+_tag;
     const urlencoded = encodeURI(url);
 
@@ -139,8 +132,7 @@ const fetchData = async (_name, _tag, _level = -1) => {
     })
     .then(res => res.data)
     .catch((error) => { 
-        console.log(_name+'#'+_tag+' TCP ERROR');
-        return ERROR_RESULT.TCP_CONNECTION_ERROR;
+        throw "TCP_CONNECTION_ERROR";
      })
     .then(body => {
         console.log(_name+'#'+_tag+' 의 전적을 가져오는 중...');
@@ -195,6 +187,9 @@ const fetchData = async (_name, _tag, _level = -1) => {
         return userInfo;
     })
     .catch((error) => {
+        if(error in ERROR_RESULT){
+            return ERROR_RESULT[error];
+        }
         if(error.response){
             console.log('에러 response 필드');
             console.log(error.response.data);
@@ -211,7 +206,6 @@ const fetchData = async (_name, _tag, _level = -1) => {
             console.log('Error', error.message);
             return ERROR_RESULT.UNKNOWN_ERROR;
         }
-        console.log(error.config);
     });
 
     return new Promise( (resolve) => {

@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // GET user info
-app.get('/users', async (req, res, next) => {
+app.get('/', async (req, res, next) => {
     // if query string exists
     if(req.query.name && req.query.tag){
         next();
@@ -37,7 +37,7 @@ app.get('/users', async (req, res, next) => {
         return res.send('유저 이름과 배틀태그를 넘겨주세요');
     }
 });
-app.get('/users', (req, res, next) => {
+app.get('/', (req, res, next) => {
     const _name = req.query.name;
     const _tag = req.query.tag;
     const _update = req.query.update;
@@ -61,7 +61,7 @@ app.get('/users', (req, res, next) => {
         }
     });
 });
-app.get('/users', asyncHandler( async (req, res, next) => {
+app.get('/', asyncHandler( async (req, res, next) => {
     const _name = req.query.name;
     const _tag = req.query.tag;
     const _update = req.query.update;
@@ -122,6 +122,14 @@ app.get('/users', asyncHandler( async (req, res, next) => {
         console.error(error);
     }
 }));
+
+app.get('/users', (req, res, next) => {
+    console.log('finding user data from DB...');
+    User.find({}).select("name tag level rank imageSrc icon").exec((err, users) => {
+        if(err) return res.json({error: err});
+        return res.json(users);
+    });
+})
 
 app.listen(PORT, () => {
     console.log(`Server is listening at port ${PORT}`);

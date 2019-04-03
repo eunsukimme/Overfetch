@@ -12,12 +12,12 @@ const User = require('../models/user');
 const Error = require('../models/error');
 
 ///////               몽고 DB 연결                 /////
-const db = mongoose.connection;
+/*const db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', () => {
     console.log("Connected to mongod server");
 })
-mongoose.connect('mongodb://localhost/overfetch', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/overfetch', {useNewUrlParser: true});*/
 /////////////////////////////////////////////////////
 
 // 2019-04-02 16:00 시 기준 3페이지 까지(포함) 크롤링 완료됨
@@ -233,17 +233,3 @@ const findUsersAtHomepage = async (name) => {
     });
     console.log('Done');
 })();*/
-
-const log = (item) => {
-    return new Promise( (resolve) => {
-        resolve(console.log(item));
-    });
-}
-
-const promise = async () => {
-    for(let i = 4 ;i < 6 ; i++){
-        await log(i);
-    }
-}
-
-promise();
