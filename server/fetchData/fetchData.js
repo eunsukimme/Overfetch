@@ -55,11 +55,7 @@ const getLevel = async(_name, _tag) => {
         origin: '',
         validateStatus: status => true,
     })
-    .then((res) => { 
-        if(res.error || res.data.error) { 
-            throw "INTERNALL_SERVER_ERROR";
-        } 
-    })
+    .then(res => res.data)
     .then(users => {
         if(users.error){
             return "INTERNALL_SERVER_ERROR";
