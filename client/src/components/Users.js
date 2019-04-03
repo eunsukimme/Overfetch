@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { User } from './User';
 
-
 export class Users extends Component {
   constructor(props){
     super(props);
@@ -55,7 +54,7 @@ export class Users extends Component {
   async componentDidMount(){
     const url = this.props.match.path+'/rank/1';
     await fetch(url)
-    .then(res => res.json())
+    .then((res) => { console.log(res); return res.json(); })
     .then((_data) => {
       this.setState({ data: _data });
     });

@@ -3,7 +3,8 @@ const router = express.Router();
 
 const User = require('../models/user');
 
-router.get('/users/:sort/:page', (req, res, next) => {
+// path: /users
+router.get('/:sort/:page', (req, res, next) => {
     // sort는 level 혹은 rank(default)이다
     let sort = req.params.sort;
     // rank순 정렬은 val 프로퍼티로 준다

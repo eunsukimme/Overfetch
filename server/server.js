@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const homeRoute = require('./routes/homeRoute');
+const searchRoute = require('./routes/searchRoute');
 const usersRoute = require('./routes/usersRoute');
 const PORT = process.env.PORT || 5000;
 ///////               몽고 DB 연결                 /////
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 /* router split */
-app.use('/', homeRoute);
+app.use('/search', searchRoute);
 app.use('/users', usersRoute);
 
 /* server run */

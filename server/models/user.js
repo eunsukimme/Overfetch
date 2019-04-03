@@ -6,6 +6,7 @@ const userSchema = new Schema({
     tag: { type: String, required: true },
     icon: String,
     level: Number,
+    update: String,
     rank: {
         val: Number,
         imageSrc: String

@@ -179,6 +179,7 @@ const fetchData = async (_name, _tag, _level = -1) => {
             rank.imageSrc = _rankImage;
         userInfo.rank = rank;
         userInfo.level = _level;
+        userInfo.update = new Date().toString();
         console.log(_name+'#'+_tag+' 의 전적 수집 완료');
         return userInfo;
     })
