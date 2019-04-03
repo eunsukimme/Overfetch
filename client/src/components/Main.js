@@ -2,7 +2,7 @@ import React from 'react';
 import { Profile } from './Profile';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-export class Welcome extends React.Component {
+export class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
