@@ -12,18 +12,19 @@ const User = require('../models/user');
 const Error = require('../models/error');
 
 ///////               몽고 DB 연결                 /////
-/*const db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', () => {
     console.log("Connected to mongod server");
 })
-mongoose.connect('mongodb://localhost/overfetch', {useNewUrlParser: true});*/
+mongoose.connect('mongodb://localhost/overfetch', {useNewUrlParser: true});
 /////////////////////////////////////////////////////
 
 // 2019-04-02 16:00 시 기준 3페이지 까지(포함) 크롤링 완료됨
+const pages = [4, 5, 6];
 
 const genesisData = async () => {
-    for(let page = 4 ; page < 6; page++){
+    for(let page of pages){
         await getUserNames(page);
     }
 }
@@ -51,16 +52,18 @@ const getUserNames = async (page) => {
             // 각각의 유저블록에 대해 이름 접근
             // promises는 데이터 수집이 정상적이든 비정상적이든 종료된 결과
             // name 또는 saved error of name 이 들어간다
-            const cheerioObject = userList.map( async (i, el) => {
+            const names = [];
+            await userList.each( (i, el) => {
                 const name = $(el).find('.ContentCell-Player').find('b').text();
-                const result = await findUsersAtHomepage(name);
-                return new Promise((resolve) => {
-                    resolve(result);
-                })
-            })
-            const promises = cheerioObject.toArray();
-            await Promise.all(promises);
-        })
+                names.push(name);
+            });
+
+            for(let name of names){
+                await findUsersAtHomepage(name);
+            }
+
+        });
+
         console.log('=============== page#'+page+' 크롤링 완료! ===============');
         console.log(Date());
         return new Promise((resolve) => {
@@ -106,7 +109,7 @@ const findUsersAtHomepage = async (name) => {
                     const tag = token[1];
 
                     // 먼저 중복 여부 검사
-                    User.findOne({ name: _name, tag: tag }, (err, user) => {
+                    await User.findOne({ name: _name, tag: tag }, (err, user) => {
                         if(err) return false;
                         if(user){
                             console.log(`${_name}#${tag} 유저가 DB에 존재하여 넘어갑니다...`);
@@ -203,11 +206,11 @@ const findUsersAtHomepage = async (name) => {
     });
 }
 
-/*( async () => {
+( async () => {
     console.log('Genesis data ...');
     await genesisData();
     console.log('Done');
-})();*/
+})();
 
 /*( async () => {
     const promises = [];
