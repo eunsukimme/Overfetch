@@ -33,9 +33,7 @@ export class Profile extends Component {
     .style('stroke-width', '1px');
 
     // aggregation test
-    await fetch('/avg/win_rate')
-    .then(res => res.json())
-    .then(users => console.log(users));
+    
   }
 
  async handleClick(e){

@@ -18,6 +18,7 @@ const CHAMPION_DROPDOWN_VALUE = {
     '0x02E000000000013B' : '아나',
     '0x02E0000000000200' : '애쉬',
     '0x02E0000000000015' : '바스티온',
+    '0x02E0000000000221' : '바티스트',
     '0x02E0000000000195' : '브리기테',
     '0x02E000000000007A' : 'D-Va',
     '0x02E000000000012F': '둠피스트',
@@ -37,9 +38,9 @@ const CHAMPION_DROPDOWN_VALUE = {
     '0x02E000000000006E' : '솔저',
     '0x02E000000000012E' : '솜브라',
     '0x02E0000000000016' : '시메트라',
-    '0x02E0000000000006' : '토리비욘',
+    '0x02E0000000000006' : '토르비욘',
     '0x02E0000000000003' : '트레이서',
-    '0x02E000000000000A': '위도웨이커',
+    '0x02E000000000000A': '위도우메이커',
     '0x02E0000000000009' : '윈스턴',
     '0x02E00000000001CA' : '레킹볼',
     '0x02E0000000000068' : '자리야',
@@ -290,6 +291,7 @@ const getQuickPlayData = (_$) => {
             let championName = $(el).find('div > div').find('.ProgressBar-title').text();
             // 챔피언 이름이 D.Va 인 경우 '.'이 들어가면 안됨. '-'으로 변경
             if(championName == "D.Va") championName = 'D-Va';
+            if(championName == "솔저: 76") championName = '솔저';
             let championValue = $(el).find('div > div').find('.ProgressBar-description').text();
             // 시간과 백분율, 스트링 값들을 다 numeric하게 바꿔준다(DB aggregation을 위하여)
             championValue = await makeValueNumeric(championValue);
@@ -366,6 +368,7 @@ const getRankPlayData = (_$) => {
             let championName = $(el).find('div > div').find('.ProgressBar-title').text();
             // 챔피언 이름이 D.Va 인 경우 '.'이 들어가면 안됨. '-'으로 변경
             if(championName == "D.Va") championName = 'D-Va';
+            if(championName == "솔저: 76") championName = '솔저';
             let championValue = $(el).find('div > div').find('.ProgressBar-description').text();
             championValue = await makeValueNumeric(championValue);
             category_result[championName] = championValue;

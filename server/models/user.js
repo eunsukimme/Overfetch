@@ -118,6 +118,9 @@ const userSchema = new Schema({
             '바스티온': {
 
             },
+            '바티스트': {
+
+            },
             '브리기테': {
 
             },
@@ -199,7 +202,9 @@ const userSchema = new Schema({
         }
     },
     rankplay: {
+        type: Object,
         mostChampion: {
+            type: Object,
             // 플레이 시간
             byPlaytime: {
                 // 챔피언 이름: 값
@@ -234,7 +239,8 @@ const userSchema = new Schema({
             }
         },
         record: {
-            byAllChampion: {
+            type: Object,
+            '모든영웅': {
                 // 최고
                 best:{
 
