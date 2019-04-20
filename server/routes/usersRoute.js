@@ -21,7 +21,7 @@ router.get('/:sort/:page', (req, res, next) => {
     .sort(sort).skip(userCountperPage*(page-1)).limit(userCountperPage).exec((err, users) => {
         if(err) return res.json({error: err});
         return res.json(users);
-    })
-})
+    });
+});
 
 module.exports = router;

@@ -8,6 +8,7 @@ const cors = require('cors');
 const app = express();
 const searchRoute = require('./routes/searchRoute');
 const usersRoute = require('./routes/usersRoute');
+const avgRoute = require('./routes/avgRoute');
 const PORT = process.env.PORT || 5000;
 ///////               몽고 DB 연결                 /////
 const db = mongoose.connection;
@@ -15,7 +16,7 @@ db.on('error', console.error);
 db.once('open', () => {
     console.log("Connected to mongod server");
 })
-mongoose.connect('mongodb://localhost/overfetch', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://eunsu:dmstn~0909@overfetch-beta-release-noxxr.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
 /////////////////////////////////////////////////////
 
 app.use(morgan('tiny'));
@@ -26,6 +27,7 @@ app.use(cors());
 /* router split */
 app.use('/search', searchRoute);
 app.use('/users', usersRoute);
+app.use('/avg', avgRoute);
 
 /* server run */
 app.listen(PORT, () => {

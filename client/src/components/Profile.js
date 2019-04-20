@@ -10,7 +10,7 @@ export class Profile extends Component {
     }
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     console.log(this.state.data);
     d3.select('svg')
     .selectAll('g.smaple')
@@ -31,6 +31,11 @@ export class Profile extends Component {
     .style('fill', 'lightblue')
     .style('stroke', 'red')
     .style('stroke-width', '1px');
+
+    // aggregation test
+    await fetch('/avg/win_rate')
+    .then(res => res.json())
+    .then(users => console.log(users));
   }
 
  async handleClick(e){
