@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../../../models/user');
 
 // path: /avg/rankplay/champion/dva
-router.post('/', (req, res, next) => {
+router.get('/', (req, res, next) => {
     console.log('hello world');
     const rank = req.query.rank;
     console.log(rank);      // bug
@@ -42,7 +42,7 @@ router.post('/', (req, res, next) => {
             return res.status(400).json({'error': '잘못된 랭크 정보입니다'});
         }
     }
-    User.aggregate([
+    const aggregation = User.aggregate([
         {
             $project: 
             {
