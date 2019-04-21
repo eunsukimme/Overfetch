@@ -4,7 +4,6 @@ const router = express.Router();
 const asyncHandler = require('express-async-handler');
 
 const FetchManager = require('../fetchData/fetchData');
-const GenesisManager = require('../fetchData/genesis');
 const User = require('../models/user');
 
 // GET user info
@@ -47,12 +46,6 @@ router.get('/', asyncHandler( async (req, res, next) => {
     const _tag = req.query.tag;
     const _update = req.query.update;
     const _genesis = req.query.genesis;
-
-    if(_genesis == 'true'){
-        console.log('초기 DB 구축 중 ...');
-        const data = await GenesisManager.genesisData();
-        return res.json(data);
-    }
 
     try{
         const userInfo = await FetchManager.fetchData(_name, _tag);

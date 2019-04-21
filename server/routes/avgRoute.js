@@ -30,11 +30,11 @@ router.get('/rankplay/bronze/win_rate', (req, res, next) => {
             'rankplay.record.아나.게임.승률':1,
             'rankplay.record.애쉬.게임.승률':1,
             'rankplay.record.오리사.게임.승률':1,
-            'rankplay.record.위도웨이커.게임.승률':1,
+            'rankplay.record.위도우메이커.게임.승률':1,
             'rankplay.record.윈스턴.게임.승률':1,
             'rankplay.record.자리야.게임.승률':1,
             'rankplay.record.젠야타.게임.승률':1,
-            'rankplay.record.토리비욘.게임.승률':1,
+            'rankplay.record.토르비욘.게임.승률':1,
             'rankplay.record.트레이서.게임.승률':1,
             'rankplay.record.파라.게임.승률':1,
             'rankplay.record.한조.게임.승률':1,
@@ -132,9 +132,9 @@ router.get('/rankplay/bronze/win_rate', (req, res, next) => {
             {
                 $avg : "$rankplay.record.오리사.게임.승률"
             },
-            '위도웨이커': 
+            '위도우메이커': 
             {
-                $avg : "$rankplay.record.위도웨이커.게임.승률"
+                $avg : "$rankplay.record.위도우메이커.게임.승률"
             },
             '윈스턴': 
             {
@@ -148,9 +148,9 @@ router.get('/rankplay/bronze/win_rate', (req, res, next) => {
             {
                 $avg : "$rankplay.record.젠야타.게임.승률"
             },
-            '토리비욘': 
+            '토르비욘': 
             {
-                $avg : "$rankplay.record.토리비욘.게임.승률"
+                $avg : "$rankplay.record.토르비욘.게임.승률"
             },
             '트레이서': 
             {
@@ -202,11 +202,11 @@ router.get('/rankplay/silver/win_rate', (req, res, next) => {
                 'rankplay.record.아나.게임.승률':1,
                 'rankplay.record.애쉬.게임.승률':1,
                 'rankplay.record.오리사.게임.승률':1,
-                'rankplay.record.위도웨이커.게임.승률':1,
+                'rankplay.record.위도우메이커.게임.승률':1,
                 'rankplay.record.윈스턴.게임.승률':1,
                 'rankplay.record.자리야.게임.승률':1,
                 'rankplay.record.젠야타.게임.승률':1,
-                'rankplay.record.토리비욘.게임.승률':1,
+                'rankplay.record.토르비욘.게임.승률':1,
                 'rankplay.record.트레이서.게임.승률':1,
                 'rankplay.record.파라.게임.승률':1,
                 'rankplay.record.한조.게임.승률':1,
@@ -304,9 +304,9 @@ router.get('/rankplay/silver/win_rate', (req, res, next) => {
                 {
                     $avg : "$rankplay.record.오리사.게임.승률"
                 },
-                '위도웨이커': 
+                '위도우메이커': 
                 {
-                    $avg : "$rankplay.record.위도웨이커.게임.승률"
+                    $avg : "$rankplay.record.위도우메이커.게임.승률"
                 },
                 '윈스턴': 
                 {
@@ -320,9 +320,9 @@ router.get('/rankplay/silver/win_rate', (req, res, next) => {
                 {
                     $avg : "$rankplay.record.젠야타.게임.승률"
                 },
-                '토리비욘': 
+                '토르비욘': 
                 {
-                    $avg : "$rankplay.record.토리비욘.게임.승률"
+                    $avg : "$rankplay.record.토르비욘.게임.승률"
                 },
                 '트레이서': 
                 {
