@@ -3,6 +3,23 @@ const bodyParser = require('body-parser');
 const router = express.Router();
 const User = require('../../../models/user');
 
+/* D-Va 영웅별 스키마
+"영웅별": 
+{
+    "막은 피해": 15549,
+    "막은 피해 - 10분당 평균": 12.03,
+    "막은 피해 - 한 게임 최고기록": 8677,
+    "보조 발사 적중률": 29,
+    "자폭으로 처치": 7,
+    "자폭으로 처치 - 10분당 평균": 0.01,
+    "자폭으로 처치 - 한 게임 최고기록": 4,
+    "파괴된 메카": 11,
+    "호출한 메카": 11,
+    "호출한 메카 - 10분당 평균": 0.01,
+    "호출한 메카 - 한 게임 최고기록": 7
+}
+*/
+
 // path: /avg/rankplay/champion/dva
 router.get('/', (req, res, next) => {
     console.log('hello world');
@@ -47,21 +64,56 @@ router.get('/', (req, res, next) => {
             $project: 
             {
                 rank: 1,
-                'rankplay.record.D-Va.영웅별':1
+                'rankplay.record.D-Va.영웅별':1,
+                'rankplay.record.D-Va.게임': 1
             }
         },
         {
             $match: 
             {
-                'rank.val': {$gte: min, $lt: max}
+                'rank.val': {$gte: min, $lt: max},
+                'rankplay.record.D-Va.게임.치른 게임': {$gt: 0}
             }
         },
         {
             $group:
             {
                 _id: null,
-                avg_field: {
-                    $avg: '$rankplay.record.D-Va.영웅별'
+                '평균_막은 피해': {
+                    $avg: '$rankplay.record.D-Va.영웅별.막은 피해'
+                },
+                '평균_막은 피해 - 10분당 평균': {
+                    $avg: '$rankplay.record.D-Va.영웅별.막은 피해 - 10분당 평균'
+                },
+                '평균_막은 피해 - 한 게임 최고기록': {
+                    $avg: '$rankplay.record.D-Va.영웅별.막은 피해 - 한 게임 최고기록'
+                },
+                '평균_보조 발사 적중률': {
+                    $avg: '$rankplay.record.D-Va.영웅별.보조 발사 적중률'
+                },
+                '평균_자폭으로 처치': {
+                    $avg: '$rankplay.record.D-Va.영웅별.자폭으로 처치'
+                },
+                '평균_자폭으로 처치 - 10분당 평균': {
+                    $avg: '$rankplay.record.D-Va.영웅별.자폭으로 처치 - 10분당 평균'
+                },
+                '평균_자폭으로 처치 - 한 게임 최고기록균': {
+                    $avg: '$rankplay.record.D-Va.영웅별.자폭으로 처치 - 한 게임 최고기록'
+                },
+                '평균_파괴된 메카': {
+                    $avg: '$rankplay.record.D-Va.영웅별.파괴된 메카'
+                },
+                '평균_호출한 메카': {
+                    $avg: '$rankplay.record.D-Va.영웅별.호출한 메카'
+                },
+                '평균_호출한 메카 - 10분당 평균': {
+                    $avg: '$rankplay.record.D-Va.영웅별.호출한 메카 - 10분당 평균'
+                },
+                '평균_호출한 메카 - 한 게임 최고기록': {
+                    $avg: '$rankplay.record.D-Va.영웅별.호출한 메카 - 한 게임 최고기록'
+                },
+                '평균_게임당_막은 피해': {
+                    $avg: { $divide: ['$rankplay.record.D-Va.영웅별.막은 피해', '$rankplay.record.D-Va.게임.치른 게임' ] }
                 }
             }
         }

@@ -16,7 +16,10 @@ db.on('error', console.error);
 db.once('open', () => {
     console.log("Connected to mongod server");
 })
-mongoose.connect('mongodb+srv://eunsu:dmstn~0909@overfetch-beta-release-noxxr.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
+// MongoDB Atlas 연결
+//mongoose.connect('mongodb+srv://eunsu:dmstn~0909@overfetch-beta-release-noxxr.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
+// 로컬 DB 연결
+mongoose.connect('mongodb://localhost:27017/overfetch');
 /////////////////////////////////////////////////////
 
 app.use(morgan('tiny'));
