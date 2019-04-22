@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const router = express.Router();
 const User = require('../../../models/user');
 
@@ -22,9 +21,8 @@ const User = require('../../../models/user');
 
 // path: /avg/rankplay/champion/dva
 router.get('/', (req, res, next) => {
-    console.log('hello world');
     const rank = req.query.rank;
-    console.log(rank);      // bug
+    console.log(`D-Va champion analyzing... rank: ${rank}`);
     let min, max;
     {
         if(rank < 1500){
@@ -72,13 +70,16 @@ router.get('/', (req, res, next) => {
             $match: 
             {
                 'rank.val': {$gte: min, $lt: max},
-                'rankplay.record.D-Va.게임.치른 게임': {$gt: 0}
+                'rankplay.record.D-Va.게임.치른 게임': {$gt: 9}
             }
         },
         {
             $group:
             {
                 _id: null,
+                count: {
+                    $sum: 1
+                },
                 '평균_막은 피해': {
                     $avg: '$rankplay.record.D-Va.영웅별.막은 피해'
                 },
@@ -114,7 +115,11 @@ router.get('/', (req, res, next) => {
                 },
                 '평균_게임당_막은 피해': {
                     $avg: { $divide: ['$rankplay.record.D-Va.영웅별.막은 피해', '$rankplay.record.D-Va.게임.치른 게임' ] }
-                }
+                },
+                '평균_게임당_자폭으로 처치': {
+                    $avg: { $divide: ['$rankplay.record.D-Va.영웅별.자폭으로 처치', '$rankplay.record.D-Va.게임.치른 게임' ] }
+                },
+                
             }
         }
     ]);

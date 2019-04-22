@@ -8,6 +8,7 @@ router.use('/champion', championRouter);
 // path: /avg/rankplay
 router.get('/:tier/win_rate', (req, res, next) => {
     const tier = req.params.tier;
+    const alltier = req.query.alltier;
     console.log(tier);
     let min, max;
     {
@@ -42,6 +43,10 @@ router.get('/:tier/win_rate', (req, res, next) => {
         else{
             return res.status(400).json({'error': '잘못된 파라미터로 요청하였습니다' });
         }
+    }
+    if(alltier == 'true'){
+        min = 0;
+        max= 5000;
     }
     let aggregation = User.aggregate(
         [
@@ -88,6 +93,9 @@ router.get('/:tier/win_rate', (req, res, next) => {
             $group:
             {
                 _id: null,
+                count: {
+                    $sum: 1
+                },
                'D-Va':{
                     $avg: "$rankplay.record.D-Va.게임.승률"
                 },
