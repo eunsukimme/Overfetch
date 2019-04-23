@@ -86,17 +86,19 @@ export class Main extends React.Component {
 
     render() {
         return (
-            <div>
-                <p>Welcome to Overfetch!!</p>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" placeholder="name" onChange={this.handleChange} name="name"/>
-                    <input type="text" placeholder="tag" onChange={this.handleChange} name="tag"/>
-                    <button type="submit">fetch</button>
-                </form>
+            <Router>
                 <div>
-                    {this.state.user}
+                    <p>Welcome to Overfetch!!</p>
+                    <form onSubmit={this.handleSubmit}>
+                        <input type="text" placeholder="name" onChange={this.handleChange} name="name"/>
+                        <input type="text" placeholder="tag" onChange={this.handleChange} name="tag"/>
+                        <button type="submit">fetch</button>
+                    </form>
+                    <div>
+                        {this.state.user}
+                    </div>
                 </div>
-            </div>
+            </Router>
         )
     }
 }
