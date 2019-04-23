@@ -10,13 +10,13 @@ const dvaRouter = require('./champion/D-Va');
 const doomfistRouter = require('./champion/Doomfist');
 
 // path: /avg/rankplay/champion
-router.use('/dva', dvaRouter);
-router.use('/ana', anaRouter);
-router.use('/ashe', asheRouter);
-router.use('/baptiste', baptisteRouter);
-router.use('/bastion', bastionRouter);
-router.use('/brigitte', brigitteRouter);
-router.use('/doomfist', doomfistRouter);
+router.use(`/${encodeURI('D-Va')}`, dvaRouter);
+router.use(`/${encodeURI('아나')}`, anaRouter);
+router.use(`/${encodeURI('애쉬')}`, asheRouter);
+router.use(`/${encodeURI('바티스트')}`, baptisteRouter);
+router.use(`/${encodeURI('바스티온')}`, bastionRouter);
+router.use(`/${encodeURI('브리기테')}`, brigitteRouter);
+router.use(`/${encodeURI('둠피스트')}`, doomfistRouter);
 
 
 module.exports = router;

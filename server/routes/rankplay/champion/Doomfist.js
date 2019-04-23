@@ -18,7 +18,7 @@ const User = require('../../../models/user');
 }
 */
 
-// path: /avg/rankplay/champion/doomfist
+// path: /avg/rankplay/champion/둠피스트
 router.get('/', (req, res, next) => {
     const rank = req.query.rank;
     console.log(`doomfist champion analyzing... rank: ${rank}`);

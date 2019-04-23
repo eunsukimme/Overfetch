@@ -21,7 +21,7 @@ const User = require('../../../models/user');
 }
 */
 
-// path: /avg/rankplay/champion/bastion
+// path: /avg/rankplay/champion/바스티온
 router.get('/', (req, res, next) => {
     const rank = req.query.rank;
     console.log(`Bastion champion analyzing... rank: ${rank}`);

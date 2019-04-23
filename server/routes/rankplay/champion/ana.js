@@ -29,7 +29,7 @@ const User = require('../../../models/user');
 }
 */
 
-// path: /avg/rankplay/champion/ana
+// path: /avg/rankplay/champion/아나
 router.get('/', (req, res, next) => {
     const rank = req.query.rank;
     console.log(`Ana champion analyzing... rank: ${rank}`);

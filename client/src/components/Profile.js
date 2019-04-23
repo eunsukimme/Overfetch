@@ -1,38 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Detail } from './Detail';
 import * as d3 from "d3";
 
-export class Profile extends Component {
+export class Profile extends React.Component {
   constructor(props){
     super(props);
-    this.handleClick = this.handleClick.bind(this);
     this.state = {
-      data: [1, 3, 2, 4, 5]
+      data: '',
+      detail: undefined,
+      loading: true,
+      error: false
     }
+    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount(){
-    console.log(this.state.data);
-    d3.select('svg')
-    .selectAll('g.smaple')
-    .data(this.state.data)
-    .enter()
-    .append('g')
-    .attr('class', 'bar');
+    const url = `/search?name=${this.props.match.params.name}&tag=${this.props.match.params.tag}`;
 
-    const bars = d3.selectAll('.bar');
-    const dataRange = d3.extent(this.state.data, (el) => el);
-    const yScale = d3.scaleLinear().domain(dataRange).range([50, 380]);
+    await fetch(url)
+    .then(res => res.json())
+    .then((user) => {
 
-    bars.append('rect')
-    .attr('x', (d, i) => i * 50)
-    .attr('y', (d) => 400 - yScale(d))
-    .attr('width', 50)
-    .attr('height', (d) => yScale(d))
-    .style('fill', 'lightblue')
-    .style('stroke', 'red')
-    .style('stroke-width', '1px');
-
-    // aggregation test
+      // error 발생시 알림 띄운다
+      if(user.error){
+        this.setState({ error: true });
+        return alert(user.error);
+      }
+      // 유저가 존재하면 이를 상태 data에 반영한다
+      this.setState({ loading: false });
+      this.setState({ data: user });
+      this.setState({ detail: <Detail data={this.state.data} /> });
+    })
+    .catch(error => {
+      this.setState({ error: true });
+    });
     
   }
 
@@ -41,8 +42,17 @@ export class Profile extends Component {
   }
 
   render() {
-    return (
-      <div>
+    const loading = this.state.loading;
+    const error = this.state.error;
+
+    if(error){
+      return <p>error!!!</p>
+    }
+    else if(loading){
+      return <p>loading...</p>
+    }
+    else return (
+      /*<div>
         <img src={this.props.icon_image} />
         <h1>{this.props.name}#{this.props.tag}</h1>
         <button onClick={this.handleClick} name="update">갱신</button>
@@ -51,6 +61,10 @@ export class Profile extends Component {
         <h4>마지막 갱신: {this.props.date}</h4>
         <img src={this.props.rank.imageSrc} />
         <svg style={{width: '400px', height:'400px', border: '1px lightgray solid'}}></svg>
+      </div>*/
+      <div>
+        Hello {this.props.match.params.name}#{this.props.match.params.tag}!
+        {this.state.detail}
       </div>
     )
   }
