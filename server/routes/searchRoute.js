@@ -18,6 +18,7 @@ router.get('/', async (req, res, next) => {
         return res.send('유저 이름과 배틀태그를 넘겨주세요');
     }
 });
+
 router.get('/', (req, res, next) => {
     const _name = req.query.name;
     const _tag = req.query.tag;
