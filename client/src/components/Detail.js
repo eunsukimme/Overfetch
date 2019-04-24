@@ -157,14 +157,15 @@ export class Detail extends Component {
               </ul>
           </div>
         </div>
-        <Route path={`${this.props.match.url}/둠피스트`} render={props => this.state.championComponents.둠피스트 }  />
-        <Route path={`${this.props.match.url}/겐지`} render={props => this.state.championComponents.겐지} />
-        <Route path={`${this.props.match.url}/D-Va`} render={props => this.state.championComponents['D-Va'] } />
         <Route path={`${this.props.match.url}/아나`} render={props => this.state.championComponents.아나 } />
         <Route path={`${this.props.match.url}/애쉬`} render={props => this.state.championComponents.애쉬 } />
         <Route path={`${this.props.match.url}/바티스트`} render={props => this.state.championComponents.바티스트 } />
         <Route path={`${this.props.match.url}/바스티온`} render={props => this.state.championComponents.바스티온 } />
         <Route path={`${this.props.match.url}/브리기테`} render={props => this.state.championComponents.브리기테 } />
+        <Route path={`${this.props.match.url}/D-Va`} render={props => this.state.championComponents['D-Va'] } />
+        <Route path={`${this.props.match.url}/둠피스트`} render={props => this.state.championComponents.둠피스트 }  />
+        <Route path={`${this.props.match.url}/겐지`} render={props => this.state.championComponents.겐지} />
+        <Route path={`${this.props.match.url}/한조`} render={props => this.state.championComponents.한조} />
       </Router>
     )
   }
