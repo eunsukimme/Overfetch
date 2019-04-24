@@ -80,7 +80,7 @@ router.get('/', (req, res, next) => {
                 count: {
                     $sum: 1
                 },
-                '평균_막은 피해': {
+                /*'평균_막은 피해': {
                     $avg: '$rankplay.record.D-Va.영웅별.막은 피해'
                 },
                 '평균_막은 피해 - 10분당 평균': {
@@ -112,14 +112,69 @@ router.get('/', (req, res, next) => {
                 },
                 '평균_호출한 메카 - 한 게임 최고기록': {
                     $avg: '$rankplay.record.D-Va.영웅별.호출한 메카 - 한 게임 최고기록'
+                },*/
+
+                '평균_게임당_호출한 메카': {
+                    $avg: { $divide: ['$rankplay.record.D-Va.영웅별.호출한 메카', '$rankplay.record.D-Va.게임.치른 게임' ]}
+                },
+                '평균_게임당_호출한 메카_최소': {
+                    $min: {
+                        $avg: { $divide: ['$rankplay.record.D-Va.영웅별.호출한 메카', '$rankplay.record.D-Va.게임.치른 게임' ]}
+                    }
+                },
+                '평균_게임당_호출한 메카_최대': {
+                    $max: {
+                        $avg: { $divide: ['$rankplay.record.D-Va.영웅별.호출한 메카', '$rankplay.record.D-Va.게임.치른 게임' ]}
+                    }
                 },
                 '평균_게임당_막은 피해': {
                     $avg: { $divide: ['$rankplay.record.D-Va.영웅별.막은 피해', '$rankplay.record.D-Va.게임.치른 게임' ] }
                 },
+                '평균_게임당_막은 피해_최소': {
+                    $min: {
+                        $avg: { $divide: ['$rankplay.record.D-Va.영웅별.막은 피해', '$rankplay.record.D-Va.게임.치른 게임' ] }
+                    }
+                },
+                '평균_게임당_막은 피해_최대': {
+                    $max: {
+                        $avg: { $divide: ['$rankplay.record.D-Va.영웅별.막은 피해', '$rankplay.record.D-Va.게임.치른 게임' ] }
+                    }
+                },
                 '평균_게임당_자폭으로 처치': {
                     $avg: { $divide: ['$rankplay.record.D-Va.영웅별.자폭으로 처치', '$rankplay.record.D-Va.게임.치른 게임' ] }
                 },
-                
+                '평균_게임당_자폭으로 처치_최소': {
+                    $min: {
+                        $avg: { $divide: ['$rankplay.record.D-Va.영웅별.자폭으로 처치', '$rankplay.record.D-Va.게임.치른 게임' ] }
+                    }
+                },
+                '평균_게임당_자폭으로 처치_최대': {
+                    $max: {
+                        $avg: { $divide: ['$rankplay.record.D-Va.영웅별.자폭으로 처치', '$rankplay.record.D-Va.게임.치른 게임' ] }
+                    }
+                }
+            }
+        },
+        {
+            $addFields: {
+                "평균_게임당_호출한 메카.avg": "$평균_게임당_호출한 메카",
+                "평균_게임당_호출한 메카.min": "$평균_게임당_호출한 메카_최소",
+                "평균_게임당_호출한 메카.max": "$평균_게임당_호출한 메카_최대",
+
+                "평균_게임당_막은 피해.avg": "$평균_게임당_막은 피해",
+                "평균_게임당_막은 피해.min": "$평균_게임당_막은 피해_최소",
+                "평균_게임당_막은 피해.max": "$평균_게임당_막은 피해_최대",
+
+                "평균_게임당_자폭으로 처치.avg": "$평균_게임당_자폭으로 처치",
+                "평균_게임당_자폭으로 처치.min": "$평균_게임당_자폭으로 처치_최소",
+                "평균_게임당_자폭으로 처치.max": "$평균_게임당_자폭으로 처치_최대",
+            }
+        },
+        {
+            $project: {
+                "평균_게임당_호출한 메카": 1,
+                "평균_게임당_막은 피해": 1,
+                "평균_게임당_자폭으로 처치": 1   
             }
         }
     ]);

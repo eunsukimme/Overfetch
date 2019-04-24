@@ -29,7 +29,6 @@ export class Detail extends Component {
     const keys = Object.keys(this.props.data.rankplay.record);
     const except = keys.indexOf('모든영웅');
     keys.splice(except, 1); // 모든영웅 필드 제거
-    console.log(keys);
 
     // 경쟁전 플레이 영웅별로 시각화할 레코드를 가져온다
     const result = await keys.map(async (el) => {
@@ -68,7 +67,6 @@ export class Detail extends Component {
         });
     });
     await Promise.all(result);
-    console.log(this.state.champion);
     console.log(this.state.championComponents);
     this.setState({ loading: false });
 
@@ -152,7 +150,6 @@ export class Detail extends Component {
             <h3>level: {this.props.data.level}</h3>
             <h4>마지막 갱신: {this.props.data.update}</h4>
             <img src={this.props.data.rank.imageSrc} />
-            <svg style={{width: '400px', height:'400px', border: '1px lightgray solid'}}></svg>
           </div>
           <div>
               <ul>
@@ -163,6 +160,9 @@ export class Detail extends Component {
         <Route path={`${this.props.match.url}/둠피스트`} render={props => this.state.championComponents.둠피스트 }  />
         <Route path={`${this.props.match.url}/겐지`} render={props => this.state.championComponents.겐지} />
         <Route path={`${this.props.match.url}/D-Va`} render={props => this.state.championComponents['D-Va'] } />
+        <Route path={`${this.props.match.url}/아나`} render={props => this.state.championComponents.아나 } />
+        <Route path={`${this.props.match.url}/애쉬`} render={props => this.state.championComponents.애쉬 } />
+        <Route path={`${this.props.match.url}/바티스트`} render={props => this.state.championComponents.바티스트 } />
       </Router>
     )
   }
