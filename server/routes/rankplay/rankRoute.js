@@ -6,8 +6,8 @@ const championRouter = require('./championRoute');
 router.use('/champion', championRouter);
 
 // path: /avg/rankplay
-router.get('/:tier/win_rate', (req, res, next) => {
-    const tier = req.params.tier;
+router.get('/win_rate', (req, res, next) => {
+    const tier = req.query.tier;
     console.log(tier);
     let min, max;
     {

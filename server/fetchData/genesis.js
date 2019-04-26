@@ -17,12 +17,14 @@ db.on('error', console.error);
 db.once('open', () => {
     console.log("Connected to mongod server");
 })
-mongoose.connect('mongodb+srv://eunsu:dmstn~0909@overfetch-beta-release-noxxr.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
+//mongoose.connect('mongodb+srv://eunsu:dmstn~0909@overfetch-beta-release-noxxr.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
+// 로컬 DB 연결
+mongoose.connect('mongodb://localhost:27017/overfetch');
 /////////////////////////////////////////////////////
 
 // 2019-04-02 16:00 시 기준 3페이지 까지(포함) 크롤링 완료됨
 const pages = [];
-for(let i = 81 ;i <= 160 ; i++){
+for(let i = 10 ;i <= 80 ; i++){
     pages.push(i);
 }
 

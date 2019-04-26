@@ -10,6 +10,8 @@ const dvaRouter = require('./champion/D-Va');
 const doomfistRouter = require('./champion/Doomfist');
 const genziRouter = require('./champion/Genzi');
 const hanzoRouter = require('./champion/Hanzo');
+const junkratRouter = require('./champion/Junkrat');
+const lucioRouter = require('./champion/Lucio');
 
 // path: /avg/rankplay/champion
 router.use(`/${encodeURI('D-Va')}`, dvaRouter);
@@ -21,6 +23,8 @@ router.use(`/${encodeURI('브리기테')}`, brigitteRouter);
 router.use(`/${encodeURI('둠피스트')}`, doomfistRouter);
 router.use(`/${encodeURI('겐지')}`, genziRouter);
 router.use(`/${encodeURI('한조')}`, hanzoRouter);
+router.use(`/${encodeURI('정크랫')}`, junkratRouter);
+router.use(`/${encodeURI('루시우')}`, lucioRouter);
 
 
 module.exports = router;
