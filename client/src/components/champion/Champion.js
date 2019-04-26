@@ -21,14 +21,22 @@ export class Champion extends Component {
         return;
 
       console.log(el);
+      let field;
+      let play;
+      if(el.includes('게임당')){
+        const tokens = el.split('_'); // 게임당' 문자열 제외
+        field = tokens[1];
+        play = this.props.userData.rankplay.record[`${this.props.championName}`].게임['치른 게임'];
+      }
+      else{
+        field = el;
+        play = 1;
+      }
       const min = data[el]['min'].toFixed(2);
       const avg = data[el]['avg'].toFixed(2);
       const max = data[el]['max'].toFixed(2);
-      const tokens = el.split('_'); // '평균' '게임당' 문자열 제외
-      const field = tokens[2];
 
       const value = this.props.userData.rankplay.record[`${this.props.championName}`].영웅별[field];
-      const play = this.props.userData.rankplay.record[`${this.props.championName}`].게임['치른 게임'];
       const my_val = ( value / play ).toFixed(2);
 
 

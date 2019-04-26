@@ -12,6 +12,7 @@ const genziRouter = require('./champion/Genzi');
 const hanzoRouter = require('./champion/Hanzo');
 const junkratRouter = require('./champion/Junkrat');
 const lucioRouter = require('./champion/Lucio');
+const mccreeRouter = require('./champion/Mccree');
 
 // path: /avg/rankplay/champion
 router.use(`/${encodeURI('D-Va')}`, dvaRouter);
@@ -25,6 +26,7 @@ router.use(`/${encodeURI('겐지')}`, genziRouter);
 router.use(`/${encodeURI('한조')}`, hanzoRouter);
 router.use(`/${encodeURI('정크랫')}`, junkratRouter);
 router.use(`/${encodeURI('루시우')}`, lucioRouter);
+router.use(`/${encodeURI('맥크리')}`, mccreeRouter);
 
 
 module.exports = router;

@@ -168,6 +168,7 @@ export class Detail extends Component {
         <Route path={`${this.props.match.url}/한조`} render={props => this.state.championComponents.한조} />
         <Route path={`${this.props.match.url}/정크랫`} render={props => this.state.championComponents.정크랫} />
         <Route path={`${this.props.match.url}/루시우`} render={props => this.state.championComponents.루시우} />
+        <Route path={`${this.props.match.url}/맥크리`} render={props => this.state.championComponents.맥크리} />
       </Router>
     )
   }
