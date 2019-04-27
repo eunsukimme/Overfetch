@@ -15,14 +15,18 @@ export class Champion extends Component {
     console.log(data);
     const keys = Object.keys(data);
 
-
+    // 현재 챔피언 플레이 수
+    let play = this.props.userData.rankplay.record[`${this.props.championName}`].게임['치른 게임'];
+    if(play < 10){
+      alert('플레이 수가 10 보다 적어 부정확한 데이터가 포함될 수 있습니다');
+    }
+    
     keys.forEach((el, i) => {
+      let field;  // 현재 필드
       if(el == '_id') 
         return;
 
       console.log(el);
-      let field;
-      let play;
       if(el.includes('게임당')){
         const tokens = el.split('_'); // 게임당' 문자열 제외
         field = tokens[1];

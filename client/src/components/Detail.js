@@ -2,22 +2,15 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Champion } from './champion/Champion';
 import { Unknown } from './champion/Unknown';
-import * as d3 from 'd3';
 
 export class Detail extends Component {
   constructor(props){
       super(props);
       this.state = {
-        champion: {},
         loading: false,
         error: false,
         buttons: [],
-        championComponents: {
-            '둠피스트': <Unknown />,
-            '겐지': <Unknown />,
-            'D-Va': ''
-
-        },
+        championComponents: { },
       }
       this.handleClick = this.handleClick.bind(this);
   }
@@ -37,12 +30,6 @@ export class Detail extends Component {
         const result = await fetch(url)
         .then(res => res.json())
         .then((data) => {
-            this.setState(prevState => ({ 
-                champion: {
-                    ...prevState.champion,
-                    [el] : data
-                }
-            }));
 
             this.setState(prevState => ({
                 championComponents: {
@@ -70,8 +57,6 @@ export class Detail extends Component {
     console.log(this.state.championComponents);
     this.setState({ loading: false });
 
-    // tset
-    //this.vizDoomfist();
 
     const _buttons = keys.map((el) => {
         return <li><Link to={`${this.props.match.url}/${el}`}>{el}</Link></li>
@@ -93,40 +78,6 @@ export class Detail extends Component {
       await this.props.onClick();
       this.setState({ loading: false });
       console.log(this.props);
-  }
-
-  vizDoomfist(){
-    /* visualizing */
-    const min_field = '평균_게임당_기술로 준 피해_최소';
-    const min = this.state.champion.둠피스트[0][min_field];
-    const max_field = '평균_게임당_기술로 준 피해_최대';
-    const max = this.state.champion.둠피스트[0][max_field];
-    const avg_field = '평균_게임당_기술로 준 피해';
-    const avg_val = this.state.champion.둠피스트[0][avg_field];
-
-    const my_val = this.props.data.rankplay.record.둠피스트.영웅별['기술로 준 피해'] / this.props.data.rankplay.record.둠피스트.게임['치른 게임'];
-    
-    const dataSet = [min, my_val, avg_val, max];
-    console.log(dataSet);
-
-    const doomfistYScale = d3.scaleLinear()
-    .domain([min, max]).range([40, 360]);
-
-    d3.select('svg')
-    .selectAll('rect.doomfist')
-    .data(dataSet)
-    .enter()
-    .append('rect')
-    .attr('x', (d, i) => 100*i)
-    .attr('y', (d) => 400 - doomfistYScale(d))
-    .attr('width', '100px')
-    .transition()
-    .duration(1000)
-    .attr('height', (d) => doomfistYScale(d))
-    .style('fill', 'lightblue')
-    .style('stroke', 'red')
-    .style('stroke-width', '1px');
-
   }
 
   render() {
@@ -171,6 +122,10 @@ export class Detail extends Component {
         <Route path={`${this.props.match.url}/맥크리`} render={props => this.state.championComponents.맥크리} />
         <Route path={`${this.props.match.url}/메이`} render={props => this.state.championComponents.메이} />
         <Route path={`${this.props.match.url}/메르시`} render={props => this.state.championComponents.메르시} />
+        <Route path={`${this.props.match.url}/모이라`} render={props => this.state.championComponents.모이라} />
+        <Route path={`${this.props.match.url}/오리사`} render={props => this.state.championComponents.오리사} />
+        <Route path={`${this.props.match.url}/파라`} render={props => this.state.championComponents.파라} />
+        <Route path={`${this.props.match.url}/리퍼`} render={props => this.state.championComponents.리퍼} />
       </Router>
     )
   }

@@ -15,6 +15,11 @@ const lucioRouter = require('./champion/Lucio');
 const mccreeRouter = require('./champion/Mccree');
 const meiRouter = require('./champion/Mei');
 const mercyRouter = require('./champion/Mercy');
+const moiraRouter = require('./champion/Moira');
+const orisaRouter = require('./champion/Orisa');
+const pharahRouter = require('./champion/Pharah');
+const reaperRouter = require('./champion/Reaper');
+
 
 // path: /avg/rankplay/champion
 router.use(`/${encodeURI('D-Va')}`, dvaRouter);
@@ -31,6 +36,9 @@ router.use(`/${encodeURI('루시우')}`, lucioRouter);
 router.use(`/${encodeURI('맥크리')}`, mccreeRouter);
 router.use(`/${encodeURI('메이')}`, meiRouter);
 router.use(`/${encodeURI('메르시')}`, mercyRouter);
-
+router.use(`/${encodeURI('모이라')}`, moiraRouter);
+router.use(`/${encodeURI('오리사')}`, orisaRouter);
+router.use(`/${encodeURI('파라')}`, pharahRouter);
+router.use(`/${encodeURI('리퍼')}`, reaperRouter);
 
 module.exports = router;
