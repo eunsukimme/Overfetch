@@ -26,11 +26,12 @@ export class Detail extends Component {
     // 경쟁전 플레이 영웅별로 시각화할 레코드를 가져온다
     const result = await keys.map(async (el) => {
 
-        // 해당 영웅의 플레이 정보가 존재하면
-        // 즉, 치른 게임 수가 0 보다 크면 정보를 가져온다
+        // 해당 영웅의 플레이 정보(영웅별)가 존재하지 않거나
+        // 치른 게임 수가 0 이라면 해당 레코드는 가져오지 않는다
         let play = this.props.data.rankplay.record[el].게임['치른 게임'];
+        let champion_info = this.props.data.rankplay.record[el].영웅별;
         console.log(`${el}: ${play}`);
-        if(play == 0){
+        if(play == 0 || champion_info == undefined){
             return;
         }
 
