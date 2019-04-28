@@ -19,6 +19,12 @@ const moiraRouter = require('./champion/Moira');
 const orisaRouter = require('./champion/Orisa');
 const pharahRouter = require('./champion/Pharah');
 const reaperRouter = require('./champion/Reaper');
+const reinhardtRouter = require('./champion/Reinhardt');
+const roadhogRouter = require('./champion/Roadhog');
+const soldierRouter = require('./champion/Soldier');
+const sombraRouter = require('./champion/Sombra');
+const symmetraRouter = require('./champion/Symmetra');
+const torbjornRouter = require('./champion/Torbjorn');
 
 
 // path: /avg/rankplay/champion
@@ -40,5 +46,11 @@ router.use(`/${encodeURI('모이라')}`, moiraRouter);
 router.use(`/${encodeURI('오리사')}`, orisaRouter);
 router.use(`/${encodeURI('파라')}`, pharahRouter);
 router.use(`/${encodeURI('리퍼')}`, reaperRouter);
+router.use(`/${encodeURI('라인하르트')}`, reinhardtRouter);
+router.use(`/${encodeURI('로드호그')}`, roadhogRouter);
+router.use(`/${encodeURI('솔저')}`, soldierRouter);
+router.use(`/${encodeURI('솜브라')}`, sombraRouter);
+router.use(`/${encodeURI('시메트라')}`, symmetraRouter);
+router.use(`/${encodeURI('토르비욘')}`, torbjornRouter);
 
 module.exports = router;

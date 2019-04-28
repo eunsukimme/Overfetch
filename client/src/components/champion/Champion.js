@@ -59,7 +59,7 @@ export class Champion extends Component {
 
       // bar-graph의 타이틀 생성
       bar_graph.append('text')
-      .attr('y', 30)
+      .attr('y', 16)
       .html(el);
 
       // g생성하고 그 안에 또 g를 생성(막대 그래프+라벨 포함) 생성

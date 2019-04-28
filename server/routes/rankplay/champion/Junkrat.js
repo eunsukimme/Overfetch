@@ -21,7 +21,6 @@ const User = require('../../../models/user');
 // path: /avg/rankplay/champion/정크랫
 router.get('/', (req, res, next) => {
     const rank = req.query.rank;
-    console.log(`junkrat champion analyzing... rank: ${rank}`);
     let min, max;
     {
         if(rank < 1500){

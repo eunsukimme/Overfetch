@@ -7,6 +7,7 @@ export class Detail extends Component {
   constructor(props){
       super(props);
       this.state = {
+        champions: {},
         loading: false,
         error: false,
         buttons: [],
@@ -25,11 +26,26 @@ export class Detail extends Component {
 
     // 경쟁전 플레이 영웅별로 시각화할 레코드를 가져온다
     const result = await keys.map(async (el) => {
+
+        // 해당 영웅의 플레이 정보가 존재하면
+        // 즉, 치른 게임 수가 0 보다 크면 정보를 가져온다
+        let play = this.props.data.rankplay.record[el].게임['치른 게임'];
+        console.log(`${el}: ${play}`);
+        if(play == 0){
+            return;
+        }
+
         // 존재하는 각 영웅이름 의 레코드를 가져온다
         const url = '/avg/rankplay/champion/'+el+'?rank='+this.props.data.rank.val;
         const result = await fetch(url)
         .then(res => res.json())
         .then((data) => {
+            this.setState(prevState => ({
+                champions: {
+                    ...prevState.champions,
+                    [el]: el
+                }
+            }));
 
             this.setState(prevState => ({
                 championComponents: {
@@ -54,11 +70,12 @@ export class Detail extends Component {
         });
     });
     await Promise.all(result);
+    console.log(this.state.champions);
     console.log(this.state.championComponents);
     this.setState({ loading: false });
 
 
-    const _buttons = keys.map((el) => {
+    const _buttons = Object.keys(this.state.champions).map((el) => {
         return <li><Link to={`${this.props.match.url}/${el}`}>{el}</Link></li>
     })
     this.setState({ buttons: _buttons });
@@ -126,6 +143,12 @@ export class Detail extends Component {
         <Route path={`${this.props.match.url}/오리사`} render={props => this.state.championComponents.오리사} />
         <Route path={`${this.props.match.url}/파라`} render={props => this.state.championComponents.파라} />
         <Route path={`${this.props.match.url}/리퍼`} render={props => this.state.championComponents.리퍼} />
+        <Route path={`${this.props.match.url}/라인하르트`} render={props => this.state.championComponents.라인하르트} />
+        <Route path={`${this.props.match.url}/로드호그`} render={props => this.state.championComponents.로드호그} />
+        <Route path={`${this.props.match.url}/솔저`} render={props => this.state.championComponents.솔저} />
+        <Route path={`${this.props.match.url}/솜브라`} render={props => this.state.championComponents.솜브라} />
+        <Route path={`${this.props.match.url}/시메트라`} render={props => this.state.championComponents.시메트라} />
+        <Route path={`${this.props.match.url}/토르비욘`} render={props => this.state.championComponents.토르비욘} />
       </Router>
     )
   }

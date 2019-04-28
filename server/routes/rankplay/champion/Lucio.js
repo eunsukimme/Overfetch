@@ -18,7 +18,6 @@ const User = require('../../../models/user');
 // path: /avg/rankplay/champion/루시우
 router.get('/', (req, res, next) => {
     const rank = req.query.rank;
-    console.log(`lucio champion analyzing... rank: ${rank}`);
     let min, max;
     {
         if(rank < 1500){
