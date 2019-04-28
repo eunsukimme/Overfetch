@@ -25,6 +25,12 @@ const soldierRouter = require('./champion/Soldier');
 const sombraRouter = require('./champion/Sombra');
 const symmetraRouter = require('./champion/Symmetra');
 const torbjornRouter = require('./champion/Torbjorn');
+const tracerRouter = require('./champion/Tracer');
+const widowmakerRouter = require('./champion/Widowmaker');
+const winstonRouter = require('./champion/Winston');
+const wreckingballRouter = require('./champion/Wreckingball');
+const zaryaRouter = require('./champion/Zarya');
+const zenyattaRouter = require('./champion/Zenyatta');
 
 
 // path: /avg/rankplay/champion
@@ -52,5 +58,11 @@ router.use(`/${encodeURI('솔저')}`, soldierRouter);
 router.use(`/${encodeURI('솜브라')}`, sombraRouter);
 router.use(`/${encodeURI('시메트라')}`, symmetraRouter);
 router.use(`/${encodeURI('토르비욘')}`, torbjornRouter);
+router.use(`/${encodeURI('트레이서')}`, tracerRouter);
+router.use(`/${encodeURI('위도우메이커')}`, widowmakerRouter);
+router.use(`/${encodeURI('윈스턴')}`, winstonRouter);
+router.use(`/${encodeURI('레킹볼')}`, wreckingballRouter);
+router.use(`/${encodeURI('자리야')}`, zaryaRouter);
+router.use(`/${encodeURI('젠야타')}`, zenyattaRouter);
 
 module.exports = router;

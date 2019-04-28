@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Champion } from './champion/Champion';
-import { Unknown } from './champion/Unknown';
 
 export class Detail extends Component {
   constructor(props){
@@ -149,6 +148,12 @@ export class Detail extends Component {
         <Route path={`${this.props.match.url}/솜브라`} render={props => this.state.championComponents.솜브라} />
         <Route path={`${this.props.match.url}/시메트라`} render={props => this.state.championComponents.시메트라} />
         <Route path={`${this.props.match.url}/토르비욘`} render={props => this.state.championComponents.토르비욘} />
+        <Route path={`${this.props.match.url}/트레이서`} render={props => this.state.championComponents.트레이서} />
+        <Route path={`${this.props.match.url}/위도우메이커`} render={props => this.state.championComponents.위도우메이커} />
+        <Route path={`${this.props.match.url}/윈스턴`} render={props => this.state.championComponents.윈스턴} />
+        <Route path={`${this.props.match.url}/레킹볼`} render={props => this.state.championComponents.레킹볼} />
+        <Route path={`${this.props.match.url}/자리야`} render={props => this.state.championComponents.자리야} />
+        <Route path={`${this.props.match.url}/젠야타`} render={props => this.state.championComponents.젠야타} />
       </Router>
     )
   }

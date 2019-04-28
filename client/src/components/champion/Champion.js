@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+import './champion.css';
 
 export class Champion extends Component {
   constructor(props){
@@ -72,7 +73,12 @@ export class Champion extends Component {
       .enter()
       .append('g')
       .attr('class', 'bar')
-      .attr('transform', (d, i) => `translate(${i*100}, 0)`);
+      .attr('transform', function(d, i) {
+        if(i == 1){
+          d3.select(this).attr('class', 'bar my_bar');
+        }
+        return `translate(${i*100}, 0)`;
+      });
 
       // 각 g 에 막대 할당
       bars.append('rect')
@@ -81,7 +87,7 @@ export class Champion extends Component {
       .transition()
       .duration(1500)
       .attr('height', (d) => championYScale(d))
-      .style('fill', 'lightblue')
+      //.style('fill', 'lightblue')
       .style('stroke', 'lightgray')
       .style('stroke-width', '1px');
 
