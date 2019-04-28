@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import './css/search.css';
 
 export class Search extends React.Component {
     constructor(props){
@@ -20,8 +21,10 @@ export class Search extends React.Component {
      * @dev name, tag input태그의 변화를 감지하고 state에 저장
      */
     handleChange(e) {
+        const tokens = e.target.value.split('#');
         this.setState({
-            [e.target.name]: e.target.value
+            name: tokens[0],
+            tag: tokens[1]
         });
     }
 
@@ -32,6 +35,7 @@ export class Search extends React.Component {
      */
     async handleSubmit(e) {
         e.preventDefault();
+        console.log(this.state.name, this.state.tag);
         if(!this.validateInput()){
             return alert('유저 이름과 배틀태그를 입력해 주세요');
         }
@@ -39,10 +43,10 @@ export class Search extends React.Component {
     }
 
     validateInput(){
-        if(this.state.name == ''){
+        if(this.state.name == undefined || this.state.name == ''){
             return false;
         }
-        else if(this.state.tag == ''){
+        else if(this.state.tag == undefined || this.state.tag == ''){
             return false;
         }
         return true;
@@ -50,13 +54,14 @@ export class Search extends React.Component {
 
   render() {
     return (
-      <div>
-        <p>Welcome to Overfetch!!</p>
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" placeholder="name" onChange={this.handleChange} name="name"/>
-          <input type="text" placeholder="tag" onChange={this.handleChange} name="tag"/>
-          <Link to={`/profile/${this.state.name}/${this.state.tag}`}>Fetch</Link>
-        </form>
+      <div className='search'>
+        <h1 class='intro' style={{color: 'white'}}>Welcome to OVERFETCH</h1>
+        <div className='search-content' >
+          <form onSubmit={this.handleSubmit}>
+            <input name='search' type="text" placeholder="name#tag" onChange={this.handleChange}/>
+            <Link className='button' to={`/profile/${this.state.name}/${this.state.tag}`}>Fetch</Link>
+          </form>
+        </div>
       </div>
     )
   }

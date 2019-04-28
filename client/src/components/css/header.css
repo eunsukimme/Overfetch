@@ -1,0 +1,45 @@
+.header {
+    background-color: black;
+    padding: 40px;
+    overflow: hidden;
+}
+
+.header .menu {
+    float: left;
+    padding: 12px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 25px;
+    border-radius: 4px;
+    color: white;
+}
+
+.header .menu.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.header .menu:hover{
+    background-color: gray;
+    color: black;
+}
+
+.header .menu.active {
+    background-color: #d65a31;
+    color: white;
+}
+
+.header-right {
+    float: right;
+}
+
+@media screen and (max-width: 500px){
+    .header .menu {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+    .header-right {
+        float: none;
+    }
+}
