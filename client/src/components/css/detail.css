@@ -1,10 +1,22 @@
+.user-detail-top {
+  text-align: center;
+}
+
+.user-detail-card-container {
+  position: relative;
+  display: inline-block;
+  margin: 80px auto;
+  width: 50%;
+}
+
 .user-detail-card {
   position: relative;
+  display: inline-block;
   overflow: hidden;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
   max-width: 600px;
   text-align: center;
-  margin: 80px auto;
+  width: 100%;
 }
 
 .user-detail-card .user-icon {
@@ -49,6 +61,29 @@
 
 .update-button:hover {
   opacity: 0.7;
+}
+
+.user-detail-most-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+  width: 30%;
+  min-width: 400px;
+  height: 560px;
+}
+.user-detail-most-header {
+  position: absolute;
+  display: inline-block;
+  top: 0;
+  left: 15%;
+  font-size: 2rem;
+  font-weight: bold;
+}
+.user-detail-most {
+  margin-top: 2.5rem;
+}
+.user-detail-most .svg-most {
+  margin-bottom: 10px;
 }
 
 .user-champions-buttons {
@@ -105,5 +140,12 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .user-detail-card-container {
+    width: 100%;
+    margin: 60px auto;
   }
 }

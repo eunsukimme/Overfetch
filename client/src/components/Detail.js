@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Champion } from "./champion/Champion";
 import "./css/detail.css";
+import * as d3 from "d3";
 
 export class Detail extends Component {
   constructor(props) {
@@ -12,7 +13,9 @@ export class Detail extends Component {
       error: false,
       buttons: [],
       championComponents: {},
-      diff_time: ""
+      diff_time: "",
+      most: [],
+      mostComponents: []
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -50,7 +53,7 @@ export class Detail extends Component {
     else if (name == "젠야타") return "zenyatta";
   }
 
-  async fetchData() {
+  async getChampionRecord() {
     this.setState({ loading: true });
 
     // 유저의 경쟁전 플레이 영웅이름을 가져온다
@@ -123,7 +126,7 @@ export class Detail extends Component {
       return (
         <div className="champion-button">
           <Link
-            classsName="champion-button-link"
+            className="champion-button-link"
             to={`${this.props.match.url}/${el}`}
           >
             <img className="champion-button-image" src={image_src} />
@@ -148,6 +151,99 @@ export class Detail extends Component {
     return new Promise(resolve => {
       resolve(true);
     });
+  }
+
+  // 플레이 시간 순 모스트 챔피언 정보를 가져온다
+  async getMostRecord() {
+    const mosts = this.props.data.rankplay.mostChampion;
+    console.log(mosts);
+    // most_criteria는 모든 모스트 기준을 저장한다
+    const most_criteria = Object.keys(mosts);
+
+    const sorted = []; // 플레이 시간 기준 상위 챔피언을 순서대로 정렬해 저장하는 배열
+    // 각 기준을 돌면서 플레이 시간 기준을 찾는다
+    await most_criteria.some(el => {
+      if (el == "byPlaytime") {
+        // 해당하는 키(영웅이름)의 값(플레이시간)을 배열에 저장한다
+        for (let key in mosts[el]) {
+          sorted.push([key, mosts[el][key]]);
+        }
+        // 배열을 내림차순(큰 수가 앞에)으로 정렬
+        sorted.sort(function(a, b) {
+          return b[1] - a[1];
+        });
+      }
+      // 순회 종료
+      return el == "byPlaytime";
+    });
+    this.setState({
+      most: sorted
+    });
+
+    // 스케일링을 위한 플레이 시간의 최소, 최대 값을 저장한다
+    const minimum = sorted[sorted.length - 1];
+    const maximum = sorted[0];
+    const timeScale = d3
+      .scaleLinear()
+      .domain([minimum, maximum])
+      .range([0, 400]);
+
+    // 이제 state의 most 에는 플레이시간 별 상위 영웅이 저장되있음
+    // 이 영웅들 중 앞 3 원소들의 데이터만 우리의 관심이 있다
+    // 이미지, K/D 정보를 가져온다
+    let limit = 3;
+    // 만약 모스트가 3 보다 적다면 그 길이만큼 가져온다
+    if (this.state.most.length < 3) limit = this.state.most.length;
+    for (let i = 0; i < limit; i++) {
+      const champion_name = this.state.most[i][0];
+      const champion_playtime = this.state.most[i][1];
+      console.log(`${champion_name} - ${champion_playtime}`);
+
+      // 이제 시간 값을 계산한다
+      // champion-playtime 에 저장된 값은 플레이 시간 단위가 초(sec)이다
+      // 이를 시간:분:초 로 표기하려면, 먼저 시간은 3600초(1분 * 60 = 60초 * 60 = 3600)
+      // 즉 시간은 champion_playtime을 3600으로 나눈 몫이다
+      // 그리고 분은 60초(1분 * 1 = 60 * 1 = 60)
+      // 즉 시간으로 나눈 나머지를 다시 60으로 나눈 몫이다
+      // 마지막으로 그 나머지가 초가 된다
+      const hour = (champion_playtime / 3600).toFixed(0);
+      const min = ((champion_playtime % 3600) / 60).toFixed(0);
+      const sec = ((champion_playtime % 3600) % 60).toFixed(0);
+      const playtime = {}; // prop으로 넘겨줄 시간 오브젝트
+      playtime.hour = hour;
+      playtime.min = min;
+      playtime.sec = sec;
+      console.log(`${champion_name}: ${hour}시 ${min}분 ${sec}초`);
+
+      // 이제 KD 값을 가져온다
+      // 영웅의 KD 필드는 mostChampion -> byKD 필드에 존재한다
+      const KD = this.props.data.rankplay.mostChampion.byKD[champion_name];
+      console.log(KD);
+
+      // 마지막으로 이 모든 값을 그려준다
+      // 먼저 svg 를 생성해준다
+      const most_graph = d3
+        .select(".user-detail-most")
+        .append("svg")
+        .attr("id", `most_${i}`)
+        .attr("class", "svg-most")
+        .attr("width", "400px")
+        .attr("height", "160px")
+        .attr("display", "block")
+        .style("border", "1px solid lightgray");
+
+      // 해당 svg 에 영웅 이름, KD, 플레이타임 정보를 넣어준다
+      most_graph
+        .append("text")
+        .attr("y", 16)
+        .attr("class", "text")
+        .html(champion_name);
+    }
+  }
+
+  async fetchData() {
+    await this.getChampionRecord();
+    await this.getMostRecord();
   }
 
   componentDidMount() {
@@ -184,26 +280,35 @@ export class Detail extends Component {
     return (
       <Router>
         <div className="user-detail">
-          <div className="user-detail-card">
-            <img className="user-icon" src={this.props.data.icon} />
-            <h1 className="user-data user-name">{this.props.data.name}</h1>
-            <h3 className="user-data">Lv. {this.props.data.level}</h3>
-            <h4 className="user-data">
-              마지막 갱신: {this.state.diff_time} 시간 전
-            </h4>
-            <img
-              className="user-data user-rank-image"
-              src={this.props.data.rank.imageSrc}
-            />
-            <h2 className="user-data">rank. {this.props.data.rank.val}</h2>
-            <button
-              className="user-data update-button"
-              onClick={this.handleClick}
-              name="update"
-            >
-              갱신
-            </button>
+          <div className="user-detail-top">
+            <div className="user-detail-card-container">
+              <div className="user-detail-card">
+                <img className="user-icon" src={this.props.data.icon} />
+                <h1 className="user-data user-name">{this.props.data.name}</h1>
+                <h3 className="user-data">Lv. {this.props.data.level}</h3>
+                <h4 className="user-data">
+                  마지막 갱신: {this.state.diff_time} 시간 전
+                </h4>
+                <img
+                  className="user-data user-rank-image"
+                  src={this.props.data.rank.imageSrc}
+                />
+                <h2 className="user-data">rank. {this.props.data.rank.val}</h2>
+                <button
+                  className="user-data update-button"
+                  onClick={this.handleClick}
+                  name="update"
+                >
+                  갱신
+                </button>
+              </div>
+            </div>
+            <div className="user-detail-most-container">
+              <div className="user-detail-most-header">Most Champion Top 3</div>
+              <div className="user-detail-most" />
+            </div>
           </div>
+
           <div className="user-champions-buttons">{this.state.buttons}</div>
         </div>
         <div className="user-champions">
