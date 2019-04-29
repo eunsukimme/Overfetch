@@ -12,10 +12,10 @@ export const GlobalStyle = createGlobalStyle`
       color:inherit;
   }
   #root{
-    height: 100%;
     width: 100%;
   }
   main{
+    background-color: #222222;
     height: 100%;
   }
 `;

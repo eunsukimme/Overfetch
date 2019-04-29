@@ -1,7 +1,8 @@
 .header {
   background-color: black;
-  padding: 40px;
+  padding: 20px;
   overflow: hidden;
+  border-bottom: 2px solid #d65a31;
 }
 
 .header .menu {

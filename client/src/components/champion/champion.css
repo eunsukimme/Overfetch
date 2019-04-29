@@ -1,6 +1,28 @@
+.champion-detail {
+  color: white;
+  text-align: center;
+}
+
+#viz .svg-graph {
+  margin: 20px;
+  padding-left: 40px;
+}
+
 .bar rect {
   fill: lightblue;
 }
 .my_bar rect {
   fill: lightgreen;
+}
+
+.text {
+  fill: white;
+}
+
+@media screen and (max-width: 500px) {
+  #viz .svg-graph {
+    width: 100%;
+    margin: 20px auto;
+    padding-left: 20px;
+  }
 }

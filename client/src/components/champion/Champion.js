@@ -62,12 +62,14 @@ export class Champion extends Component {
         .attr("id", `${this.props.championName}_${i}`)
         .attr("width", "400px")
         .attr("height", "400px")
+        .attr("class", "svg-graph")
         .style("border", "1px lightgray solid");
 
       // bar-graph의 타이틀 생성
       bar_graph
         .append("text")
         .attr("y", 16)
+        .attr("class", "text")
         .html(el);
 
       // g생성하고 그 안에 또 g를 생성(막대 그래프+라벨 포함) 생성
@@ -105,6 +107,7 @@ export class Champion extends Component {
         .append("text")
         .text(d => d)
         .attr("y", d => 400 - championYScale(d) - 10)
+        .attr("class", "text")
         .style("text-anchor", "left");
 
       // 각 bar 에 라벨(기준) 생성
@@ -113,6 +116,7 @@ export class Champion extends Component {
         .data(["min", "my", "avg", "max"])
         .text(d => d)
         .attr("y", 390)
+        .attr("class", "text")
         .style("text-anchor", "left");
 
       function mouseOver(d, i) {
@@ -127,7 +131,7 @@ export class Champion extends Component {
   render() {
     console.log(this.props);
     return (
-      <div>
+      <div className="champion-detail">
         {this.props.championName}
         <div id="viz" />
       </div>

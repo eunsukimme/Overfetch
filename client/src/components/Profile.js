@@ -1,6 +1,6 @@
 import React from "react";
 import { Detail } from "./Detail";
-import * as d3 from "d3";
+import "./css/profile.css";
 
 export class Profile extends React.Component {
   constructor(props) {
@@ -86,15 +86,9 @@ export class Profile extends React.Component {
     const error = this.state.error;
 
     if (error) {
-      return <p>error!!!</p>;
+      return <div className="profile">error!!!</div>;
     } else if (loading) {
-      return <p>유저 정보를 가져오는 중...</p>;
-    } else
-      return (
-        <div>
-          Hello {this.props.match.params.name}#{this.props.match.params.tag}!
-          {this.state.detail}
-        </div>
-      );
+      return <div className="profile">유저 정보를 가져오는 중...</div>;
+    } else return <div className="profile">{this.state.detail}</div>;
   }
 }
