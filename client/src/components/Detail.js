@@ -167,9 +167,19 @@ export class Detail extends Component {
     const loading = this.state.loading;
 
     if (error) {
-      return <p>error!!!</p>;
+      return (
+        <div className="error">
+          <p>error!!!</p>
+          <div class="lds-dual-ring" />
+        </div>
+      );
     } else if (loading) {
-      return <p>게임 데이터를 가져오는 중...</p>;
+      return (
+        <div className="loading">
+          <p>게임 데이터를 가져오는 중...</p>
+          <div class="lds-dual-ring" />
+        </div>
+      );
     }
     return (
       <Router>

@@ -86,9 +86,19 @@ export class Profile extends React.Component {
     const error = this.state.error;
 
     if (error) {
-      return <div className="profile">error!!!</div>;
+      return (
+        <div className="error">
+          <p>error!!!</p>
+          <div class="lds-dual-ring" />
+        </div>
+      );
     } else if (loading) {
-      return <div className="profile">유저 정보를 가져오는 중...</div>;
+      return (
+        <div className="loading">
+          <p>유저 정보를 가져오는 중...</p>
+          <div class="lds-dual-ring" />
+        </div>
+      );
     } else return <div className="profile">{this.state.detail}</div>;
   }
 }
