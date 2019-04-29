@@ -14,8 +14,6 @@ export const GlobalStyle = createGlobalStyle`
   #root{
     height: 100%;
     width: 100%;
-    color: white;
-    background-color: black;
   }
   main{
     height: 100%;
