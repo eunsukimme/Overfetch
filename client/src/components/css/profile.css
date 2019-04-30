@@ -1,4 +1,6 @@
 .profile {
+  position: relative;
+  width: 100%;
   min-height: 100%;
   background-color: #222222;
   color: white;

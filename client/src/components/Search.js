@@ -54,7 +54,7 @@ export class Search extends React.Component {
   render() {
     return (
       <div className="search">
-        <h1 class="intro" style={{ color: "white" }}>
+        <h1 className="intro" style={{ color: "white" }}>
           Welcome to OVERFETCH
         </h1>
         <div className="search-content">

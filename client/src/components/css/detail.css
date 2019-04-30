@@ -1,12 +1,14 @@
 .user-detail-top {
   text-align: center;
+  width: 100%;
+  margin: 80px auto;
 }
 
 .user-detail-card-container {
   position: relative;
   display: inline-block;
-  margin: 80px auto;
-  width: 50%;
+  width: 40%;
+  margin: 0 auto;
 }
 
 .user-detail-card {
@@ -75,7 +77,7 @@
   position: absolute;
   display: inline-block;
   top: 0;
-  left: 15%;
+  left: 20%;
   font-size: 2rem;
   font-weight: bold;
 }
@@ -84,6 +86,13 @@
 }
 .user-detail-most .svg-most {
   margin-bottom: 10px;
+  overflow: hidden;
+}
+.user-detail-most .svg-most .most-title {
+  font-size: 1.8rem;
+}
+.user-detail-most .svg-most .most-kd {
+  font-size: 1.2rem;
 }
 
 .user-champions-buttons {
@@ -96,7 +105,7 @@
 .champion-button {
   position: relative;
   display: inline-block;
-  border: 1px solid lightgray;
+  border: 1px solid #444444;
   border-radius: 20px;
   text-align: center;
   margin: 10px;
@@ -147,5 +156,14 @@
   .user-detail-card-container {
     width: 100%;
     margin: 60px auto;
+  }
+
+  .user-detail-most-container {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .user-detail-most-container .svg-most {
+    width: 100%;
   }
 }

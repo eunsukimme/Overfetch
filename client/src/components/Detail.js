@@ -140,8 +140,10 @@ export class Detail extends Component {
     /* 현재 날짜와 최근 업데이트 시각을 비교한다 */
     const now = Date.now();
     const last_update = new Date(this.props.data.update).getTime();
+    console.log(`last update: ${last_update}`);
     const diff_millisec = now - last_update;
     let diff_hour = diff_millisec / 1000 / 60 / 60;
+
     diff_hour = diff_hour.toFixed(0);
 
     this.setState({
@@ -181,12 +183,15 @@ export class Detail extends Component {
     });
 
     // 스케일링을 위한 플레이 시간의 최소, 최대 값을 저장한다
-    const minimum = sorted[sorted.length - 1];
-    const maximum = sorted[0];
+    const minimum = sorted[sorted.length - 1][1];
+    console.log(`minTime: ${minimum}`);
+    const maximum = sorted[0][1];
+    console.log(`maxTime: ${maximum}`);
     const timeScale = d3
       .scaleLinear()
       .domain([minimum, maximum])
-      .range([0, 400]);
+      .range([40, 360])
+      .clamp(true);
 
     // 이제 state의 most 에는 플레이시간 별 상위 영웅이 저장되있음
     // 이 영웅들 중 앞 3 원소들의 데이터만 우리의 관심이 있다
@@ -222,22 +227,62 @@ export class Detail extends Component {
 
       // 마지막으로 이 모든 값을 그려준다
       // 먼저 svg 를 생성해준다
+      const background_imageSrc = `https://static.playoverwatch.com/media/artwork/${this.convertChampionName(
+        champion_name
+      )}-concept.jpg`;
       const most_graph = d3
         .select(".user-detail-most")
         .append("svg")
         .attr("id", `most_${i}`)
         .attr("class", "svg-most")
-        .attr("width", "400px")
+        .attr("width", "500px")
         .attr("height", "160px")
         .attr("display", "block")
-        .style("border", "1px solid lightgray");
+        //.style("background-image", `url(${background_imageSrc})`)
+        //.style("background-size", "500px 160px")
+        .style("border", "1px solid #444444");
 
       // 해당 svg 에 영웅 이름, KD, 플레이타임 정보를 넣어준다
+      // 먼저 영웅 이름을 넣어준다
       most_graph
         .append("text")
-        .attr("y", 16)
-        .attr("class", "text")
+        .attr("y", 60)
+        .attr("x", 30)
+        .attr("class", "text most-title")
         .html(champion_name);
+
+      // KD 정보를 넣어준다
+      most_graph
+        .append("text")
+        .attr("y", 90)
+        .attr("x", 30)
+        .attr("class", "text most-kd")
+        .html(`KD: ${KD}`);
+
+      // playtime 정보를 넣어준다
+      // 이때 playtime 은 막대 그래프를 포함하므로
+      // g 태그를 먼저 넣어준다
+      const most_graph_g = most_graph
+        .append("g")
+        .attr("class", "svg-most-g")
+        .attr("transform", "translate(0, 130)");
+
+      // 이 g 에다 text는 playtime을, 그래프로 이를 나타내준다
+      most_graph_g
+        .append("text")
+        .attr("class", "text")
+        .attr("x", 30)
+        .html("playtime: ");
+
+      most_graph_g
+        .append("rect")
+        .attr("height", 16)
+        .attr("x", 100)
+        .attr("y", -14)
+        .transition()
+        .duration(1000)
+        .attr("width", timeScale(champion_playtime))
+        .style("fill", "#d65a31");
     }
   }
 
@@ -266,14 +311,14 @@ export class Detail extends Component {
       return (
         <div className="error">
           <p>error!!!</p>
-          <div class="lds-dual-ring" />
+          <div className="lds-dual-ring" />
         </div>
       );
     } else if (loading) {
       return (
         <div className="loading">
           <p>게임 데이터를 가져오는 중...</p>
-          <div class="lds-dual-ring" />
+          <div className="lds-dual-ring" />
         </div>
       );
     }

@@ -1,0 +1,24 @@
+.user-card {
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  height: 60px;
+  border: 1px solid red;
+}
+
+.user-card-order,
+.user-card-image,
+.user-card-name,
+.user-card-level,
+.user-card-rank,
+.user-card-icon {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.user-card-image,
+.user-card-icon {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+}

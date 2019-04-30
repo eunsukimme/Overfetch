@@ -89,14 +89,14 @@ export class Profile extends React.Component {
       return (
         <div className="error">
           <p>error!!!</p>
-          <div class="lds-dual-ring" />
+          <div className="lds-dual-ring" />
         </div>
       );
     } else if (loading) {
       return (
         <div className="loading">
           <p>유저 정보를 가져오는 중...</p>
-          <div class="lds-dual-ring" />
+          <div className="lds-dual-ring" />
         </div>
       );
     } else return <div className="profile">{this.state.detail}</div>;
