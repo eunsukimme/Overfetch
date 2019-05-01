@@ -7,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   html,body{
+    scroll-behavior: smooth;
     height: 100%;
     width: 100%;
     font-family: 'Roboto', sans-serif;

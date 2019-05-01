@@ -5,9 +5,11 @@ import "./champion.css";
 export class Champion extends Component {
   constructor(props) {
     super(props);
+    this.championRef = React.createRef();
   }
 
   componentDidMount() {
+    this.scrollToChampionRef();
     this.visualizeData();
   }
 
@@ -27,7 +29,6 @@ export class Champion extends Component {
       let field; // 현재 필드
       if (el == "_id") return;
 
-      console.log(el);
       if (el.includes("게임당")) {
         const tokens = el.split("_"); // 게임당' 문자열 제외
         field = tokens[1];
@@ -47,7 +48,6 @@ export class Champion extends Component {
       const my_val = (value / play).toFixed(2);
 
       const dataSet = [min, my_val, avg, max];
-      console.log(dataSet);
 
       const championYScale = d3
         .scaleLinear()
@@ -128,12 +128,17 @@ export class Champion extends Component {
     });
   }
 
+  // 해당 챔피언 내용으로 스크롤함
+  scrollToChampionRef() {
+    window.scrollTo(0, this.championRef.current.offsetTop);
+  }
+
   render() {
     console.log(this.props);
     return (
       <div className="champion-detail">
         {this.props.championName}
-        <div id="viz" />
+        <div id="viz" ref={this.championRef} />
       </div>
     );
   }

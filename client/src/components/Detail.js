@@ -54,6 +54,15 @@ export class Detail extends Component {
     else if (name == "젠야타") return "zenyatta";
   }
 
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  async fetchData() {
+    await this.getChampionRecord();
+    await this.getMostRecord();
+  }
+
   async getChampionRecord() {
     this.setState({ loading: true });
 
@@ -68,7 +77,6 @@ export class Detail extends Component {
       // 치른 게임 수가 0 이라면 해당 레코드는 가져오지 않는다
       let play = this.props.data.rankplay.record[el].게임["치른 게임"];
       let champion_info = this.props.data.rankplay.record[el].영웅별;
-      console.log(`${el}: ${play}`);
       if (play == 0 || champion_info == undefined) {
         return;
       }
@@ -124,8 +132,6 @@ export class Detail extends Component {
       });
     });
     await Promise.all(result);
-    console.log(this.state.champions);
-    console.log(this.state.championComponents);
     this.setState({ loading: false });
 
     // 각 영웅별 아이콘을 공홈으로부터 가져온다
@@ -138,6 +144,7 @@ export class Detail extends Component {
           <Link
             className="champion-button-link"
             to={`${this.props.match.url}/${el}`}
+            //            onClick={this.scrollToChampionRef}
           >
             <img className="champion-button-image" src={image_src} />
             <p>{el}</p>
@@ -194,9 +201,7 @@ export class Detail extends Component {
 
     // 스케일링을 위한 플레이 시간의 최소, 최대 값을 저장한다
     const minimum = sorted[sorted.length - 1][1];
-    console.log(`minTime: ${minimum}`);
     const maximum = sorted[0][1];
-    console.log(`maxTime: ${maximum}`);
     const timeScale = d3
       .scaleLinear()
       .domain([minimum, maximum])
@@ -212,7 +217,6 @@ export class Detail extends Component {
     for (let i = 0; i < limit; i++) {
       const champion_name = this.state.most[i][0];
       const champion_playtime = this.state.most[i][1];
-      console.log(`${champion_name} - ${champion_playtime}`);
 
       // 이제 시간 값을 계산한다
       // champion-playtime 에 저장된 값은 플레이 시간 단위가 초(sec)이다
@@ -228,19 +232,16 @@ export class Detail extends Component {
       playtime.hour = hour;
       playtime.min = min;
       playtime.sec = sec;
-      console.log(`${champion_name}: ${hour}시 ${min}분 ${sec}초`);
 
       // 이제 KD 값을 가져온다
       // 영웅의 KD 필드는 mostChampion -> byKD 필드에 존재한다
       const KD = this.props.data.rankplay.mostChampion.byKD[champion_name];
-      console.log(KD);
 
       // 마지막으로 이 모든 값을 그려준다
       // 먼저 svg 를 생성해준다
       const background_imageSrc = `../../../document/champion_profile/${this.convertChampionName(
         champion_name
       )}.PNG`;
-      console.log(background_imageSrc);
       const most_graph = d3
         .select(".user-detail-most")
         .append("div")
@@ -325,15 +326,6 @@ export class Detail extends Component {
     }
   }
 
-  async fetchData() {
-    await this.getChampionRecord();
-    await this.getMostRecord();
-  }
-
-  componentDidMount() {
-    this.fetchData();
-  }
-
   async handleClick(e) {
     console.log("updating...");
     this.setState({ loading: true });
@@ -394,7 +386,7 @@ export class Detail extends Component {
 
           <div className="user-champions-buttons">{this.state.buttons}</div>
         </div>
-        <div className="user-champions">
+        <div className="user-champions" ref={this.championRef}>
           <Route
             path={`${this.props.match.url}/아나`}
             render={props => this.state.championComponents.아나}
