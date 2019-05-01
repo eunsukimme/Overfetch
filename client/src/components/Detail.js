@@ -199,7 +199,7 @@ export class Detail extends Component {
     const timeScale = d3
       .scaleLinear()
       .domain([minimum, maximum])
-      .range([40, 360])
+      .range([20, 360])
       .clamp(true);
 
     // 이제 state의 most 에는 플레이시간 별 상위 영웅이 저장되있음
@@ -236,18 +236,22 @@ export class Detail extends Component {
 
       // 마지막으로 이 모든 값을 그려준다
       // 먼저 svg 를 생성해준다
-      const background_imageSrc = `https://static.playoverwatch.com/media/artwork/${this.convertChampionName(
+      const background_imageSrc = `../../../document/champion_profile/${this.convertChampionName(
         champion_name
-      )}-concept.jpg`;
+      )}.PNG`;
+      console.log(background_imageSrc);
       const most_graph = d3
         .select(".user-detail-most")
+        .append("div")
+        .style("background-image", `url(${background_imageSrc})`)
+        .style("background-size", "100% 100%")
+        .style("background-repeat", "no-repeat")
         .append("svg")
         .attr("id", `most_${i}`)
         .attr("class", "svg-most")
         .attr("width", "500px")
         .attr("height", "160px")
         .attr("display", "block")
-        //.style("background-image", `url(${background_imageSrc})`)
         //.style("background-size", "500px 160px")
         .style("border", "1px solid #444444");
 
@@ -281,8 +285,9 @@ export class Detail extends Component {
         .append("text")
         .attr("class", "text")
         .attr("x", 30)
-        .html("playtime: ");
+        .html("Playtime: ");
 
+      // g 에다 rect 로 그래프를 그려준다
       most_graph_g
         .append("rect")
         .attr("height", 16)
@@ -292,6 +297,22 @@ export class Detail extends Component {
         .duration(1000)
         .attr("width", timeScale(champion_playtime))
         .style("fill", "#d65a31");
+
+      // rect 옆에 텍스트로 플레이 시간을 나타내준다
+      most_graph_g
+        .append("text")
+        .attr("class", "text")
+        .attr("x", 100 + timeScale(champion_playtime) + 5)
+        .style("fill", "#d65a31")
+        .html(d => {
+          if (hour > 0) {
+            return `${hour}h`;
+          } else if (min > 0) {
+            return `${min}min`;
+          } else if (sec > 0) {
+            return `${sec}sec`;
+          }
+        });
     }
   }
 

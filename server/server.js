@@ -26,6 +26,7 @@ app.use(morgan("tiny"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static("../"));
 
 /* router split */
 app.use("/search", searchRoute);
