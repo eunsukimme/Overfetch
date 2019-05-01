@@ -24,6 +24,15 @@ export class Champion extends Component {
     if (play < 10) {
       alert("플레이 수가 10 보다 적어 부정확한 데이터가 포함될 수 있습니다");
     }
+    // 영웅별 필드가 존재하지 않는 경우 알림을 띄운다
+    if (
+      this.props.userData.rankplay.record[`${this.props.championName}`]
+        .영웅별 == undefined
+    ) {
+      return alert(
+        "해당 영웅의 레코드가 존재하지 않습니다. 유저 데이터를 갱신해 주세요"
+      );
+    }
 
     keys.forEach((el, i) => {
       let field; // 현재 필드

@@ -205,7 +205,7 @@ export class Detail extends Component {
     const timeScale = d3
       .scaleLinear()
       .domain([minimum, maximum])
-      .range([2, 70])
+      .range([2, 68])
       .clamp(true);
 
     // 이제 state의 most 에는 플레이시간 별 상위 영웅이 저장되있음
@@ -252,10 +252,9 @@ export class Detail extends Component {
         .append("svg")
         .attr("id", `most_${i}`)
         .attr("class", "svg-most")
-        .attr("width", "500px")
+        .attr("width", "520px")
         .attr("height", "160px")
         .attr("display", "block")
-        //.style("background-size", "500px 160px")
         .style("border", "1px solid #444444");
 
       // 해당 svg 에 영웅 이름, KD, 플레이타임 정보를 넣어준다
@@ -318,9 +317,9 @@ export class Detail extends Component {
           if (hour > 0) {
             return `${hour}h`;
           } else if (min > 0) {
-            return `${min}min`;
+            return `${min}m`;
           } else if (sec > 0) {
-            return `${sec}sec`;
+            return `${sec}s`;
           }
         });
     }
