@@ -231,7 +231,6 @@ export class Users extends Component {
       return (
         <div className="error">
           <p>error!!!</p>
-          <div className="lds-dual-ring" />
           <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
             Top
           </button>

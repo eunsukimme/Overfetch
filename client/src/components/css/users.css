@@ -12,6 +12,12 @@
   font-size: 3rem;
 }
 
+.leaderboard-top-dropdown {
+  position: relative;
+  width: 200px;
+  padding: 20px;
+}
+
 .leaderboard-bottom-table {
   position: relative;
   width: 80%;

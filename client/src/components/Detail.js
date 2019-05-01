@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Champion } from "./champion/Champion";
 import "./css/detail.css";
 import * as d3 from "d3";
+import { colorbrewer } from "../lib/colorbrewer";
 
 export class Detail extends Component {
   constructor(props) {
@@ -199,7 +200,7 @@ export class Detail extends Component {
     const timeScale = d3
       .scaleLinear()
       .domain([minimum, maximum])
-      .range([20, 360])
+      .range([2, 70])
       .clamp(true);
 
     // 이제 state의 most 에는 플레이시간 별 상위 영웅이 저장되있음
@@ -243,6 +244,7 @@ export class Detail extends Component {
       const most_graph = d3
         .select(".user-detail-most")
         .append("div")
+        .attr("class", "svg-most-background")
         .style("background-image", `url(${background_imageSrc})`)
         .style("background-size", "100% 100%")
         .style("background-repeat", "no-repeat")
@@ -265,11 +267,18 @@ export class Detail extends Component {
         .html(champion_name);
 
       // KD 정보를 넣어준다
+      // 색을 스케일링 해준다
+      const colorQuantize = d3
+        .scaleQuantize()
+        .domain([0, 6])
+        .range(colorbrewer.Oranges[3]);
+
       most_graph
         .append("text")
         .attr("y", 90)
         .attr("x", 30)
         .attr("class", "text most-kd")
+        .style("fill", d => colorQuantize(KD))
         .html(`KD: ${KD}`);
 
       // playtime 정보를 넣어준다
@@ -295,14 +304,14 @@ export class Detail extends Component {
         .attr("y", -14)
         .transition()
         .duration(1000)
-        .attr("width", timeScale(champion_playtime))
+        .attr("width", `${timeScale(champion_playtime)}%`)
         .style("fill", "#d65a31");
 
       // rect 옆에 텍스트로 플레이 시간을 나타내준다
       most_graph_g
         .append("text")
         .attr("class", "text")
-        .attr("x", 100 + timeScale(champion_playtime) + 5)
+        .attr("x", `${timeScale(champion_playtime) + 24}%`)
         .style("fill", "#d65a31")
         .html(d => {
           if (hour > 0) {

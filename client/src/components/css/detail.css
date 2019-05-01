@@ -160,16 +160,35 @@
 
 @media screen and (max-width: 500px) {
   .user-detail-card-container {
+    text-align: center;
     width: 100%;
     margin: 60px auto;
   }
 
+  .user-detail-most-header {
+    position: static;
+    width: 80%;
+    margin: 0 auto;
+  }
   .user-detail-most-container {
     width: 100%;
     margin: 0 auto;
   }
 
-  .user-detail-most-container .svg-most {
+  .user-detail-most-container .svg-most,
+  .user-detail-most-container .svg-most-background {
+    width: 100%;
+  }
+
+  .user-champions-buttons {
+    text-align: center;
+  }
+  .champion-button {
+    width: 80px;
+    height: 80px;
+    font-size: 0.8rem;
+  }
+  .champion-button-image {
     width: 100%;
   }
 }
