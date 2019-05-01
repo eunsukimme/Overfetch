@@ -15,7 +15,10 @@
 .leaderboard-top-dropdown {
   position: relative;
   width: 200px;
-  padding: 20px;
+  padding: 10px;
+  background-color: #222222;
+  border: 2px solid #444444;
+  color: white;
 }
 
 .leaderboard-bottom-table {
@@ -33,24 +36,29 @@
   padding: 10px;
   height: 60px;
   border: 1px solid #444444;
-  background-color: #222222;
-  color: white;
 }
 .leaderboard-bottom-table-header th {
   vertical-align: middle;
-  border: 1px solid #444444;
+}
+
+.leaderboard-bottom-buttons-container {
+  padding: 30px;
+}
+
+.leaderboard-button {
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  padding: 10px;
+  margin: 10px 10px;
   background-color: #222222;
   color: white;
 }
 
-.leaderboard-bottom-buttons-container {
-  padding: 20px;
-}
-
-.leaderboard-button {
-  font-weight: bold;
-  padding: 6px;
-  margin: 10px 10px;
+.leaderboard-button:hover {
+  background-color: white;
+  color: #222222;
+  transition-duration: 0.5s;
 }
 
 #leaderboard-button-to-top {
@@ -64,6 +72,14 @@
   width: 50px;
   height: 50px;
   padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+#leaderboard-button-to-top:hover {
+  border: 1px solid white;
+  background-color: #222222;
+  color: white;
+  transition-duration: 0.5s;
 }
 
 .error,

@@ -5,9 +5,8 @@
   height: 60px;
   border: 1px solid #444444;
 }
-
-.user-card td {
-  border: 1px solid #444444;
+.even {
+  background-color: #333333;
 }
 
 .user-card-order,

@@ -9,7 +9,11 @@ export class User extends Component {
 
   render() {
     return (
-      <tr className="user-card">
+      <tr
+        className={
+          this.props.type == "odd" ? "user-card odd" : "user-card even"
+        }
+      >
         <td>
           <h1 className="user-card-order">{this.props.order}</h1>
         </td>

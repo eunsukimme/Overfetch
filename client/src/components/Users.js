@@ -82,6 +82,12 @@ export class Users extends Component {
       const rank = user.rank;
       const level = user.level;
       const icon_image = user.icon;
+      let type; // 홀수 & 짝수 구분
+      if (i % 2 == 0) {
+        type = "even";
+      } else {
+        type = "odd";
+      }
       return (
         <User
           name={name}
@@ -90,6 +96,7 @@ export class Users extends Component {
           level={level}
           icon_image={icon_image}
           order={(this.state.page - 1) * 100 + i + 1}
+          type={type}
         />
       );
     });
