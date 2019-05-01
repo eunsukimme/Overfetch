@@ -14,6 +14,42 @@ export class Users extends Component {
       buttonComponets: []
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleClickNext = this.handleClickNext.bind(this);
+    this.handleClickBefore = this.handleClickBefore.bind(this);
+  }
+
+  /**
+   * @dev 컴포넌트가 마운트 되었을때, 유저의 리스트를 쿼리한다
+   *      디폴트로 랭크순으로 첫 페이지를 보여준다
+   */
+  async componentDidMount() {
+    const url = `/users/${this.state.criteria}/${this.state.page}`;
+
+    console.log(url);
+    await this.fetchData();
+    await this.updateUserComponents();
+    await this.addButtons();
+    // 스크롤 함수 바인딩
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  /**
+   * 현재 state의 criteria&page 의 유저들을 불러온다
+   */
+  async fetchData() {
+    const url = `${this.props.match.path}/${this.state.criteria}/${
+      this.state.page
+    }`;
+
+    await fetch(url)
+      .then(res => res.json())
+      .then(_data => {
+        this.setState({ data: _data });
+      });
+
+    return new Promise(resolve => {
+      resolve(true);
+    });
   }
 
   /**
@@ -48,21 +84,51 @@ export class Users extends Component {
     });
   }
 
-  async fetchData() {
-    const url = `${this.props.match.path}/${this.state.criteria}/${
-      this.state.page
-    }`;
+  /**
+   * @dev 하단에 네비게이션 버튼을 생성한다
+   */
+  async addButtons() {
+    // 아래에 버튼 네비게이션 바를 만든다
+    const buttons = [];
+    let startPage = Math.floor(this.state.page / 10) * 10;
+    let endPage = startPage + 10;
 
-    await fetch(url)
-      .then(res => res.json())
-      .then(_data => {
-        this.setState({ data: _data });
-      });
+    // 만약 현재 페이지가 10 보다 크거나 같다면
+    // 뒤의 범주로 돌아가는(10~19 => 1~9) 버튼을 달아준다
+    if (this.state.page >= 10) {
+      buttons.push(
+        <button
+          className="leaderboard-button"
+          onClick={this.handleClickBefore}
+        >{`<`}</button>
+      );
+    }
 
-    return new Promise(resolve => {
-      resolve(true);
+    for (startPage = Number(startPage); startPage < endPage; startPage++) {
+      if (startPage == 0) continue;
+      buttons.push(
+        <button
+          className="leaderboard-button"
+          onClick={this.handleChange}
+          name="page"
+          value={`${startPage}`}
+        >
+          {startPage}
+        </button>
+      );
+    }
+    // 다음 범위로 넘어가는 버튼을 생성한다
+    buttons.push(
+      <button className="leaderboard-button" onClick={this.handleClickNext}>
+        >
+      </button>
+    );
+
+    this.setState({
+      buttonComponets: buttons
     });
   }
+
   /**
    *
    * @param {event Object} e 정렬 option 값의 변화 이벤트
@@ -74,43 +140,66 @@ export class Users extends Component {
     });
 
     await this.fetchData();
-    this.updateUserComponents();
+    await this.updateUserComponents();
+    // 버튼은 업데이트 시키지 않는다
   }
 
   /**
-   * @dev 컴포넌트가 마운트 되었을때, 유저의 리스트를 쿼리한다
-   *      디폴트로 랭크순으로 첫 페이지를 보여준다
+   *
+   * @param {event Object} e 다음 범주의 페이지로 넘어가는 버튼 클릭 이벤트
+   * @dev 다음 버튼을 누르면 다음 범주의 페이지(1~9 => 10~19)로 넘어간다
    */
-  async componentDidMount() {
-    const url = `/users/${this.state.criteria}/${this.state.page}`;
-
-    console.log(url);
-    await fetch(url)
-      .then(res => {
-        return res.json();
-      })
-      .then(_data => {
-        this.setState({ data: _data });
-      });
-
-    await this.updateUserComponents();
-
-    // 아래에 버튼 네비게이션 바를 만든다
-    const buttons = [];
-    let startPage = (this.state.page / 10).toFixed(0);
-    let endPage = startPage + 10;
-    for (startPage = Number(startPage) + 1; startPage < endPage; startPage++) {
-      buttons.push(
-        <button onClick={this.handleChange} name="page" value={`${startPage}`}>
-          {startPage}
-        </button>
-      );
-    }
-
-    this.setState({
-      buttonComponets: buttons
+  async handleClickNext(e) {
+    const next = (Math.floor(this.state.page / 10) + 1) * 10;
+    console.log(`the next start page is ${next}`);
+    await this.setState({
+      page: next
     });
-    console.log(this.state.buttonComponets);
+
+    await this.fetchData();
+    await this.updateUserComponents();
+    await this.addButtons();
+  }
+
+  /**
+   *
+   * @param {event Object} e 이전 범주의 페이지로 넘어가는 버튼 클릭 이벤트
+   * @dev 이전 버튼을 누르면 이전 범주의 페이지(10~19 => 1~9)로 넘어간다
+   */
+  async handleClickBefore(e) {
+    let next = (Math.floor(this.state.page / 10) - 1) * 10;
+    if (next == 0) next = 1;
+    console.log(`the next start page is ${next}`);
+    await this.setState({
+      page: next
+    });
+
+    await this.fetchData();
+    await this.updateUserComponents();
+    await this.addButtons();
+  }
+
+  /**
+   *
+   * @param {event Object} e 스크롤 할 때 발생하는 이벤트
+   * @dev 유저가 스크롤을 하면 맨 위로 올리는 버튼을 보이게 만든다
+   */
+  handleScroll(e) {
+    // 스크롤을 100 이상 하면
+    const topButton = document.getElementById("leaderboard-button-to-top");
+    if (
+      document.body.scrollTop > 500 ||
+      document.documentElement.scrollTop > 500
+    ) {
+      topButton.style.display = "block";
+    } else {
+      topButton.style.display = "none";
+    }
+  }
+
+  handleTopClick(e) {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   }
 
   render() {
@@ -118,13 +207,13 @@ export class Users extends Component {
       <div className="leaderboard">
         <div className="leaderboard-top">
           <p>Users Info</p>
-          <select onChange={this.handleChange}>
-            <option name="rank" value="rank" selected>
-              경쟁전 평점 순
-            </option>
-            <option name="level" value="level">
-              레벨 순
-            </option>
+          <select
+            name="criteria"
+            value={this.state.criteria}
+            onChange={this.handleChange}
+          >
+            <option value="rank">경쟁전 평점 순</option>
+            <option value="level">레벨 순</option>
           </select>
         </div>
         <div className="leaderboard-bottom">
@@ -135,6 +224,9 @@ export class Users extends Component {
             {this.state.buttonComponets}
           </div>
         </div>
+        <button id="leaderboard-button-to-top" onClick={this.handleTopClick}>
+          Top
+        </button>
       </div>
     );
   }
