@@ -73,8 +73,17 @@ export class Detail extends Component {
       }
 
       // 존재하는 각 영웅이름 의 레코드를 가져온다
-      const url =
-        "/avg/rankplay/champion/" + el + "?rank=" + this.props.data.rank.val;
+      // 이때, 랭크 정보가 포함되지 않은 유저는 전 랭크에 대해서 가져온다
+      let rankInfo;
+      if (
+        this.props.data.rank.val == undefined ||
+        this.props.data.rank.val == null
+      ) {
+        rankInfo = "alltier";
+      } else {
+        rankInfo = this.props.data.rank.val;
+      }
+      const url = "/avg/rankplay/champion/" + el + "?rank=" + rankInfo;
       const result = await fetch(url)
         .then(res => res.json())
         .then(data => {
@@ -311,7 +320,6 @@ export class Detail extends Component {
       return (
         <div className="error">
           <p>error!!!</p>
-          <div className="lds-dual-ring" />
         </div>
       );
     } else if (loading) {

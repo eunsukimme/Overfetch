@@ -9,22 +9,34 @@ export class Profile extends React.Component {
       data: "",
       detail: undefined,
       loading: true,
-      error: false
+      error: false,
+      errorMsg: ""
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
+    this.scrollToTop();
+
     const url = `/search?name=${this.props.match.params.name}&tag=${
       this.props.match.params.tag
     }`;
 
+    await this.fetchData(url);
+  }
+
+  async fetchData(url) {
+    this.setState({ loading: true });
     await fetch(url)
       .then(res => res.json())
       .then(user => {
         // error 발생시 알림 띄운다
         if (user.error) {
-          this.setState({ error: true });
+          this.setState({
+            error: true,
+            loading: false,
+            errorMsg: user.error
+          });
           return alert(user.error);
         }
         // 유저가 존재하면 이를 상태 data에 반영한다
@@ -41,8 +53,15 @@ export class Profile extends React.Component {
         });
       })
       .catch(error => {
-        this.setState({ error: true });
+        this.setState({
+          error: true,
+          loading: false
+        });
       });
+
+    return new Promise(resolve => {
+      resolve(true);
+    });
   }
 
   async handleClick() {
@@ -50,35 +69,12 @@ export class Profile extends React.Component {
       this.props.match.params.tag
     }&update=true`;
 
-    this.setState({ loading: true });
-    await fetch(url)
-      .then(res => res.json())
-      .then(user => {
-        // error 발생시 알림 띄운다
-        if (user.error) {
-          this.setState({ error: true });
-          return alert(user.error);
-        }
-        // 유저가 존재하면 이를 상태 data에 반영한다
-        this.setState({ loading: false });
-        this.setState({ data: user });
-        this.setState({
-          detail: (
-            <Detail
-              data={this.state.data}
-              onClick={this.handleClick}
-              match={this.props.match}
-            />
-          )
-        });
-      })
-      .catch(error => {
-        this.setState({ error: true });
-      });
+    await this.fetchData(url);
+  }
 
-    return new Promise(resolve => {
-      resolve(true);
-    });
+  scrollToTop(e) {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   }
 
   render() {
@@ -88,8 +84,7 @@ export class Profile extends React.Component {
     if (error) {
       return (
         <div className="error">
-          <p>error!!!</p>
-          <div className="lds-dual-ring" />
+          <p>{this.state.errorMsg}</p>
         </div>
       );
     } else if (loading) {

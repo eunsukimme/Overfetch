@@ -17,6 +17,7 @@
   overflow: hidden;
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
   max-width: 600px;
+  height: 500px;
   text-align: center;
   width: 100%;
 }
@@ -33,7 +34,7 @@
 
 .user-data {
   position: relative;
-  padding: 15px;
+  padding: 12px;
   font-size: 1.5rem;
   z-index: 2;
 }
@@ -44,13 +45,17 @@
 }
 
 .user-rank-image {
-  max-width: 230px;
+  max-width: 200px;
+  padding: 0;
   height: auto;
 }
 
 .update-button {
   border: none;
   outline: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
   display: inline-block;
   padding: 14px;
   color: white;
@@ -82,7 +87,7 @@
   font-weight: bold;
 }
 .user-detail-most {
-  margin-top: 2.5rem;
+  margin-top: 3.5rem;
 }
 .user-detail-most .svg-most {
   margin-bottom: 10px;
@@ -121,6 +126,7 @@
   width: 100%;
   height: 100%;
   color: white;
+  background-color: #222222;
   text-align: center;
   font-size: 1.5rem;
   padding-top: 80px;

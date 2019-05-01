@@ -1,9 +1,13 @@
 .user-card {
   width: 80%;
-  margin: 10px auto;
+  margin: 0 auto;
   padding: 10px;
   height: 60px;
-  border: 1px solid red;
+  border: 1px solid #444444;
+}
+
+.user-card td {
+  border: 1px solid #444444;
 }
 
 .user-card-order,
@@ -12,8 +16,8 @@
 .user-card-level,
 .user-card-rank,
 .user-card-icon {
-  display: inline-block;
   margin: 0 10px;
+  vertical-align: middle;
 }
 
 .user-card-image,

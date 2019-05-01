@@ -11,7 +11,9 @@ export class Users extends Component {
       userComponents: [],
       criteria: "rank",
       page: 1,
-      buttonComponets: []
+      buttonComponets: [],
+      loading: false,
+      error: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
@@ -23,6 +25,7 @@ export class Users extends Component {
    *      디폴트로 랭크순으로 첫 페이지를 보여준다
    */
   async componentDidMount() {
+    this.scrollToTop();
     const url = `/users/${this.state.criteria}/${this.state.page}`;
 
     console.log(url);
@@ -33,10 +36,18 @@ export class Users extends Component {
     window.addEventListener("scroll", this.handleScroll);
   }
 
+  // 컴포넌트 언마운트 시 스크롤 이벤트 리스너 제거한다
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
   /**
    * 현재 state의 criteria&page 의 유저들을 불러온다
    */
   async fetchData() {
+    this.setState({
+      loading: true
+    });
     const url = `${this.props.match.path}/${this.state.criteria}/${
       this.state.page
     }`;
@@ -45,6 +56,15 @@ export class Users extends Component {
       .then(res => res.json())
       .then(_data => {
         this.setState({ data: _data });
+        this.setState({
+          loading: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+          error: true
+        });
       });
 
     return new Promise(resolve => {
@@ -63,16 +83,14 @@ export class Users extends Component {
       const level = user.level;
       const icon_image = user.icon;
       return (
-        <li>
-          <User
-            name={name}
-            tag={tag}
-            rank={rank}
-            level={level}
-            icon_image={icon_image}
-            order={(this.state.page - 1) * 100 + i + 1}
-          />
-        </li>
+        <User
+          name={name}
+          tag={tag}
+          rank={rank}
+          level={level}
+          icon_image={icon_image}
+          order={(this.state.page - 1) * 100 + i + 1}
+        />
       );
     });
 
@@ -139,6 +157,7 @@ export class Users extends Component {
       [e.target.name]: e.target.value
     });
 
+    this.scrollToTop();
     await this.fetchData();
     await this.updateUserComponents();
     // 버튼은 업데이트 시키지 않는다
@@ -156,6 +175,7 @@ export class Users extends Component {
       page: next
     });
 
+    this.scrollToTop();
     await this.fetchData();
     await this.updateUserComponents();
     await this.addButtons();
@@ -174,6 +194,7 @@ export class Users extends Component {
       page: next
     });
 
+    this.scrollToTop();
     await this.fetchData();
     await this.updateUserComponents();
     await this.addButtons();
@@ -197,34 +218,67 @@ export class Users extends Component {
     }
   }
 
-  handleTopClick(e) {
+  scrollToTop(e) {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   }
 
   render() {
+    const error = this.state.error;
+    const loading = this.state.loading;
+
+    if (error) {
+      return (
+        <div className="error">
+          <p>error!!!</p>
+          <div className="lds-dual-ring" />
+          <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
+            Top
+          </button>
+        </div>
+      );
+    } else if (loading) {
+      return (
+        <div className="loading">
+          <p>랭킹 데이터를 가져오는 중...</p>
+          <div className="lds-dual-ring" />
+          <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
+            Top
+          </button>
+        </div>
+      );
+    }
     return (
       <div className="leaderboard">
         <div className="leaderboard-top">
-          <p>Users Info</p>
+          <p>Leaderboard</p>
           <select
             name="criteria"
             value={this.state.criteria}
             onChange={this.handleChange}
+            className="leaderboard-top-dropdown"
           >
             <option value="rank">경쟁전 평점 순</option>
             <option value="level">레벨 순</option>
           </select>
         </div>
         <div className="leaderboard-bottom">
-          <div className="leaderboard-bottom-cards-container">
-            <ul>{this.state.userComponents}</ul>
-          </div>
+          <table className="leaderboard-bottom-table">
+            <tbody className="leaderboard-bottom-table-body">
+              <tr className="leaderboard-bottom-table-header">
+                <th>Ranking</th>
+                <th colSpan="2">Userinfo</th>
+                <th>Level</th>
+                <th colspan="2">Points</th>
+              </tr>
+              {this.state.userComponents}
+            </tbody>
+          </table>
           <div className="leaderboard-bottom-buttons-container">
             {this.state.buttonComponets}
           </div>
         </div>
-        <button id="leaderboard-button-to-top" onClick={this.handleTopClick}>
+        <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
           Top
         </button>
       </div>

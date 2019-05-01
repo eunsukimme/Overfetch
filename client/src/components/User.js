@@ -9,19 +9,31 @@ export class User extends Component {
 
   render() {
     return (
-      <div className="user-card">
-        <h1 className="user-card-order">{this.props.order}</h1>
-        <img className="user-card-image" src={this.props.icon_image} />
-        <Link
-          className="user-card-container"
-          to={`/profile/${this.props.name}/${this.props.tag}`}
-        >
-          <h2 className="user-card-name">{this.props.name}</h2>
-        </Link>
-        <h3 className="user-card-level">Lv. {this.props.level}</h3>
-        <img className="user-card-icon" src={this.props.rank.imageSrc} />
-        <h3 className="user-card-rank">rank. {this.props.rank.val}</h3>
-      </div>
+      <tr className="user-card">
+        <td>
+          <h1 className="user-card-order">{this.props.order}</h1>
+        </td>
+        <td>
+          <img className="user-card-image" src={this.props.icon_image} />
+        </td>
+        <td>
+          <Link
+            className="user-card-container"
+            to={`/profile/${this.props.name}/${this.props.tag}`}
+          >
+            <h2 className="user-card-name">{this.props.name}</h2>
+          </Link>
+        </td>
+        <td>
+          <h3 className="user-card-level">Lv. {this.props.level}</h3>
+        </td>
+        <td>
+          <img className="user-card-icon" src={this.props.rank.imageSrc} />
+        </td>
+        <td>
+          <h3 className="user-card-rank">rank. {this.props.rank.val}</h3>
+        </td>
+      </tr>
     );
   }
 }
