@@ -47,6 +47,7 @@ export class Champion extends Component {
         field = el;
         play = 1;
       }
+
       const min = data[el]["min"].toFixed(2);
       const avg = data[el]["avg"].toFixed(2);
       const max = data[el]["max"].toFixed(2);
@@ -94,9 +95,9 @@ export class Champion extends Component {
         .attr("class", "bar")
         .attr("transform", function(d, i) {
           if (i == 1) {
-            if (d < avg) {
+            if (Number(d) < Number(avg)) {
               d3.select(this).attr("class", "bar my_bar lt");
-            } else if (d >= avg) {
+            } else if (Number(d) >= Number(avg)) {
               d3.select(this).attr("class", "bar my_bar gte");
             }
           }
