@@ -94,7 +94,11 @@ export class Champion extends Component {
         .attr("class", "bar")
         .attr("transform", function(d, i) {
           if (i == 1) {
-            d3.select(this).attr("class", "bar my_bar");
+            if (d < avg) {
+              d3.select(this).attr("class", "bar my_bar lt");
+            } else if (d >= avg) {
+              d3.select(this).attr("class", "bar my_bar gte");
+            }
           }
           return `translate(${i * 100}, 0)`;
         });
@@ -107,7 +111,6 @@ export class Champion extends Component {
         .transition()
         .duration(1500)
         .attr("height", d => championYScale(d))
-        //.style('fill', 'lightblue')
         .style("stroke", "lightgray")
         .style("stroke-width", "1px");
 

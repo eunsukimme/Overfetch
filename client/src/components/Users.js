@@ -275,7 +275,7 @@ export class Users extends Component {
                 <th className="table-header-order">Rank</th>
                 <th colSpan="2">Userinfo</th>
                 <th>Level</th>
-                <th colspan="2">Points</th>
+                <th colSpan="2">Points</th>
               </tr>
               {this.state.userComponents}
             </tbody>

@@ -1,0 +1,101 @@
+.user-detail-top {
+  text-align: center;
+  width: 100%;
+  margin: 80px auto;
+}
+
+.user-detail-card-container {
+  position: relative;
+  display: inline-block;
+  width: 40%;
+  margin: 0 auto;
+}
+
+.user-detail-card {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  height: 500px;
+  text-align: center;
+  width: 100%;
+}
+
+.user-detail-card .user-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  z-index: 1;
+}
+
+.user-data {
+  position: relative;
+  padding: 12px;
+  font-size: 1.5rem;
+  z-index: 2;
+}
+
+.user-name {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.user-rank-image {
+  max-width: 200px;
+  padding: 0;
+  height: auto;
+}
+
+.update-button {
+  border: none;
+  outline: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: inline-block;
+  padding: 14px;
+  color: white;
+  background-color: gray;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 20px;
+}
+
+.update-button:hover {
+  opacity: 0.7;
+}
+
+.user-detail-most-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+  width: 520px;
+  min-width: 400px;
+  height: 560px;
+}
+.user-detail-most-header {
+  position: absolute;
+  display: inline-block;
+  top: 0;
+  left: 20%;
+  font-size: 2rem;
+  font-weight: bold;
+}
+.user-detail-most {
+  margin-top: 3.5rem;
+}
+.user-detail-most .svg-most {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.user-detail-most .svg-most .most-title {
+  font-size: 1.8rem;
+}
+.user-detail-most .svg-most .most-kd {
+  font-size: 1.2rem;
+}

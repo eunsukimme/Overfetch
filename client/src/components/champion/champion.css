@@ -9,10 +9,13 @@
 }
 
 .bar rect {
-  fill: lightblue;
+  fill: #10316b;
 }
-.my_bar rect {
-  fill: lightgreen;
+.my_bar.lt rect {
+  fill: #d65a31;
+}
+.my_bar.gte rect {
+  fill: #0b8457;
 }
 
 .text {

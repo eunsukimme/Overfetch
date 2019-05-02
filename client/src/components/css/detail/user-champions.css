@@ -1,0 +1,24 @@
+.user-champions-buttons {
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+.champion-button {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #444444;
+  border-radius: 20px;
+  text-align: center;
+  margin: 10px;
+}
+
+.champion-button-link {
+  text-decoration: none;
+}
+
+.champion-button:hover {
+  transition: transform 0.3s;
+  transform: scale(1.2);
+}

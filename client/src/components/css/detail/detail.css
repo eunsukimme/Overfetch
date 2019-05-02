@@ -1,0 +1,93 @@
+.section-header-container {
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+}
+.header-bar {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #d65a31;
+}
+.header-parahgraph {
+  display: inline-block;
+  font-size: 2rem;
+  padding: 20px;
+  margin: 20px auto;
+}
+
+.error,
+.loading {
+  width: 100%;
+  height: 100%;
+  color: white;
+  background-color: #222222;
+  text-align: center;
+  font-size: 1.5rem;
+  padding-top: 80px;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+  margin-top: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .user-detail-top {
+    margin-top: 0;
+  }
+
+  .user-detail-card-container {
+    text-align: center;
+    width: 100%;
+    margin: 60px auto;
+  }
+
+  .user-detail-most-header {
+    position: static;
+    width: 80%;
+    margin: 0 auto;
+  }
+  .user-detail-most-container {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .user-detail-most-container .svg-most,
+  .user-detail-most-container .svg-most-background {
+    width: 100%;
+  }
+
+  .user-champions-buttons {
+    text-align: center;
+  }
+  .champion-button {
+    width: 80px;
+    height: 80px;
+    font-size: 0.8rem;
+  }
+  .champion-button-image {
+    width: 100%;
+  }
+}

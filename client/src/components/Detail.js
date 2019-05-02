@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Champion } from "./champion/Champion";
-import "./css/detail.css";
+import "./css/detail/detail.css";
+import "./css/detail/user-detail-top.css";
+import "./css/detail/user-detail-play.css";
+import "./css/detail/user-champions.css";
 import * as d3 from "d3";
 import { colorbrewer } from "../lib/colorbrewer";
 
@@ -382,10 +385,15 @@ export class Detail extends Component {
       "모이라",
       "젠야타"
     ];
+    // 챔피언
+
     if (tank.includes(champion_name)) return "tank";
     else if (damage.includes(champion_name)) return "damage";
     else if (support.includes(champion_name)) return "support";
-    else return -1;
+    else {
+      console.log(champion_name);
+      return -1;
+    }
   }
   /**
    * @dev 사용자의 플레이 통계(돌격, 공격, 지원)를 가져와서 파이 차트를 그린다
@@ -407,7 +415,11 @@ export class Detail extends Component {
       if (champion_type == "tank") tank += champion_playtime;
       else if (champion_type == "damage") damage += champion_playtime;
       else if (champion_type == "support") support += champion_playtime;
-      else return alert("잘못된 타입의 영웅이 입력되었습니다");
+      else {
+        return alert(
+          "잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요"
+        );
+      }
 
       return new Promise(resolve => {
         resolve(true);
@@ -421,32 +433,39 @@ export class Detail extends Component {
     // 범주의 값을 파이 차트로 나타낸다
     const width = 400;
     const height = 400;
+    // 데이터 생성
     const data = [
       { name: "tank", value: tank, color: "#10316b" },
       { name: "damage", value: damage, color: "#d65a31" },
       { name: "support", value: support, color: "#0b8457" }
     ];
+    // 중앙에 공간이 없고 반지름이 width의 절반인 호를 생성
     const arc = d3
       .arc()
       .innerRadius(0)
       .outerRadius(Math.min(width, height) / 2);
 
+    // 반지름이 width의 0.8 배이고 또한 중앙에 그만큼에 공간을 할당하여
+    // 라벨이 위치할 호를 생성
     const arcLabel = (() => {
-      const radius = (Math.min(width, height) / 2) * 0.8;
+      const radius = (Math.min(width, height) / 2) * 0.7;
       return d3
         .arc()
         .innerRadius(radius)
         .outerRadius(radius);
     })();
 
+    // 큰 값이 먼저 오도록 정렬하고, 그 값을 할당
     const pie = d3
       .pie()
       .sort((a, b) => b.value - a.value)
       .value(d => d.value);
 
+    // 데이터를 기반으로 각도를 계산한다
     const arcs = pie(data);
     console.log(arcs);
 
+    // svg를 그린다
     const svg = d3
       .select(".user-detail-play")
       .append("svg")
@@ -455,16 +474,22 @@ export class Detail extends Component {
       .attr("text-anchor", "middle");
     // text-anchor 텍스트의 정렬을 설정합니다 ( start | middle | end | inherit )
 
+    // svg 안에 파이 차트를 그릴 g를 생성
     const g = svg
       .append("g")
+      // 원을 중앙에 위치시키기 위해 g 태그를 이동시킨다
       .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
+    // 위에서 데이터를 바탕으로 생성한 호를 path 의 데이터로 바인딩한다
     g.selectAll("path")
       .data(arcs)
       .enter()
       .append("path")
       // 이전과 동일하게 가상 path 요소를 만들고 그래프 데이터와 매핑하여 엘리먼트를 추가합니다.
-      .attr("fill", d => d.data.color)
+      .attr("fill", d => {
+        console.log(d);
+        return d.data.color;
+      })
       // 다른 그래프와 다르게 .data 라는 객체가 추가되어 있는데, 위에 arcs 변수를 선언할때
       // .pie(data)가 {data, value, index, startAngle, endAngle, padAngle} 의 값을 가지고 있습니다.
       .attr("stroke", "black")
@@ -477,23 +502,37 @@ export class Detail extends Component {
       .data(arcs)
       .enter()
       .append("text")
+      // startAngle과 endAngle 사이에 text 요소를 넣어서 설명을 추가한다
       .attr("transform", d => `translate(${arcLabel.centroid(d)})`)
       .attr("dy", "0.35em");
 
+    // 먼저 범주 이름을 굵은 글씨로 추가한다
+    // 각도가 0.1 이상인 것에 한해서만 제목을 추가한다
     text
+      .filter(d => d.endAngle - d.startAngle > 0.1)
       .append("tspan")
       .attr("x", 0)
       .attr("y", "-0.7em")
+      .style("font-size", "1.5rem")
       .style("font-weight", "bold")
       .text(d => d.data.name);
 
+    // 그리고 각도가 0.25 이상인 것에 한해서(글씨가 들어갈 공간이 있는 것에서)
+    // 플레이 시간을 나타낸다
     text
       .filter(d => d.endAngle - d.startAngle > 0.25)
       .append("tspan")
       .attr("x", 0)
       .attr("y", "0.7em")
       .attr("fill-opacity", 0.7)
-      .text(d => d.data.value);
+      .text(d => {
+        const hour = (d.value / 3600).toFixed(0);
+        const min = ((d.value % 3600) / 60).toFixed(0);
+        const sec = ((d.value % 3600) % 60).toFixed(0);
+        if (hour > 0) return `${hour}h ${min}m ${sec}s`;
+        else if (min > 0) return `${min}min ${sec}s`;
+        else if (sec > 0) return `${sec}sec`;
+      });
 
     return new Promise(resolve => {
       resolve(true);
