@@ -146,7 +146,12 @@ export class Champion extends Component {
     console.log(this.props);
     return (
       <div className="champion-detail">
-        {this.props.championName}
+        <div className="section-header-container">
+          <div classname="section-header">
+            <div className="header-bar" />
+            <div className="header-parahgraph">{this.props.championName}</div>
+          </div>
+        </div>
         <div id="viz" ref={this.championRef} />
       </div>
     );

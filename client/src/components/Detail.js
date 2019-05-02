@@ -21,6 +21,11 @@ export class Detail extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  /**
+   *
+   * @param {한글 챔피언 이름} name
+   * @dev 주어진 한글 챔피언 이름을 영어로 변환한다
+   */
   convertChampionName(name) {
     if (name == "아나") return "ana";
     else if (name == "애쉬") return "ashe";
@@ -54,15 +59,25 @@ export class Detail extends Component {
     else if (name == "젠야타") return "zenyatta";
   }
 
+  /**
+   * @dev 컴포넌트 마운트 시 실행
+   */
   componentDidMount() {
     this.fetchData();
   }
 
+  /**
+   * @dev 사용자의 게임 데이터를 가져온다
+   */
   async fetchData() {
     await this.getChampionRecord();
     await this.getMostRecord();
+    await this.getPlayRecord();
   }
 
+  /**
+   * @dev 영웅별 통계를 가져오고, 컴포넌트를 생성해서 state 에 할당한다
+   */
   async getChampionRecord() {
     this.setState({ loading: true });
 
@@ -172,7 +187,9 @@ export class Detail extends Component {
     });
   }
 
-  // 플레이 시간 순 모스트 챔피언 정보를 가져온다
+  /**
+   * @dev 모스트 통계를 가져오고 그래프를 그린다(Top3)
+   */
   async getMostRecord() {
     const mosts = this.props.data.rankplay.mostChampion;
     console.log(mosts);
@@ -325,6 +342,94 @@ export class Detail extends Component {
     }
   }
 
+  /**
+   * @dev 주어진 이름의 챔피언이 어느 범주에 속하는지 체크한다
+   */
+  getChampionType(champion_name) {
+    const tank = [
+      "D-Va",
+      "오리사",
+      "라인하르트",
+      "로드호그",
+      "윈스턴",
+      "레킹볼",
+      "자리야"
+    ];
+    const damage = [
+      "애쉬",
+      "바스티온",
+      "둠피스트",
+      "겐지",
+      "한조",
+      "정크랫",
+      "맥크리",
+      "메이",
+      "파라",
+      "리퍼",
+      "솔저",
+      "솜브라",
+      "시메트라",
+      "토르비욘",
+      "트레이서",
+      "위도우메이커"
+    ];
+    const support = [
+      "아나",
+      "바티스트",
+      "브리기테",
+      "루시우",
+      "메르시",
+      "모이라",
+      "젠야타"
+    ];
+    if (tank.includes(champion_name)) return "tank";
+    else if (damage.includes(champion_name)) return "damage";
+    else if (support.includes(champion_name)) return "support";
+    else return -1;
+  }
+  /**
+   * @dev 사용자의 플레이 통계(돌격, 공격, 지원)를 가져와서 파이 차트를 그린다
+   */
+  async getPlayRecord() {
+    const keys = Object.keys(this.props.data.rankplay.mostChampion.byPlaytime);
+    console.log(keys);
+
+    // 해당 영웅의 플레이 시간을 세 범주(돌격, 공격, 지원)로 나누어 저장한다
+    let tank = 0;
+    let damage = 0;
+    let support = 0;
+    const result = await keys.map(el => {
+      const champion_name = el;
+      const champion_playtime = this.props.data.rankplay.mostChampion
+        .byPlaytime[el];
+      const champion_type = this.getChampionType(champion_name);
+      // 영웅의 타입에 해당하는 변수에 시간을 누적한다
+      if (champion_type == "tank") tank += champion_playtime;
+      else if (champion_type == "damage") damage += champion_playtime;
+      else if (champion_type == "support") support += champion_playtime;
+      else return alert("잘못된 타입의 영웅이 입력되었습니다");
+
+      return new Promise(resolve => {
+        resolve(true);
+      });
+    });
+    await Promise.all(result);
+    console.log(`tank: ${tank}`);
+    console.log(`damage: ${damage}`);
+    console.log(`support: ${support}`);
+
+    // 범주의 값을 파이 차트로 나타낸다
+    const pieChart = d3.pie();
+    const playPie = pieChart([tank, damage, support]);
+    const playArc = d3.arc();
+    playArc.outerRadius(200);
+    console.log(playArc(playPie[0]));
+
+    return new Promise(resolve => {
+      resolve(true);
+    });
+  }
+
   async handleClick(e) {
     console.log("updating...");
     this.setState({ loading: true });
@@ -380,6 +485,21 @@ export class Detail extends Component {
             <div className="user-detail-most-container">
               <div className="user-detail-most-header">Most Champion Top 3</div>
               <div className="user-detail-most" />
+            </div>
+          </div>
+
+          <div className="section-header-container">
+            <div classname="section-header">
+              <div className="header-bar" />
+              <div className="header-parahgraph">플레이 통계</div>
+              <div>파이 차트 들어갈 자리</div>
+            </div>
+          </div>
+
+          <div className="section-header-container">
+            <div classname="section-header">
+              <div className="header-bar" />
+              <div className="header-parahgraph">영웅별 통계</div>
             </div>
           </div>
 
