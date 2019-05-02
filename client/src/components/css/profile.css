@@ -42,3 +42,11 @@
     transform: rotate(360deg);
   }
 }
+
+@media screen and (max-width: 500px) {
+  .error,
+  .loading {
+    padding: 30px;
+    line-height: 2rem;
+  }
+}

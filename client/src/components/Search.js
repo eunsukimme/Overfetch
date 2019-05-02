@@ -66,6 +66,7 @@ export class Search extends React.Component {
               onChange={this.handleChange}
             />
             <Link
+              onClick={this.handleSubmit}
               className="button"
               to={`/profile/${this.state.name}/${this.state.tag}`}
             >

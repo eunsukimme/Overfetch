@@ -116,6 +116,10 @@
   margin: 10px;
 }
 
+.champion-button-link {
+  text-decoration: none;
+}
+
 .champion-button:hover {
   transition: transform 0.3s;
   transform: scale(1.2);
@@ -159,6 +163,10 @@
 }
 
 @media screen and (max-width: 500px) {
+  .user-detail-top {
+    margin-top: 0;
+  }
+
   .user-detail-card-container {
     text-align: center;
     width: 100%;

@@ -22,7 +22,7 @@ export class User extends Component {
         </td>
         <td>
           <Link
-            className="user-card-container"
+            className="user-name-container"
             to={`/profile/${this.props.name}/${this.props.tag}`}
           >
             <h2 className="user-card-name">{this.props.name}</h2>

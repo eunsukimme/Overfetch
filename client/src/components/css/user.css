@@ -17,6 +17,12 @@
 .user-card-icon {
   margin: 0 10px;
   vertical-align: middle;
+  text-decoration: none;
+}
+
+.user-name-container {
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .user-card-image,

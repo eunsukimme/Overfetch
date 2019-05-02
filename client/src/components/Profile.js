@@ -21,6 +21,7 @@ export class Profile extends React.Component {
     const url = `/search?name=${this.props.match.params.name}&tag=${
       this.props.match.params.tag
     }`;
+    console.log(url);
 
     await this.fetchData(url);
   }

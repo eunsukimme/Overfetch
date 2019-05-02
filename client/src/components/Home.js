@@ -16,6 +16,7 @@ export class Home extends Component {
           <GlobalStyle />
           <Header />
           <Route path="/" exact component={Search} />
+          <Route path="/profile//" component={Search} />
           <Route path="/profile/:name/:tag" component={Profile} />
           <Route path="/users" component={Users} />
           <Route path="/about" component={About} />
