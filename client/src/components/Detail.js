@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Champion } from "./champion/Champion";
 import "./css/detail/detail.css";
 import "./css/detail/user-detail-top.css";
-import "./css/detail/user-detail-play.css";
+import "./css/detail/user-detail-chart.css";
 import "./css/detail/user-champions.css";
 import * as d3 from "d3";
 import { colorbrewer } from "../lib/colorbrewer";
@@ -19,9 +19,11 @@ export class Detail extends Component {
       championComponents: {},
       diff_time: "",
       most: [],
-      mostComponents: []
+      mostComponents: [],
+      chartName: "user-detail-play"
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleDropdownChange = this.handleDropdownChange.bind(this);
   }
 
   /**
@@ -73,9 +75,14 @@ export class Detail extends Component {
    * @dev 사용자의 게임 데이터를 가져온다
    */
   async fetchData() {
+    // 영웅별 통계
     await this.getChampionRecord();
+    // 모스트 챔피언
     await this.getMostRecord();
-    await this.getPlayRecord();
+    // 플레이 통계(파이 차트)
+    await this.getPlaytimeRecord();
+    await this.getWinGameRecord();
+    await this.getHitRateRecord();
   }
 
   /**
@@ -395,40 +402,65 @@ export class Detail extends Component {
       return -1;
     }
   }
-  /**
-   * @dev 사용자의 플레이 통계(돌격, 공격, 지원)를 가져와서 파이 차트를 그린다
-   */
-  async getPlayRecord() {
-    const keys = Object.keys(this.props.data.rankplay.mostChampion.byPlaytime);
+
+  async accumulateChampionValue(criteria, avg = false) {
+    const keys = Object.keys(this.props.data.rankplay.mostChampion[criteria]);
     console.log(keys);
 
     // 해당 영웅의 플레이 시간을 세 범주(돌격, 공격, 지원)로 나누어 저장한다
     let tank = 0;
+    let tank_count = 0;
     let damage = 0;
+    let damage_count = 0;
     let support = 0;
+    let support_count = 0;
+
     const result = await keys.map(el => {
       const champion_name = el;
-      const champion_playtime = this.props.data.rankplay.mostChampion
-        .byPlaytime[el];
+      const champion_value = this.props.data.rankplay.mostChampion[criteria][
+        el
+      ];
       const champion_type = this.getChampionType(champion_name);
       // 영웅의 타입에 해당하는 변수에 시간을 누적한다
-      if (champion_type == "tank") tank += champion_playtime;
-      else if (champion_type == "damage") damage += champion_playtime;
-      else if (champion_type == "support") support += champion_playtime;
-      else {
-        return alert(
-          "잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요"
-        );
+      if (champion_type == "tank") {
+        tank += champion_value;
+        tank_count += 1;
+      } else if (champion_type == "damage") {
+        damage += champion_value;
+        damage_count += 1;
+      } else if (champion_type == "support") {
+        support += champion_value;
+        support_count += 1;
+      } else {
+        return -1;
       }
 
       return new Promise(resolve => {
         resolve(true);
       });
     });
+    if (result.includes(-1)) {
+      return -1;
+    }
     await Promise.all(result);
-    console.log(`tank: ${tank}`);
-    console.log(`damage: ${damage}`);
-    console.log(`support: ${support}`);
+
+    return new Promise(resolve => {
+      if (avg == false) {
+        resolve([tank, damage, support]);
+      } else if (avg == true) {
+        resolve([
+          tank / tank_count,
+          damage / damage_count,
+          support / support_count
+        ]);
+      }
+    });
+  }
+
+  createChart(_tank, _damage, _support, where, criteria) {
+    const tank = _tank;
+    const damage = _damage;
+    const support = _support;
 
     // 범주의 값을 파이 차트로 나타낸다
     const width = 400;
@@ -467,11 +499,12 @@ export class Detail extends Component {
 
     // svg를 그린다
     const svg = d3
-      .select(".user-detail-play")
+      .select(`.user-detail-${where}`)
       .append("svg")
       .style("width", width)
       .style("height", height)
-      .attr("text-anchor", "middle");
+      .attr("text-anchor", "middle")
+      .attr("class", `svg-${criteria}`);
     // text-anchor 텍스트의 정렬을 설정합니다 ( start | middle | end | inherit )
 
     // svg 안에 파이 차트를 그릴 g를 생성
@@ -487,7 +520,6 @@ export class Detail extends Component {
       .append("path")
       // 이전과 동일하게 가상 path 요소를 만들고 그래프 데이터와 매핑하여 엘리먼트를 추가합니다.
       .attr("fill", d => {
-        console.log(d);
         return d.data.color;
       })
       // 다른 그래프와 다르게 .data 라는 객체가 추가되어 있는데, 위에 arcs 변수를 선언할때
@@ -525,18 +557,70 @@ export class Detail extends Component {
       .attr("x", 0)
       .attr("y", "0.7em")
       .attr("fill-opacity", 0.7)
+      .attr("font-weight", "bold")
       .text(d => {
-        const hour = (d.value / 3600).toFixed(0);
-        const min = ((d.value % 3600) / 60).toFixed(0);
-        const sec = ((d.value % 3600) % 60).toFixed(0);
-        if (hour > 0) return `${hour}h ${min}m ${sec}s`;
-        else if (min > 0) return `${min}min ${sec}s`;
-        else if (sec > 0) return `${sec}sec`;
+        if (criteria === "byPlaytime") {
+          const hour = (d.value / 3600).toFixed(0);
+          const min = ((d.value % 3600) / 60).toFixed(0);
+          const sec = ((d.value % 3600) % 60).toFixed(0);
+          if (hour > 0) return `${hour}h ${min}m ${sec}s`;
+          else if (min > 0) return `${min}min ${sec}s`;
+          else if (sec > 0) return `${sec}sec`;
+        } else if (criteria === "byWinGame") {
+          return d.value;
+        } else if (criteria === "byHitRate") {
+          return d.value.toFixed(1);
+        }
       });
 
     return new Promise(resolve => {
       resolve(true);
     });
+  }
+
+  /**
+   * @dev 사용자의 플레이 통계(돌격, 공격, 지원)를 가져와서 파이 차트를 그린다
+   */
+  async getPlaytimeRecord() {
+    const champions = await this.accumulateChampionValue("byPlaytime");
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(tank, damage, support, "play", "byPlaytime");
+  }
+
+  /**
+   * @dev 사용자의 승리한 게임 통계를 가져와서 파이 차트를 그린다
+   */
+  async getWinGameRecord() {
+    const champions = await this.accumulateChampionValue("byWinGame");
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(tank, damage, support, "wingame", "byWinGame");
+  }
+
+  async getHitRateRecord() {
+    const champions = await this.accumulateChampionValue("byHitRate", true);
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(tank, damage, support, "hitrate", "byHitRate");
   }
 
   async handleClick(e) {
@@ -545,6 +629,20 @@ export class Detail extends Component {
     await this.props.onClick();
     this.setState({ loading: false });
     console.log(this.props);
+  }
+
+  async handleDropdownChange(e) {
+    document.getElementsByClassName(
+      this.state.chartName
+    )[0].parentElement.style.display = "none";
+
+    await this.setState({
+      chartName: e.target.value
+    });
+
+    document.getElementsByClassName(
+      this.state.chartName
+    )[0].parentElement.style.display = "block";
   }
 
   render() {
@@ -601,10 +699,33 @@ export class Detail extends Component {
             <div className="section-header">
               <div className="header-bar" />
               <div className="header-parahgraph">플레이 통계</div>
+              <select
+                value={this.state.chartName}
+                className="user-detail-dropdown"
+                onChange={this.handleDropdownChange}
+              >
+                <option value="user-detail-play">플레이 시간</option>
+                <option value="user-detail-wingame">승리한 게임</option>
+                <option value="user-detail-hitrate">명중률</option>
+                <option value="user-detail-none">승률</option>
+                <option value="user-detail-none">KD</option>
+                <option value="user-detail-none">치명타 명중률</option>
+                <option value="user-detail-none">멀티 킬</option>
+                <option value="user-detail-none">임무 기여 처치</option>
+              </select>
             </div>
           </div>
-          <div className="user-detail-play-container">
+          <div
+            className="user-detail-chart-container"
+            style={{ display: "block" }}
+          >
             <div className="user-detail-play" />
+          </div>
+          <div className="user-detail-chart-container">
+            <div className="user-detail-wingame" />
+          </div>
+          <div className="user-detail-chart-container">
+            <div className="user-detail-hitrate" />
           </div>
 
           <div className="section-header-container">
