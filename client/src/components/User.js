@@ -14,8 +14,8 @@ export class User extends Component {
           this.props.type == "odd" ? "user-card odd" : "user-card even"
         }
       >
-        <td>
-          <h1 className="user-card-order">{this.props.order}</h1>
+        <td className="user-card-order">
+          <h1>{this.props.order}</h1>
         </td>
         <td>
           <img className="user-card-image" src={this.props.icon_image} />
@@ -29,13 +29,13 @@ export class User extends Component {
           </Link>
         </td>
         <td>
-          <h3 className="user-card-level">Lv. {this.props.level}</h3>
+          <h3 className="user-card-level">{this.props.level}</h3>
         </td>
         <td>
           <img className="user-card-icon" src={this.props.rank.imageSrc} />
         </td>
         <td>
-          <h3 className="user-card-rank">rank. {this.props.rank.val}</h3>
+          <h3 className="user-card-rank">{this.props.rank.val}</h3>
         </td>
       </tr>
     );

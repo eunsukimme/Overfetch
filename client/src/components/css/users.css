@@ -21,6 +21,10 @@
   color: white;
 }
 
+.leaderboard-bottom {
+  overflow-x: auto;
+}
+
 .leaderboard-bottom-table {
   position: relative;
   width: 80%;
@@ -132,5 +136,9 @@
 
   .user-detail-most-container .svg-most {
     width: 100%;
+  }
+
+  .leaderboard-bottom-table-header .table-header-order {
+    padding: 10px;
   }
 }

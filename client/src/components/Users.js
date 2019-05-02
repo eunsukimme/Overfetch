@@ -272,7 +272,7 @@ export class Users extends Component {
           <table className="leaderboard-bottom-table">
             <tbody className="leaderboard-bottom-table-body">
               <tr className="leaderboard-bottom-table-header">
-                <th>Ranking</th>
+                <th className="table-header-order">Rank</th>
                 <th colSpan="2">Userinfo</th>
                 <th>Level</th>
                 <th colspan="2">Points</th>
