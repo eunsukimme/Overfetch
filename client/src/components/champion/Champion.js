@@ -147,7 +147,7 @@ export class Champion extends Component {
     return (
       <div className="champion-detail">
         <div className="section-header-container">
-          <div classname="section-header">
+          <div className="section-header">
             <div className="header-bar" />
             <div className="header-parahgraph">{this.props.championName}</div>
           </div>

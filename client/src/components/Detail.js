@@ -419,11 +419,81 @@ export class Detail extends Component {
     console.log(`support: ${support}`);
 
     // 범주의 값을 파이 차트로 나타낸다
-    const pieChart = d3.pie();
-    const playPie = pieChart([tank, damage, support]);
-    const playArc = d3.arc();
-    playArc.outerRadius(200);
-    console.log(playArc(playPie[0]));
+    const width = 400;
+    const height = 400;
+    const data = [
+      { name: "tank", value: tank, color: "#10316b" },
+      { name: "damage", value: damage, color: "#d65a31" },
+      { name: "support", value: support, color: "#0b8457" }
+    ];
+    const arc = d3
+      .arc()
+      .innerRadius(0)
+      .outerRadius(Math.min(width, height) / 2);
+
+    const arcLabel = (() => {
+      const radius = (Math.min(width, height) / 2) * 0.8;
+      return d3
+        .arc()
+        .innerRadius(radius)
+        .outerRadius(radius);
+    })();
+
+    const pie = d3
+      .pie()
+      .sort((a, b) => b.value - a.value)
+      .value(d => d.value);
+
+    const arcs = pie(data);
+    console.log(arcs);
+
+    const svg = d3
+      .select(".user-detail-play")
+      .append("svg")
+      .style("width", width)
+      .style("height", height)
+      .attr("text-anchor", "middle");
+    // text-anchor 텍스트의 정렬을 설정합니다 ( start | middle | end | inherit )
+
+    const g = svg
+      .append("g")
+      .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+    g.selectAll("path")
+      .data(arcs)
+      .enter()
+      .append("path")
+      // 이전과 동일하게 가상 path 요소를 만들고 그래프 데이터와 매핑하여 엘리먼트를 추가합니다.
+      .attr("fill", d => d.data.color)
+      // 다른 그래프와 다르게 .data 라는 객체가 추가되어 있는데, 위에 arcs 변수를 선언할때
+      // .pie(data)가 {data, value, index, startAngle, endAngle, padAngle} 의 값을 가지고 있습니다.
+      .attr("stroke", "black")
+      .attr("d", arc)
+      .append("title")
+      .text(d => `${d.data.name}: ${d.data.value}`);
+
+    const text = g
+      .selectAll("text")
+      .data(arcs)
+      .enter()
+      .append("text")
+      .attr("transform", d => `translate(${arcLabel.centroid(d)})`)
+      .attr("dy", "0.35em");
+
+    text
+      .append("tspan")
+      .attr("x", 0)
+      .attr("y", "-0.7em")
+      .style("font-weight", "bold")
+      .text(d => d.data.name);
+
+    text
+      .filter(d => d.endAngle - d.startAngle > 0.25)
+      .append("tspan")
+      .attr("x", 0)
+      .attr("y", "0.7em")
+      .attr("fill-opacity", 0.7)
+      .text(d => d.data.value);
 
     return new Promise(resolve => {
       resolve(true);
@@ -489,15 +559,17 @@ export class Detail extends Component {
           </div>
 
           <div className="section-header-container">
-            <div classname="section-header">
+            <div className="section-header">
               <div className="header-bar" />
               <div className="header-parahgraph">플레이 통계</div>
-              <div>파이 차트 들어갈 자리</div>
             </div>
+          </div>
+          <div className="user-detail-play-container">
+            <div className="user-detail-play" />
           </div>
 
           <div className="section-header-container">
-            <div classname="section-header">
+            <div className="section-header">
               <div className="header-bar" />
               <div className="header-parahgraph">영웅별 통계</div>
             </div>
