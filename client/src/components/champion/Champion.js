@@ -57,7 +57,24 @@ export class Champion extends Component {
       ].영웅별[field];
       const my_val = (value / play).toFixed(2);
 
-      const dataSet = [min, my_val, avg, max];
+      let percentage; // 상위 몇 % 인지를 나타내는 변수
+      const topPercentageScale = d3
+        .scaleLinear()
+        .domain([max, avg])
+        .range([1, 50])
+        .clamp(true);
+      const bottomPercentageScale = d3
+        .scaleLinear()
+        .domain([min, avg])
+        .range([99, 49])
+        .clamp(true);
+      if (Number(my_val) < Number(avg)) {
+        percentage = bottomPercentageScale(my_val);
+      } else if (Number(my_val) >= Number(avg)) {
+        percentage = topPercentageScale(my_val);
+      }
+
+      const dataSet = [min, [my_val, percentage], avg, max];
 
       const championYScale = d3
         .scaleLinear()
@@ -95,9 +112,9 @@ export class Champion extends Component {
         .attr("class", "bar")
         .attr("transform", function(d, i) {
           if (i == 1) {
-            if (Number(d) < Number(avg)) {
+            if (Number(d[0]) < Number(avg)) {
               d3.select(this).attr("class", "bar my_bar lt");
-            } else if (Number(d) >= Number(avg)) {
+            } else if (Number(d[0]) >= Number(avg)) {
               d3.select(this).attr("class", "bar my_bar gte");
             }
           }
@@ -108,18 +125,32 @@ export class Champion extends Component {
       bars
         .append("rect")
         .attr("width", "50px")
-        .attr("y", (d, i) => 400 - championYScale(d))
+        .attr("y", (d, i) => {
+          if (i == 1) {
+            return 400 - championYScale(d[0]);
+          }
+          return 400 - championYScale(d);
+        })
         .transition()
         .duration(1500)
-        .attr("height", d => championYScale(d))
-        .style("stroke", "lightgray")
-        .style("stroke-width", "1px");
+        .attr("height", (d, i) => {
+          if (i == 1) {
+            return championYScale(d[0]);
+          }
+          return championYScale(d);
+        });
 
       // 각 bar 에 라벨(값) 생성
       bars
         .append("text")
-        .text(d => d)
-        .attr("y", d => 400 - championYScale(d) - 10)
+        .text((d, i) => {
+          if (i == 1) return d[0];
+          return d;
+        })
+        .attr("y", (d, i) => {
+          if (i == 1) return 400 - championYScale(d[0]) - 10;
+          return 400 - championYScale(d) - 10;
+        })
         .attr("class", "text")
         .style("text-anchor", "left");
 
@@ -127,17 +158,52 @@ export class Champion extends Component {
       bars
         .append("text")
         .data(["min", "my", "avg", "max"])
-        .text(d => d)
+        .text((d, i) => {
+          if (i == 1) return d[0];
+          return d;
+        })
         .attr("y", 390)
         .attr("class", "text")
         .style("text-anchor", "left");
 
-      function mouseOver(d, i) {
-        console.log(d);
+      function mouseOver(d) {
+        d3.select(this).style("stroke", "white");
+
+        if (typeof d === "object" && d[1] != undefined) {
+          const my_val = Number(d[0]);
+          const per = d[1].toFixed(0);
+          // 막대가 충분히 짧다면 위에 모달 생성
+          if (per > 50) {
+            d3.select(this.parentNode)
+              .append("text")
+              .attr("class", "text modal")
+              .attr("x", -50)
+              .attr("y", 300)
+              .html(`상위 ${per}%`);
+          }
+          // 막대가 충분히 길다면 그 옆에 모달 생성
+          else {
+            d3.select(this.parentNode)
+              .append("text")
+              .attr("class", "text modal")
+              .attr("x", -50)
+              .attr("y", 300)
+              .html(`상위 ${per}%`);
+          }
+        }
+      }
+      function mouseOut(d) {
+        d3.select(this).style("stroke", "none");
+        d3.select(this.parentNode)
+          .select(".modal")
+          .remove();
       }
 
       // 각 막대에 마우스 오버 함수 생성
-      d3.selectAll("rect").on("mouseover", mouseOver);
+      d3.selectAll(".bar_graph")
+        .selectAll("rect")
+        .on("mouseover", mouseOver)
+        .on("mouseout", mouseOut);
     });
   }
 
