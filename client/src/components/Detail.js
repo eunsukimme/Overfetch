@@ -83,6 +83,11 @@ export class Detail extends Component {
     await this.getPlaytimeRecord();
     await this.getWinGameRecord();
     await this.getHitRateRecord();
+    await this.getWinRateRecord();
+    await this.getKDRecord();
+    await this.getCriticalHitRateRecord();
+    await this.getMultiKillRecord();
+    await this.getMissionContributeKill();
   }
 
   /**
@@ -570,6 +575,16 @@ export class Detail extends Component {
           return d.value;
         } else if (criteria === "byHitRate") {
           return d.value.toFixed(1);
+        } else if (criteria == "byWinRate") {
+          return d.value.toFixed(1);
+        } else if (criteria == "byKD") {
+          return d.value.toFixed(2);
+        } else if (criteria == "byCriticalHitRate") {
+          return d.value.toFixed(1);
+        } else if (criteria == "byMultiKill") {
+          return d.value;
+        } else if (criteria == "byMissionContributeKill") {
+          return d.value;
         }
       });
 
@@ -621,6 +636,88 @@ export class Detail extends Component {
     const support = champions[2];
 
     this.createChart(tank, damage, support, "hitrate", "byHitRate");
+  }
+
+  async getWinRateRecord() {
+    const champions = await this.accumulateChampionValue("byWinRate", true);
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(tank, damage, support, "winrate", "byWinRate");
+  }
+
+  async getKDRecord() {
+    const champions = await this.accumulateChampionValue("byKD", true);
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(tank, damage, support, "kd", "byKD");
+  }
+
+  async getCriticalHitRateRecord() {
+    const champions = await this.accumulateChampionValue(
+      "byCriticalHitRate",
+      true
+    );
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(
+      tank,
+      damage,
+      support,
+      "critical-hit-rate",
+      "byCriticalHitRate"
+    );
+  }
+
+  async getMultiKillRecord() {
+    const champions = await this.accumulateChampionValue("byMultiKill");
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(tank, damage, support, "multi-kill", "byMultiKill");
+  }
+
+  async getMissionContributeKill() {
+    const champions = await this.accumulateChampionValue(
+      "byMissionContributeKill"
+    );
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createChart(
+      tank,
+      damage,
+      support,
+      "mission-contribute-kill",
+      "byMissionContributeKill"
+    );
   }
 
   async handleClick(e) {
@@ -707,11 +804,15 @@ export class Detail extends Component {
                 <option value="user-detail-play">플레이 시간</option>
                 <option value="user-detail-wingame">승리한 게임</option>
                 <option value="user-detail-hitrate">명중률</option>
-                <option value="user-detail-none">승률</option>
-                <option value="user-detail-none">KD</option>
-                <option value="user-detail-none">치명타 명중률</option>
-                <option value="user-detail-none">멀티 킬</option>
-                <option value="user-detail-none">임무 기여 처치</option>
+                <option value="user-detail-winrate">승률</option>
+                <option value="user-detail-kd">KD</option>
+                <option value="user-detail-critical-hit-rate">
+                  치명타 명중률
+                </option>
+                <option value="user-detail-multi-kill">멀티 킬</option>
+                <option value="user-detail-mission-contribute-kill">
+                  임무 기여 처치
+                </option>
               </select>
             </div>
           </div>
@@ -726,6 +827,21 @@ export class Detail extends Component {
           </div>
           <div className="user-detail-chart-container">
             <div className="user-detail-hitrate" />
+          </div>
+          <div className="user-detail-chart-container">
+            <div className="user-detail-winrate" />
+          </div>
+          <div className="user-detail-chart-container">
+            <div className="user-detail-kd" />
+          </div>
+          <div className="user-detail-chart-container">
+            <div className="user-detail-critical-hit-rate" />
+          </div>
+          <div className="user-detail-chart-container">
+            <div className="user-detail-multi-kill" />
+          </div>
+          <div className="user-detail-chart-container">
+            <div className="user-detail-mission-contribute-kill" />
           </div>
 
           <div className="section-header-container">
