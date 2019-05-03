@@ -531,6 +531,9 @@ export class Detail extends Component {
       // .pie(data)가 {data, value, index, startAngle, endAngle, padAngle} 의 값을 가지고 있습니다.
       .attr("stroke", "black")
       .attr("d", arc)
+      .on("mouseover", function(d) {
+        console.log("mouse over: " + d.data.name);
+      })
       .append("title")
       .text(d => `${d.data.name}: ${d.data.value}`);
 
@@ -563,6 +566,7 @@ export class Detail extends Component {
       .attr("y", "0.7em")
       .attr("fill-opacity", 0.7)
       .attr("font-weight", "bold")
+      .style("font-size", "1.2rem")
       .text(d => {
         if (criteria === "byPlaytime") {
           const hour = (d.value / 3600).toFixed(0);

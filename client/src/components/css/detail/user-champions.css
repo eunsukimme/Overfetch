@@ -19,6 +19,7 @@
 }
 
 .champion-button:hover {
+  border: 2px solid #d65a31;
   transition: transform 0.3s;
   transform: scale(1.2);
 }

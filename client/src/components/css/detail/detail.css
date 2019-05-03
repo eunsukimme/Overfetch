@@ -20,6 +20,15 @@
   display: none;
 }
 
+.user-detail-dropdown {
+  width: 200px;
+  background-color: #222222;
+  color: white;
+  border: 1px solid #444444;
+  padding: 16px;
+  margin: 10px;
+}
+
 .error,
 .loading {
   width: 100%;
@@ -99,9 +108,9 @@
     text-align: center;
   }
   .champion-button {
-    width: 80px;
-    height: 80px;
-    font-size: 0.8rem;
+    width: auto;
+    height: auto;
+    font-size: 1.2rem;
   }
   .champion-button-image {
     width: 100%;
