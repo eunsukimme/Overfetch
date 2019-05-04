@@ -9,7 +9,11 @@
 }
 
 .bar rect {
+  z-index: 10;
   fill: #10316b;
+}
+.bar.my_bar rect {
+  z-index: 1;
 }
 .my_bar.lt rect {
   fill: #d65a31;
