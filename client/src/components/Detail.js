@@ -767,6 +767,13 @@ export class Detail extends Component {
     return (
       <Router>
         <div className="user-detail">
+          <div className="section-header-container main-header">
+            <div className="section-header">
+              <div className="header-bar main-bar" />
+              <div className="header-parahgraph">현재 시즌 데이터</div>
+              <div className="header-bar main-bar" />
+            </div>
+          </div>
           <div className="user-detail-top">
             <div className="user-detail-card-container">
               <div className="user-detail-card">

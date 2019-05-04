@@ -3,12 +3,25 @@
   margin: 10px auto;
   padding: 10px;
 }
+
+.section-header-container.main-header {
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  text-align: center;
+}
+
 .header-bar {
   display: inline-block;
   width: 20px;
   height: 20px;
   background-color: #d65a31;
 }
+.header-bar.main-bar {
+  width: 3px;
+  height: 24px;
+}
+
 .header-parahgraph {
   display: inline-block;
   font-size: 2rem;
@@ -67,14 +80,10 @@
 }
 
 @media screen and (max-width: 500px) {
-  .user-detail-top {
-    margin-top: 0;
-  }
-
   .user-detail-card-container {
     text-align: center;
     width: 100%;
-    margin: 60px auto;
+    margin: 0 auto;
   }
 
   .user-detail-most-header {

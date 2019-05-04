@@ -54,6 +54,19 @@ export class Search extends React.Component {
   render() {
     return (
       <div className="search">
+        <div className="background-video-container">
+          <video
+            className="background-video"
+            autoPlay
+            loop
+            playsInline="playsinline"
+          >
+            <source
+              src="../../../document/main_background.mp4"
+              type="video/mp4"
+            />
+          </video>
+        </div>
         <h1 className="intro" style={{ color: "white" }}>
           Welcome to OVERFETCH
         </h1>

@@ -158,10 +158,7 @@ export class Champion extends Component {
       bars
         .append("text")
         .data(["min", "my", "avg", "max"])
-        .text((d, i) => {
-          if (i == 1) return d[0];
-          return d;
-        })
+        .text(d => d)
         .attr("y", 390)
         .attr("class", "text")
         .style("text-anchor", "left");
