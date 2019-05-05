@@ -82,10 +82,10 @@ export class Detail extends Component {
     // 플레이 통계(파이 차트)
     await this.getPlaytimeRecord();
     await this.getWinGameRecord();
-    await this.getHitRateRecord();
-    await this.getWinRateRecord();
-    await this.getKDRecord();
-    await this.getCriticalHitRateRecord();
+    //await this.getHitRateRecord();
+    //await this.getWinRateRecord();
+    //await this.getKDRecord();
+    //await this.getCriticalHitRateRecord();
     await this.getMultiKillRecord();
     await this.getMissionContributeKill();
   }
@@ -408,6 +408,12 @@ export class Detail extends Component {
     }
   }
 
+  /**
+   *
+   * @param {차트를 그릴 기준 지표} criteria
+   * @param {평균값 계산 여부} avg
+   * @dev 어떠한 기준의 통계를 세 범주(돌격, 공격, 지원)로 나눈 뒤 값을 누적시킨다
+   */
   async accumulateChampionValue(criteria, avg = false) {
     const keys = Object.keys(this.props.data.rankplay.mostChampion[criteria]);
     console.log(keys);
@@ -462,7 +468,16 @@ export class Detail extends Component {
     });
   }
 
-  createChart(_tank, _damage, _support, where, criteria) {
+  /**
+   *
+   * @param {돌격 영웅 누적값} _tank
+   * @param {공격 영웅 누적값} _damage
+   * @param {지원 영웅 누적값} _support
+   * @param {그림을 그릴 위치} where
+   * @param {기준 지표} criteria
+   * @dev 주어진 파라미터를 바탕으로 파이 차트를 그린다
+   */
+  createPieChart(_tank, _damage, _support, where, criteria) {
     const tank = _tank;
     const damage = _damage;
     const support = _support;
@@ -610,7 +625,7 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(tank, damage, support, "play", "byPlaytime");
+    this.createPieChart(tank, damage, support, "play", "byPlaytime");
   }
 
   /**
@@ -626,9 +641,12 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(tank, damage, support, "wingame", "byWinGame");
+    this.createPieChart(tank, damage, support, "wingame", "byWinGame");
   }
 
+  /**
+   * @dev 사용자의 명중률 통계를 가져와서 파이 차트를 그린다
+   */
   async getHitRateRecord() {
     const champions = await this.accumulateChampionValue("byHitRate", true);
     if (champions == -1) {
@@ -639,9 +657,12 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(tank, damage, support, "hitrate", "byHitRate");
+    this.createPieChart(tank, damage, support, "hitrate", "byHitRate");
   }
 
+  /**
+   * @dev 사용자의 승률 통계를 가져와서 파이 차트를 그린다
+   */
   async getWinRateRecord() {
     const champions = await this.accumulateChampionValue("byWinRate", true);
     if (champions == -1) {
@@ -652,9 +673,12 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(tank, damage, support, "winrate", "byWinRate");
+    this.createPieChart(tank, damage, support, "winrate", "byWinRate");
   }
 
+  /**
+   * @dev 사용자의 K/D 통계를 가져와서 파이 차트를 그린다
+   */
   async getKDRecord() {
     const champions = await this.accumulateChampionValue("byKD", true);
     if (champions == -1) {
@@ -665,9 +689,12 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(tank, damage, support, "kd", "byKD");
+    this.createPieChart(tank, damage, support, "kd", "byKD");
   }
 
+  /**
+   * @dev 사용자의 치명타 명중률 통계를 가져와서 파이 차트를 그린다
+   */
   async getCriticalHitRateRecord() {
     const champions = await this.accumulateChampionValue(
       "byCriticalHitRate",
@@ -681,7 +708,7 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(
+    this.createPieChart(
       tank,
       damage,
       support,
@@ -690,6 +717,9 @@ export class Detail extends Component {
     );
   }
 
+  /**
+   * @dev 사용자의 멀티킬 통계를 가져와서 파이 차트를 그린다
+   */
   async getMultiKillRecord() {
     const champions = await this.accumulateChampionValue("byMultiKill");
     if (champions == -1) {
@@ -700,9 +730,12 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(tank, damage, support, "multi-kill", "byMultiKill");
+    this.createPieChart(tank, damage, support, "multi-kill", "byMultiKill");
   }
 
+  /**
+   * @dev 사용자의 임무 기여 처치 통계를 가져와서 파이 차트를 그린다
+   */
   async getMissionContributeKill() {
     const champions = await this.accumulateChampionValue(
       "byMissionContributeKill"
@@ -715,7 +748,7 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createChart(
+    this.createPieChart(
       tank,
       damage,
       support,
@@ -724,6 +757,11 @@ export class Detail extends Component {
     );
   }
 
+  /**
+   *
+   * @param {event Object} e
+   * @dev 갱신 버튼을 눌렸을 때 유저 정보를 새로 가져온 뒤 그려준다
+   */
   async handleClick(e) {
     console.log("updating...");
     this.setState({ loading: true });
@@ -732,6 +770,13 @@ export class Detail extends Component {
     console.log(this.props);
   }
 
+  /**
+   *
+   * @param {event Object} e
+   * @dev 플레이 통계 옵션을 선택할 때 마다 state 를 변경해주고
+   *      해당 통계 그래프를 화면에 나타내준다
+   *
+   */
   async handleDropdownChange(e) {
     document.getElementsByClassName(
       this.state.chartName
@@ -814,12 +859,12 @@ export class Detail extends Component {
               >
                 <option value="user-detail-play">플레이 시간</option>
                 <option value="user-detail-wingame">승리한 게임</option>
-                <option value="user-detail-hitrate">명중률</option>
+                {/*<option value="user-detail-hitrate">명중률</option>
                 <option value="user-detail-winrate">승률</option>
                 <option value="user-detail-kd">KD</option>
                 <option value="user-detail-critical-hit-rate">
                   치명타 명중률
-                </option>
+    </option>*/}
                 <option value="user-detail-multi-kill">멀티 킬</option>
                 <option value="user-detail-mission-contribute-kill">
                   임무 기여 처치
@@ -836,7 +881,7 @@ export class Detail extends Component {
           <div className="user-detail-chart-container">
             <div className="user-detail-wingame" />
           </div>
-          <div className="user-detail-chart-container">
+          {/*<div className="user-detail-chart-container">
             <div className="user-detail-hitrate" />
           </div>
           <div className="user-detail-chart-container">
@@ -847,7 +892,7 @@ export class Detail extends Component {
           </div>
           <div className="user-detail-chart-container">
             <div className="user-detail-critical-hit-rate" />
-          </div>
+  </div> */}
           <div className="user-detail-chart-container">
             <div className="user-detail-multi-kill" />
           </div>

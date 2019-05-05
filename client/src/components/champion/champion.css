@@ -25,6 +25,9 @@
 .text {
   fill: white;
 }
+.my_text.text {
+  fill: lightcyan;
+}
 
 .section-header-container {
   text-align: left;

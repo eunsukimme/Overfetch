@@ -203,8 +203,19 @@ export class Champion extends Component {
           if (i == 1) return height - championYScale(d[0]) + 10;
           return height - championYScale(d) + 10;
         })
-        .attr("x", 60)
-        .attr("class", "text")
+        .attr("x", (d, i) => {
+          if (i == 1) {
+            if (d[0] >= 10000) return -75;
+            else if (d[0] >= 1000) return -65;
+            else if (d[0] >= 100) return -55;
+            return -45;
+          }
+          return 60;
+        })
+        .attr("class", (d, i) => {
+          if (i == 1) return "my_text text";
+          return "text";
+        })
         .style("text-anchor", "left");
 
       // 각 bar 에 라벨(기준) 생성

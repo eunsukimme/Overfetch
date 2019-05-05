@@ -54,16 +54,19 @@
   display: inline-block;
   text-align: center;
   width: 20%;
-  padding: 17px;
+  padding: 16px;
   background: #ddd;
   font-size: 1.5rem;
-  border: none;
+  border: 2px solid white;
+  background-color: #d65a31;
+  color: white;
   cursor: pointer;
   text-decoration: none;
 }
 
 .search-content .button:hover {
-  background: #bbb;
+  border: 2px solid #d65a31;
+  transition-duration: 0.5s;
 }
 
 @media screen and (max-width: 500px) {
