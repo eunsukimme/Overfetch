@@ -99,8 +99,8 @@ export class Champion extends Component {
       // bar-graph의 타이틀 생성
       bar_graph
         .append("text")
-        .attr("y", 16)
-        .attr("class", "text")
+        .attr("y", 24)
+        .attr("class", "text chart-header")
         .html(d => {
           if (!el.includes("_")) {
             return el;
@@ -119,7 +119,7 @@ export class Champion extends Component {
       // 해당 막대가 어떤 범주를 말하는지 보여준다
       const reference_g = bar_graph_g
         .selectAll("g")
-        .data(["최소", "현재", "평균", "최대"])
+        .data(["최소", "플레이어", "평균", "최대"])
         .enter()
         .append("g")
         .attr("class", "reference_graph");
@@ -127,7 +127,7 @@ export class Champion extends Component {
         .append("rect")
         .attr("width", 20)
         .attr("height", 5)
-        .attr("y", (d, i) => height / 3 - 30 * i)
+        .attr("y", (d, i) => height / 3 - 30 * i + 34)
         .style("fill", (d, i) => {
           if (i == 0) return "#0b8457";
           else if (i == 1) return "#10316b";
@@ -137,7 +137,7 @@ export class Champion extends Component {
       reference_g
         .append("text")
         .attr("x", 25)
-        .attr("y", (d, i) => height / 3 - 30 * i + 8)
+        .attr("y", (d, i) => height / 3 - 30 * i + 40)
         .attr("class", "text")
         .style("font-size", "14px")
         .html(d => d);
@@ -159,7 +159,7 @@ export class Champion extends Component {
           }
           return "bar";
         })
-        .attr("transform", `translate(${width / 2 - bar_width - 15} , 0)`);
+        .attr("transform", `translate(${width / 2 - bar_width / 2} , 0)`);
 
       // 각 g 에 막대 할당
       bars

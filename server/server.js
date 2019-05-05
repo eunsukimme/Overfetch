@@ -22,7 +22,9 @@ db.once("open", () => {
   { useNewUrlParser: true }
 );*/
 // 로컬 DB 연결
-mongoose.connect("mongodb://localhost:27017/overfetch");
+mongoose.connect("mongodb://localhost:27017/overfetch", {
+  useNewUrlParser: true
+});
 /////////////////////////////////////////////////////
 
 app.use(morgan("tiny"));

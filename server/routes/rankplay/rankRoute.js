@@ -69,6 +69,7 @@ router.get("/win_rate", (req, res, next) => {
         "rankplay.record.위도우메이커.게임.승률": 1,
         "rankplay.record.윈스턴.게임.승률": 1,
         "rankplay.record.자리야.게임.승률": 1,
+        "rankplay.record.정크랫.게임.승률": 1,
         "rankplay.record.젠야타.게임.승률": 1,
         "rankplay.record.토르비욘.게임.승률": 1,
         "rankplay.record.트레이서.게임.승률": 1,
@@ -158,6 +159,9 @@ router.get("/win_rate", (req, res, next) => {
         },
         자리야: {
           $avg: "$rankplay.record.자리야.게임.승률"
+        },
+        정크랫: {
+          $avg: "$rankplay.record.정크랫.게임.승률"
         },
         젠야타: {
           $avg: "$rankplay.record.젠야타.게임.승률"

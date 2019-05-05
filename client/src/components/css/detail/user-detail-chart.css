@@ -4,3 +4,8 @@
   padding: 20px;
   text-align: center;
 }
+
+.user-detail-winrate .win-rate-svg {
+  padding-left: 20px;
+  margin: 20px;
+}

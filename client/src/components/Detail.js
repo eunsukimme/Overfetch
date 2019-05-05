@@ -67,8 +67,15 @@ export class Detail extends Component {
   /**
    * @dev 컴포넌트 마운트 시 실행
    */
-  componentDidMount() {
-    this.fetchData();
+  async componentDidMount() {
+    this.scrollToTop();
+    await this.fetchData();
+    // 스크롤 함수 바인딩
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 
   /**
@@ -83,7 +90,7 @@ export class Detail extends Component {
     await this.getPlaytimeRecord();
     await this.getWinGameRecord();
     //await this.getHitRateRecord();
-    //await this.getWinRateRecord();
+    await this.getWinRateRecord();
     //await this.getKDRecord();
     //await this.getCriticalHitRateRecord();
     await this.getMultiKillRecord();
@@ -664,16 +671,217 @@ export class Detail extends Component {
    * @dev 사용자의 승률 통계를 가져와서 파이 차트를 그린다
    */
   async getWinRateRecord() {
-    const champions = await this.accumulateChampionValue("byWinRate", true);
-    if (champions == -1) {
-      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
-      return;
+    let rank = this.props.data.rank.val;
+    // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
+    {
+      if (rank == undefined) {
+        rank = "alltier";
+      } else if (rank < 1500) {
+        rank = "bronze";
+      } else if (rank < 2000) {
+        rank = "silver";
+      } else if (rank < 2500) {
+        rank = "gold";
+      } else if (rank < 3000) {
+        rank = "platinum";
+      } else if (rank < 3500) {
+        rank = "diamond";
+      } else if (rank < 4000) {
+        rank = "master";
+      } else if (rank < 5000) {
+        rank = "grand_master";
+      } else {
+        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
+      }
     }
-    const tank = champions[0];
-    const damage = champions[1];
-    const support = champions[2];
+    const url = `/avg/rankplay/win_rate?tier=${rank}`;
+    let win_rate;
+    await fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        win_rate = data;
+      })
+      .catch(error => {
+        return alert(
+          "승률 정보를 가져오는 중 에러가 발생하였습니다. 잠시 뒤 시도하세요"
+        );
+      });
 
-    this.createPieChart(tank, damage, support, "winrate", "byWinRate");
+    // 반환된 값은 배열이다. 첫 번째 값을 참조하여 data에 접근한다
+    win_rate = win_rate[0];
+
+    // 승률 기준 모스트 챔피언 레코드으 키(영웅 이름)들을 가져온다
+    const keys = Object.keys(this.props.data.rankplay.mostChampion.byWinRate);
+    // 각 영웅 이름들을 순회하면서 그래프를 그린다
+    const championYScale = d3
+      .scaleLinear()
+      .domain([0, 100])
+      .range([40, 360])
+      .clamp(true);
+    const width = 300;
+    const height = 400;
+    const bar_width = 50;
+
+    // 먼저 svg 영역을 그려준다
+    keys.map(el => {
+      const my_val = this.props.data.rankplay.mostChampion.byWinRate[el];
+      const avg = win_rate[el].toFixed(1);
+
+      let percentage; // 상위 몇 % 인지를 나타내는 변수
+      const topPercentageScale = d3
+        .scaleLinear()
+        .domain([100, avg])
+        .range([1, 50])
+        .clamp(true);
+      const bottomPercentageScale = d3
+        .scaleLinear()
+        .domain([0, avg])
+        .range([99, 49])
+        .clamp(true);
+      if (Number(my_val) < Number(avg)) {
+        percentage = bottomPercentageScale(my_val);
+      } else if (Number(my_val) >= Number(avg)) {
+        percentage = topPercentageScale(my_val);
+      }
+      const dataSet = [[my_val, percentage], 0, avg, 100];
+
+      const win_rate_svg = d3
+        .select(".user-detail-winrate")
+        .append("svg")
+        .attr("id", `win-rate-${el}`)
+        .attr("class", "win-rate-svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("border", "1px solid lightgray");
+
+      // svg 의 타이틀을 붙여준다. 여기서는 챔피언 이름이다
+      win_rate_svg
+        .append("text")
+        .attr("y", 24)
+        .attr("class", "text chart-header")
+        .html(el);
+
+      // svg 안에 g 를 그려준다
+      const win_rate_g = win_rate_svg.append("g").attr("class", "win-rate-g");
+
+      // 해당 g 안에 레퍼런스 g와 그래프를 그릴 g 두개를 생성한다
+      // 먼저 레퍼런스 g 를 그려준다
+      const reference_g = win_rate_g
+        .selectAll("g")
+        .data(["플레이어", "최소", "평균", "최대"])
+        .enter()
+        .append("g")
+        .attr("class", "win-rate-reference-g");
+      reference_g
+        .append("rect")
+        .attr("width", 20)
+        .attr("height", 5)
+        .attr("y", (d, i) => height / 3 - 30 * i + 34)
+        .style("fill", (d, i) => {
+          if (i == 0) return "#10316b";
+          else if (i == 1) return "#0b8457";
+          else if (i == 2) return "#eac100";
+          else if (i == 3) return "#d65a31";
+        });
+      reference_g
+        .append("text")
+        .attr("x", 25)
+        .attr("y", (d, i) => height / 3 - 30 * i + 40)
+        .attr("class", "text")
+        .style("font-size", "14px")
+        .html(d => d);
+
+      // 이제 막대 영역을 그려준다
+      const bar_g = win_rate_g
+        .append("g")
+        .attr("class", "win-rate-chart-g")
+        .selectAll("g")
+        .data(dataSet)
+        .enter()
+        .append("g")
+        .attr("class", (d, i) => {
+          if (i == 0) return "bar my_bar";
+          return "bar";
+        })
+        .attr("transform", `translate(${width / 2 - bar_width / 2} , 0)`);
+
+      // 각 g 에 막대 할당
+      bar_g
+        .append("rect")
+        .attr("width", bar_width)
+        .attr("y", (d, i) => {
+          if (i == 0) {
+            return height - championYScale(d[0]);
+          }
+          return height - championYScale(d);
+        })
+        .style("fill", (d, i) => {
+          if (i == 0) return "#10316b";
+          else if (i == 1) return "#0b8457";
+          else if (i == 2) return "#eac100";
+          else if (i == 3) return "#d65a31";
+        })
+        .transition()
+        .duration(1500)
+        .attr("height", (d, i) => {
+          if (i == 0) {
+            return championYScale(d[0]);
+          }
+          return 5;
+        });
+
+      // 각 bar 에 라벨(값) 생성
+      bar_g
+        .append("text")
+        .text((d, i) => {
+          if (i == 0) return d[0];
+          return d;
+        })
+        .attr("y", (d, i) => {
+          if (i == 0) return height - championYScale(d[0]) + 10;
+          return height - championYScale(d) + 10;
+        })
+        .attr("x", (d, i) => {
+          if (i == 0) {
+            return -30;
+          }
+          return 60;
+        })
+        .attr("class", (d, i) => {
+          if (i == 0) return "my_text text";
+          return "text";
+        })
+        .style("text-anchor", "left");
+
+      function mouseOver(d) {
+        d3.select(this).style("stroke", "white");
+        console.log(d);
+
+        if (typeof d === "object" && d[1] != undefined) {
+          const my_val = Number(d[0]);
+          const per = d[1].toFixed(0);
+
+          d3.select(this.parentNode)
+            .append("text")
+            .attr("class", "text modal")
+            .attr("x", -70)
+            .attr("y", 320)
+            .html(`상위 ${per}%`);
+        }
+      }
+      function mouseOut(d) {
+        d3.select(this).style("stroke", "none");
+        d3.select(this.parentNode)
+          .select(".modal")
+          .remove();
+      }
+
+      // 각 막대에 마우스 오버 함수 생성
+      d3.selectAll(".win-rate-g")
+        .selectAll("rect")
+        .on("mouseover", mouseOver)
+        .on("mouseout", mouseOut);
+    });
   }
 
   /**
@@ -791,6 +999,29 @@ export class Detail extends Component {
     )[0].parentElement.style.display = "block";
   }
 
+  /**
+   *
+   * @param {event Object} e 스크롤 할 때 발생하는 이벤트
+   * @dev 유저가 스크롤을 하면 맨 위로 올리는 버튼을 보이게 만든다
+   */
+  handleScroll(e) {
+    // 스크롤을 100 이상 하면
+    const topButton = document.getElementById("leaderboard-button-to-top");
+    if (
+      document.body.scrollTop > 500 ||
+      document.documentElement.scrollTop > 500
+    ) {
+      topButton.style.display = "block";
+    } else {
+      topButton.style.display = "none";
+    }
+  }
+
+  scrollToTop(e) {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  }
+
   render() {
     const error = this.state.error;
     const loading = this.state.loading;
@@ -859,8 +1090,8 @@ export class Detail extends Component {
               >
                 <option value="user-detail-play">플레이 시간</option>
                 <option value="user-detail-wingame">승리한 게임</option>
-                {/*<option value="user-detail-hitrate">명중률</option>
                 <option value="user-detail-winrate">승률</option>
+                {/*<option value="user-detail-hitrate">명중률</option>
                 <option value="user-detail-kd">KD</option>
                 <option value="user-detail-critical-hit-rate">
                   치명타 명중률
@@ -881,11 +1112,11 @@ export class Detail extends Component {
           <div className="user-detail-chart-container">
             <div className="user-detail-wingame" />
           </div>
-          {/*<div className="user-detail-chart-container">
-            <div className="user-detail-hitrate" />
-          </div>
           <div className="user-detail-chart-container">
             <div className="user-detail-winrate" />
+          </div>
+          {/*<div className="user-detail-chart-container">
+            <div className="user-detail-hitrate" />
           </div>
           <div className="user-detail-chart-container">
             <div className="user-detail-kd" />
@@ -1031,6 +1262,9 @@ export class Detail extends Component {
             render={props => this.state.championComponents.젠야타}
           />
         </div>
+        <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
+          Top
+        </button>
       </Router>
     );
   }

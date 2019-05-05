@@ -112,6 +112,9 @@
   .user-detail-chart-container svg text {
     font-size: 1.5rem;
   }
+  .champion-detail svg text {
+    font-size: 1.5rem;
+  }
 
   .user-champions-buttons {
     text-align: center;
