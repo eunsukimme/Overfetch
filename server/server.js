@@ -28,8 +28,6 @@ mongoose.connect("mongodb://localhost:27017/overfetch", {
 });
 /////////////////////////////////////////////////////
 
-//Static file declaration
-app.use(express.static(path.join(__dirname, "client/build")));
 //production mode
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
@@ -40,6 +38,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static("../"));
+app.use(express.static(path.join(__dirname, "../document")));
+app.use(express.static(path.join(__dirname)));
 
 /* router split */
 app.use("/search", searchRoute);
