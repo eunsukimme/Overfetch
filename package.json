@@ -12,7 +12,7 @@
     "heroku-postbuild": "cd client && yarn && yarn build",
     "server": "cd server && node server.js",
     "client": "cd client && yarn start",
-    "start": "concurrently -k \"yarn server\" \"yarn client\"",
+    "start": "yarn server",
     "dev": "concurrently -k \"cd server && nodemon server\" \"yarn client\""
   },
   "keywords": [
