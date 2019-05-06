@@ -89,10 +89,10 @@ export class Detail extends Component {
     // 플레이 통계(파이 차트)
     await this.getPlaytimeRecord();
     await this.getWinGameRecord();
-    //await this.getHitRateRecord();
+    await this.getHitRateRecord();
     await this.getWinRateRecord();
-    //await this.getKDRecord();
-    //await this.getCriticalHitRateRecord();
+    await this.getKDRecord();
+    await this.getCriticalHitRateRecord();
     await this.getMultiKillRecord();
     await this.getMissionContributeKill();
   }
@@ -553,9 +553,6 @@ export class Detail extends Component {
       // .pie(data)가 {data, value, index, startAngle, endAngle, padAngle} 의 값을 가지고 있습니다.
       .attr("stroke", "black")
       .attr("d", arc)
-      .on("mouseover", function(d) {
-        console.log("mouse over: " + d.data.name);
-      })
       .append("title")
       .text(d => `${d.data.name}: ${d.data.value}`);
 
@@ -619,103 +616,32 @@ export class Detail extends Component {
     });
   }
 
-  /**
-   * @dev 사용자의 플레이 통계(돌격, 공격, 지원)를 가져와서 파이 차트를 그린다
-   */
-  async getPlaytimeRecord() {
-    const champions = await this.accumulateChampionValue("byPlaytime");
-    if (champions == -1) {
-      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
-      return;
-    }
-    const tank = champions[0];
-    const damage = champions[1];
-    const support = champions[2];
+  async createBarChart(rank, where, criteria) {
+    const url = `/avg/rankplay/${where}?tier=${rank}`;
 
-    this.createPieChart(tank, damage, support, "play", "byPlaytime");
-  }
-
-  /**
-   * @dev 사용자의 승리한 게임 통계를 가져와서 파이 차트를 그린다
-   */
-  async getWinGameRecord() {
-    const champions = await this.accumulateChampionValue("byWinGame");
-    if (champions == -1) {
-      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
-      return;
-    }
-    const tank = champions[0];
-    const damage = champions[1];
-    const support = champions[2];
-
-    this.createPieChart(tank, damage, support, "wingame", "byWinGame");
-  }
-
-  /**
-   * @dev 사용자의 명중률 통계를 가져와서 파이 차트를 그린다
-   */
-  async getHitRateRecord() {
-    const champions = await this.accumulateChampionValue("byHitRate", true);
-    if (champions == -1) {
-      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
-      return;
-    }
-    const tank = champions[0];
-    const damage = champions[1];
-    const support = champions[2];
-
-    this.createPieChart(tank, damage, support, "hitrate", "byHitRate");
-  }
-
-  /**
-   * @dev 사용자의 승률 통계를 가져와서 파이 차트를 그린다
-   */
-  async getWinRateRecord() {
-    let rank = this.props.data.rank.val;
-    // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
-    {
-      if (rank == undefined) {
-        rank = "alltier";
-      } else if (rank < 1500) {
-        rank = "bronze";
-      } else if (rank < 2000) {
-        rank = "silver";
-      } else if (rank < 2500) {
-        rank = "gold";
-      } else if (rank < 3000) {
-        rank = "platinum";
-      } else if (rank < 3500) {
-        rank = "diamond";
-      } else if (rank < 4000) {
-        rank = "master";
-      } else if (rank < 5000) {
-        rank = "grand_master";
-      } else {
-        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
-      }
-    }
-    const url = `/avg/rankplay/win_rate?tier=${rank}`;
-    let win_rate;
+    let rate_info;
     await fetch(url)
       .then(res => res.json())
       .then(data => {
-        win_rate = data;
+        rate_info = data;
       })
       .catch(error => {
         return alert(
-          "승률 정보를 가져오는 중 에러가 발생하였습니다. 잠시 뒤 시도하세요"
+          "통계 정보를 가져오는 중 에러가 발생하였습니다. 잠시 뒤 시도하세요"
         );
       });
 
     // 반환된 값은 배열이다. 첫 번째 값을 참조하여 data에 접근한다
-    win_rate = win_rate[0];
+    rate_info = rate_info[0];
 
     // 승률 기준 모스트 챔피언 레코드으 키(영웅 이름)들을 가져온다
-    const keys = Object.keys(this.props.data.rankplay.mostChampion.byWinRate);
+    const keys = Object.keys(this.props.data.rankplay.mostChampion[criteria]);
     // 각 영웅 이름들을 순회하면서 그래프를 그린다
+    let max = 100;
+    if (where == "kd") max = 5;
     const championYScale = d3
       .scaleLinear()
-      .domain([0, 100])
+      .domain([0, max])
       .range([40, 360])
       .clamp(true);
     const width = 300;
@@ -724,13 +650,23 @@ export class Detail extends Component {
 
     // 먼저 svg 영역을 그려준다
     keys.map(el => {
-      const my_val = this.props.data.rankplay.mostChampion.byWinRate[el];
-      const avg = win_rate[el].toFixed(1);
+      const my_val = this.props.data.rankplay.mostChampion[criteria][el];
+      // 라인하르트, 브리기테, 모이라, 윈스턴은 명중률에 대한 정보가 존재하지 않는다
+      // 이처럼 존재하지 않는 값에 대해 참조하면 오류가 발생하므로
+      // 바로 리턴해버린다
+      if (rate_info[el] == null) {
+        return;
+      }
+      // 또, 해당 기준에서 값이 0인 영웅은 의미 없으므로 포함시키지 않는다
+      else if (this.props.data.rankplay.mostChampion[criteria][el] == 0) {
+        return;
+      }
+      const avg = rate_info[el].toFixed(1);
 
       let percentage; // 상위 몇 % 인지를 나타내는 변수
       const topPercentageScale = d3
         .scaleLinear()
-        .domain([100, avg])
+        .domain([max, avg])
         .range([1, 50])
         .clamp(true);
       const bottomPercentageScale = d3
@@ -743,35 +679,52 @@ export class Detail extends Component {
       } else if (Number(my_val) >= Number(avg)) {
         percentage = topPercentageScale(my_val);
       }
-      const dataSet = [[my_val, percentage], 0, avg, 100];
+      const dataSet = [[my_val, percentage], 0, avg, max];
 
-      const win_rate_svg = d3
-        .select(".user-detail-winrate")
+      const svg = d3
+        .select(`.user-detail-${where}`)
         .append("svg")
-        .attr("id", `win-rate-${el}`)
-        .attr("class", "win-rate-svg")
+        .attr("class", `svg-${criteria}`)
+        .attr("class", "bar-chart")
         .attr("width", width)
         .attr("height", height)
         .style("border", "1px solid lightgray");
 
       // svg 의 타이틀을 붙여준다. 여기서는 챔피언 이름이다
-      win_rate_svg
+      svg
         .append("text")
         .attr("y", 24)
         .attr("class", "text chart-header")
         .html(el);
 
+      // 치른 게임 횟수를 나타내준다
+      svg
+        .append("text")
+        .attr("y", height - 30)
+        .attr("class", "text")
+        .html(() => {
+          if (this.props.data.rankplay.record[el] == undefined) {
+            console.log(el);
+            console.log(this.props.data.rankplay.record);
+          }
+          let play = this.props.data.rankplay.record[el].게임["치른 게임"];
+          if (play == undefined || play == 0) {
+            return `완료한 게임: 0`;
+          }
+          return `완료한 게임: ${play}`;
+        });
+
       // svg 안에 g 를 그려준다
-      const win_rate_g = win_rate_svg.append("g").attr("class", "win-rate-g");
+      const rate_g = svg.append("g").attr("class", `${where}-g`);
 
       // 해당 g 안에 레퍼런스 g와 그래프를 그릴 g 두개를 생성한다
       // 먼저 레퍼런스 g 를 그려준다
-      const reference_g = win_rate_g
+      const reference_g = rate_g
         .selectAll("g")
         .data(["플레이어", "최소", "평균", "최대"])
         .enter()
         .append("g")
-        .attr("class", "win-rate-reference-g");
+        .attr("class", `${where}-reference-g`);
       reference_g
         .append("rect")
         .attr("width", 20)
@@ -792,9 +745,9 @@ export class Detail extends Component {
         .html(d => d);
 
       // 이제 막대 영역을 그려준다
-      const bar_g = win_rate_g
+      const bar_g = rate_g
         .append("g")
-        .attr("class", "win-rate-chart-g")
+        .attr("class", `${where}-chart-g`)
         .selectAll("g")
         .data(dataSet)
         .enter()
@@ -855,7 +808,6 @@ export class Detail extends Component {
 
       function mouseOver(d) {
         d3.select(this).style("stroke", "white");
-        console.log(d);
 
         if (typeof d === "object" && d[1] != undefined) {
           const my_val = Number(d[0]);
@@ -877,7 +829,7 @@ export class Detail extends Component {
       }
 
       // 각 막대에 마우스 오버 함수 생성
-      d3.selectAll(".win-rate-g")
+      d3.selectAll(`.${where}-g`)
         .selectAll("rect")
         .on("mouseover", mouseOver)
         .on("mouseout", mouseOut);
@@ -885,10 +837,10 @@ export class Detail extends Component {
   }
 
   /**
-   * @dev 사용자의 K/D 통계를 가져와서 파이 차트를 그린다
+   * @dev 사용자의 플레이 통계(돌격, 공격, 지원)를 가져와서 파이 차트를 그린다
    */
-  async getKDRecord() {
-    const champions = await this.accumulateChampionValue("byKD", true);
+  async getPlaytimeRecord() {
+    const champions = await this.accumulateChampionValue("byPlaytime");
     if (champions == -1) {
       alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
       return;
@@ -897,32 +849,147 @@ export class Detail extends Component {
     const damage = champions[1];
     const support = champions[2];
 
-    this.createPieChart(tank, damage, support, "kd", "byKD");
+    this.createPieChart(tank, damage, support, "play", "byPlaytime");
+  }
+
+  /**
+   * @dev 사용자의 승리한 게임 통계를 가져와서 파이 차트를 그린다
+   */
+  async getWinGameRecord() {
+    const champions = await this.accumulateChampionValue("byWinGame");
+    if (champions == -1) {
+      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
+      return;
+    }
+    const tank = champions[0];
+    const damage = champions[1];
+    const support = champions[2];
+
+    this.createPieChart(tank, damage, support, "wingame", "byWinGame");
+  }
+
+  /**
+   * @dev 사용자의 명중률 통계를 가져와서 파이 차트를 그린다
+   */
+  async getHitRateRecord() {
+    let rank = this.props.data.rank.val;
+    // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
+    {
+      if (rank == undefined) {
+        rank = "alltier";
+      } else if (rank < 1500) {
+        rank = "bronze";
+      } else if (rank < 2000) {
+        rank = "silver";
+      } else if (rank < 2500) {
+        rank = "gold";
+      } else if (rank < 3000) {
+        rank = "platinum";
+      } else if (rank < 3500) {
+        rank = "diamond";
+      } else if (rank < 4000) {
+        rank = "master";
+      } else if (rank < 5000) {
+        rank = "grand_master";
+      } else {
+        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
+      }
+    }
+
+    this.createBarChart(rank, "hit_rate", "byHitRate");
+  }
+
+  /**
+   * @dev 사용자의 승률 통계를 가져와서 파이 차트를 그린다
+   */
+  async getWinRateRecord() {
+    let rank = this.props.data.rank.val;
+    // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
+    {
+      if (rank == undefined) {
+        rank = "alltier";
+      } else if (rank < 1500) {
+        rank = "bronze";
+      } else if (rank < 2000) {
+        rank = "silver";
+      } else if (rank < 2500) {
+        rank = "gold";
+      } else if (rank < 3000) {
+        rank = "platinum";
+      } else if (rank < 3500) {
+        rank = "diamond";
+      } else if (rank < 4000) {
+        rank = "master";
+      } else if (rank < 5000) {
+        rank = "grand_master";
+      } else {
+        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
+      }
+    }
+
+    this.createBarChart(rank, "win_rate", "byWinRate");
+  }
+
+  /**
+   * @dev 사용자의 K/D 통계를 가져와서 파이 차트를 그린다
+   */
+  async getKDRecord() {
+    let rank = this.props.data.rank.val;
+    // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
+    {
+      if (rank == undefined) {
+        rank = "alltier";
+      } else if (rank < 1500) {
+        rank = "bronze";
+      } else if (rank < 2000) {
+        rank = "silver";
+      } else if (rank < 2500) {
+        rank = "gold";
+      } else if (rank < 3000) {
+        rank = "platinum";
+      } else if (rank < 3500) {
+        rank = "diamond";
+      } else if (rank < 4000) {
+        rank = "master";
+      } else if (rank < 5000) {
+        rank = "grand_master";
+      } else {
+        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
+      }
+    }
+
+    this.createBarChart(rank, "kd", "byKD");
   }
 
   /**
    * @dev 사용자의 치명타 명중률 통계를 가져와서 파이 차트를 그린다
    */
   async getCriticalHitRateRecord() {
-    const champions = await this.accumulateChampionValue(
-      "byCriticalHitRate",
-      true
-    );
-    if (champions == -1) {
-      alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
-      return;
+    let rank = this.props.data.rank.val;
+    // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
+    {
+      if (rank == undefined) {
+        rank = "alltier";
+      } else if (rank < 1500) {
+        rank = "bronze";
+      } else if (rank < 2000) {
+        rank = "silver";
+      } else if (rank < 2500) {
+        rank = "gold";
+      } else if (rank < 3000) {
+        rank = "platinum";
+      } else if (rank < 3500) {
+        rank = "diamond";
+      } else if (rank < 4000) {
+        rank = "master";
+      } else if (rank < 5000) {
+        rank = "grand_master";
+      } else {
+        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
+      }
     }
-    const tank = champions[0];
-    const damage = champions[1];
-    const support = champions[2];
 
-    this.createPieChart(
-      tank,
-      damage,
-      support,
-      "critical-hit-rate",
-      "byCriticalHitRate"
-    );
+    this.createBarChart(rank, "critical_hit_rate", "byCriticalHitRate");
   }
 
   /**
@@ -1090,12 +1157,12 @@ export class Detail extends Component {
               >
                 <option value="user-detail-play">플레이 시간</option>
                 <option value="user-detail-wingame">승리한 게임</option>
-                <option value="user-detail-winrate">승률</option>
-                {/*<option value="user-detail-hitrate">명중률</option>
+                <option value="user-detail-win_rate">승률</option>
+                <option value="user-detail-hit_rate">명중률</option>
                 <option value="user-detail-kd">KD</option>
-                <option value="user-detail-critical-hit-rate">
+                <option value="user-detail-critical_hit_rate">
                   치명타 명중률
-    </option>*/}
+                </option>
                 <option value="user-detail-multi-kill">멀티 킬</option>
                 <option value="user-detail-mission-contribute-kill">
                   임무 기여 처치
@@ -1113,17 +1180,17 @@ export class Detail extends Component {
             <div className="user-detail-wingame" />
           </div>
           <div className="user-detail-chart-container">
-            <div className="user-detail-winrate" />
+            <div className="user-detail-win_rate" />
           </div>
-          {/*<div className="user-detail-chart-container">
-            <div className="user-detail-hitrate" />
+          <div className="user-detail-chart-container">
+            <div className="user-detail-hit_rate" />
           </div>
           <div className="user-detail-chart-container">
             <div className="user-detail-kd" />
           </div>
           <div className="user-detail-chart-container">
-            <div className="user-detail-critical-hit-rate" />
-  </div> */}
+            <div className="user-detail-critical_hit_rate" />
+          </div>
           <div className="user-detail-chart-container">
             <div className="user-detail-multi-kill" />
           </div>

@@ -5,7 +5,7 @@
   text-align: center;
 }
 
-.user-detail-winrate .win-rate-svg {
+.user-detail-chart-container .bar-chart {
   padding-left: 20px;
   margin: 20px;
 }
