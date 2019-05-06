@@ -490,8 +490,8 @@ export class Detail extends Component {
     const support = _support;
 
     // 범주의 값을 파이 차트로 나타낸다
-    const width = 400;
-    const height = 400;
+    const width = 360;
+    const height = 360;
     // 데이터 생성
     const data = [
       { name: "tank", value: tank, color: "#10316b" },
