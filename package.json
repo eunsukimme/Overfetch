@@ -1,7 +1,7 @@
 {
   "name": "overfetch",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./server/server.js",
   "repository": "https://github.com/eunsukimme/Overfetch",
   "author": "eunsukimme <eunsu.dev@gmail.com>",
   "license": "MIT",
@@ -10,5 +10,12 @@
   },
   "scripts": {
     "start": "concurrently -k \"cd server && nodemon server.js\" \"cd client && yarn start\""
+  },
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "engines": {
+    "node": "10.x"
   }
 }

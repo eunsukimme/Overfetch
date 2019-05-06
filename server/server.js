@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const searchRoute = require("./routes/searchRoute");
@@ -26,6 +27,17 @@ mongoose.connect("mongodb://localhost:27017/overfetch", {
   useNewUrlParser: true
 });
 /////////////////////////////////////////////////////
+
+//Static file declaration
+app.use(express.static(path.join(__dirname, "client/build")));
+//production mode
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "client/build")));
+}
+//build mode
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/client/public/index.html"));
+});
 
 app.use(morgan("tiny"));
 app.use(bodyParser.urlencoded({ extended: false }));

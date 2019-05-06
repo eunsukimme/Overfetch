@@ -11,9 +11,13 @@
     "express": "^4.16.4",
     "express-async-handler": "^1.1.4",
     "mongoose": "^5.4.8",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
