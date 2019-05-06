@@ -616,6 +616,12 @@ export class Detail extends Component {
     });
   }
 
+  /**
+   *
+   * @param {유저 랭크 구간} rank
+   * @param {그림을 그릴 위치} where
+   * @param {기준 지표} criteria
+   */
   async createBarChart(rank, where, criteria) {
     const url = `/avg/rankplay/${where}?tier=${rank}`;
 
@@ -658,7 +664,11 @@ export class Detail extends Component {
         return;
       }
       // 또, 해당 기준에서 값이 0인 영웅은 의미 없으므로 포함시키지 않는다
-      else if (this.props.data.rankplay.mostChampion[criteria][el] == 0) {
+      else if (my_val == 0) {
+        return;
+      }
+      // 마지막으로 해당 영웅의 플레이 수가 0이면 포함시키지 않는다
+      else if (this.props.data.rankplay.record[el].게임["치른 게임"] == 0) {
         return;
       }
       const avg = rate_info[el].toFixed(1);
@@ -703,15 +713,11 @@ export class Detail extends Component {
         .attr("y", height - 30)
         .attr("class", "text")
         .html(() => {
-          if (this.props.data.rankplay.record[el] == undefined) {
-            console.log(el);
-            console.log(this.props.data.rankplay.record);
-          }
           let play = this.props.data.rankplay.record[el].게임["치른 게임"];
           if (play == undefined || play == 0) {
-            return `완료한 게임: 0`;
+            return `게임 수: 0`;
           }
-          return `완료한 게임: ${play}`;
+          return `게임 수: ${play}`;
         });
 
       // svg 안에 g 를 그려준다
