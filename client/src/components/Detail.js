@@ -668,7 +668,10 @@ export class Detail extends Component {
         return;
       }
       // 마지막으로 해당 영웅의 플레이 수가 0이면 포함시키지 않는다
-      else if (this.props.data.rankplay.record[el].게임["치른 게임"] == 0) {
+      else if (
+        this.props.data.rankplay.record[el] == undefined ||
+        this.props.data.rankplay.record[el].게임["치른 게임"] == 0
+      ) {
         return;
       }
       const avg = rate_info[el].toFixed(1);

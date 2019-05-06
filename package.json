@@ -1,19 +1,29 @@
 {
   "name": "overfetch",
   "version": "1.0.0",
-  "main": "./server/server.js",
+  "main": "server.js",
   "repository": "https://github.com/eunsukimme/Overfetch",
   "author": "eunsukimme <eunsu.dev@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-async-handler": "^1.1.4",
+    "mongoose": "^5.4.8",
+    "morgan": "^1.9.1",
+    "path": "^0.12.7",
+    "nodemon": "^1.19.0"
   },
   "scripts": {
     "heroku-postbuild": "cd client && yarn && yarn build",
-    "server": "cd server && node server.js",
+    "server": "node server.js",
     "client": "cd client && yarn start",
     "start": "yarn server",
-    "dev": "concurrently -k \"cd server && nodemon server\" \"yarn client\""
+    "dev": "concurrently -k \"nodemon server\" \"yarn client\""
   },
   "keywords": [
     "example",

@@ -19,6 +19,12 @@ export class Champion extends Component {
     const keys = Object.keys(data);
 
     // 현재 챔피언 플레이 수
+    if (
+      this.props.userData.rankplay.record[`${this.props.championName}`] ==
+      undefined
+    ) {
+      return alert("잘못된 정보가 포함되었습니다. 유저 정보를 갱신해 주세요");
+    }
     let play = this.props.userData.rankplay.record[`${this.props.championName}`]
       .게임["치른 게임"];
     if (play < 10) {
