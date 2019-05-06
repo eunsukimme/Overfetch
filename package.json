@@ -10,7 +10,7 @@
   },
   "scripts": {
     "heroku-postbuild": "cd client && yarn && yarn build",
-    "server": "cd server && nodemon server.js",
+    "server": "cd server && node server.js",
     "client": "cd client && yarn start",
     "dev": "concurrently -k \"yarn server\" \"yarn client\""
   },
