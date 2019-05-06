@@ -74,7 +74,7 @@ export class About extends Component {
                   </a>
                 </div>
                 <p>
-                  <button>contact</button>
+                  <button className="contact-button">contact</button>
                 </p>
               </div>
               <div className="people-card">
@@ -100,7 +100,7 @@ export class About extends Component {
                   </a>
                 </div>
                 <p>
-                  <button>contact</button>
+                  <button className="contact-button">contact</button>
                 </p>
               </div>
               <div className="people-card">
@@ -126,7 +126,7 @@ export class About extends Component {
                   </a>
                 </div>
                 <p>
-                  <button>contact</button>
+                  <button className="contact-button">contact</button>
                 </p>
               </div>
             </div>

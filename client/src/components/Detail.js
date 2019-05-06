@@ -95,6 +95,9 @@ export class Detail extends Component {
     await this.getCriticalHitRateRecord();
     await this.getMultiKillRecord();
     await this.getMissionContributeKill();
+    return new Promise(resolve => {
+      resolve(true);
+    });
   }
 
   /**
