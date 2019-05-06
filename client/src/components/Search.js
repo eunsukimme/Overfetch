@@ -43,9 +43,9 @@ export class Search extends React.Component {
   }
 
   validateInput() {
-    if (this.state.name == undefined || this.state.name == "") {
+    if (this.state.name === undefined || this.state.name === "") {
       return false;
-    } else if (this.state.tag == undefined || this.state.tag == "") {
+    } else if (this.state.tag === undefined || this.state.tag === "") {
       return false;
     }
     return true;

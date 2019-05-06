@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { User } from "./User";
 import "./css/users.css";
 
@@ -83,7 +82,7 @@ export class Users extends Component {
       const level = user.level;
       const icon_image = user.icon;
       let type; // 홀수 & 짝수 구분
-      if (i % 2 == 0) {
+      if (i % 2 === 0) {
         type = "even";
       } else {
         type = "odd";
@@ -96,6 +95,7 @@ export class Users extends Component {
           level={level}
           icon_image={icon_image}
           order={(this.state.page - 1) * 100 + i + 1}
+          key={(this.state.page - 1) * 100 + i + 1}
           type={type}
         />
       );
@@ -103,7 +103,6 @@ export class Users extends Component {
 
     this.setState({ userComponents: _userComponents });
 
-    console.log(this.state.userComponents);
     return new Promise(resolve => {
       resolve(true);
     });
@@ -123,6 +122,7 @@ export class Users extends Component {
     if (this.state.page >= 10) {
       buttons.push(
         <button
+          key="before"
           className="leaderboard-button"
           onClick={this.handleClickBefore}
         >{`<`}</button>
@@ -130,13 +130,14 @@ export class Users extends Component {
     }
 
     for (startPage = Number(startPage); startPage < endPage; startPage++) {
-      if (startPage == 0) continue;
+      if (startPage === 0) continue;
       buttons.push(
         <button
           className="leaderboard-button"
           onClick={this.handleChange}
           name="page"
           value={`${startPage}`}
+          key={`${startPage}`}
         >
           {startPage}
         </button>
@@ -144,7 +145,11 @@ export class Users extends Component {
     }
     // 다음 범위로 넘어가는 버튼을 생성한다
     buttons.push(
-      <button className="leaderboard-button" onClick={this.handleClickNext}>
+      <button
+        key="next"
+        className="leaderboard-button"
+        onClick={this.handleClickNext}
+      >
         >
       </button>
     );
@@ -195,7 +200,7 @@ export class Users extends Component {
    */
   async handleClickBefore(e) {
     let next = (Math.floor(this.state.page / 10) - 1) * 10;
-    if (next == 0) next = 1;
+    if (next === 0) next = 1;
     console.log(`the next start page is ${next}`);
     await this.setState({
       page: next

@@ -15,12 +15,11 @@ export class Champion extends Component {
 
   async visualizeData() {
     const data = this.props.championData[0];
-    console.log(data);
     const keys = Object.keys(data);
 
     // 현재 챔피언 플레이 수
     if (
-      this.props.userData.rankplay.record[`${this.props.championName}`] ==
+      this.props.userData.rankplay.record[`${this.props.championName}`] ===
       undefined
     ) {
       return alert("잘못된 정보가 포함되었습니다. 유저 정보를 갱신해 주세요");
@@ -33,7 +32,7 @@ export class Champion extends Component {
     // 영웅별 필드가 존재하지 않는 경우 알림을 띄운다
     if (
       this.props.userData.rankplay.record[`${this.props.championName}`]
-        .영웅별 == undefined
+        .영웅별 === undefined
     ) {
       return alert(
         "해당 영웅의 레코드가 존재하지 않습니다. 유저 데이터를 갱신해 주세요"
@@ -42,7 +41,7 @@ export class Champion extends Component {
 
     keys.forEach((el, i) => {
       let field; // 현재 필드
-      if (el == "_id") return;
+      if (el === "_id") return;
 
       if (el.includes("게임당")) {
         const tokens = el.split("_"); // 게임당' 문자열 제외
@@ -135,10 +134,10 @@ export class Champion extends Component {
         .attr("height", 5)
         .attr("y", (d, i) => height / 3 - 30 * i + 34)
         .style("fill", (d, i) => {
-          if (i == 0) return "#0b8457";
-          else if (i == 1) return "#10316b";
-          else if (i == 2) return "#eac100";
-          else if (i == 3) return "#d65a31";
+          if (i === 0) return "#0b8457";
+          else if (i === 1) return "#10316b";
+          else if (i === 2) return "#eac100";
+          else if (i === 3) return "#d65a31";
         });
       reference_g
         .append("text")
@@ -155,7 +154,7 @@ export class Champion extends Component {
         .enter()
         .append("g")
         .attr("class", (d, i) => {
-          if (i == 1) {
+          if (i === 1) {
             /*if (Number(d[0]) < Number(avg)) {
               return "bar my_bar lt";
             } else if (Number(d[0]) >= Number(avg)) {
@@ -172,21 +171,21 @@ export class Champion extends Component {
         .append("rect")
         .attr("width", bar_width)
         .attr("y", (d, i) => {
-          if (i == 1) {
+          if (i === 1) {
             return height - championYScale(d[0]);
           }
           return height - championYScale(d);
         })
         .style("fill", (d, i) => {
-          if (i == 0) return "#0b8457";
-          else if (i == 1) return "#10316b";
-          else if (i == 2) return "#eac100";
-          else if (i == 3) return "#d65a31";
+          if (i === 0) return "#0b8457";
+          else if (i === 1) return "#10316b";
+          else if (i === 2) return "#eac100";
+          else if (i === 3) return "#d65a31";
         })
         .transition()
         .duration(1500)
         .attr("height", (d, i) => {
-          if (i == 1) {
+          if (i === 1) {
             return championYScale(d[0]);
           }
           return 5;
@@ -202,15 +201,15 @@ export class Champion extends Component {
       bars
         .append("text")
         .text((d, i) => {
-          if (i == 1) return d[0];
+          if (i === 1) return d[0];
           return d;
         })
         .attr("y", (d, i) => {
-          if (i == 1) return height - championYScale(d[0]) + 10;
+          if (i === 1) return height - championYScale(d[0]) + 10;
           return height - championYScale(d) + 10;
         })
         .attr("x", (d, i) => {
-          if (i == 1) {
+          if (i === 1) {
             if (d[0] >= 10000) return -75;
             else if (d[0] >= 1000) return -65;
             else if (d[0] >= 100) return -55;
@@ -219,7 +218,7 @@ export class Champion extends Component {
           return 60;
         })
         .attr("class", (d, i) => {
-          if (i == 1) return "my_text text";
+          if (i === 1) return "my_text text";
           return "text";
         })
         .style("text-anchor", "left");
@@ -236,8 +235,7 @@ export class Champion extends Component {
       function mouseOver(d) {
         d3.select(this).style("stroke", "white");
 
-        if (typeof d === "object" && d[1] != undefined) {
-          const my_val = Number(d[0]);
+        if (typeof d === "object" && d[1] !== undefined) {
           const per = d[1].toFixed(0);
 
           d3.select(this.parentNode)
@@ -269,7 +267,6 @@ export class Champion extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div className="champion-detail">
         <div className="section-header-container">

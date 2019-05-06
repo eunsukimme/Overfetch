@@ -29,6 +29,7 @@ export class About extends Component {
                 <img
                   className="card-image"
                   src="../../../document/about_profile/eunsu.jpg"
+                  alt="profile"
                 />
                 <h1 className="card-name">Kim Eunsu</h1>
                 <p className="title">Fullstack Developer</p>
@@ -37,13 +38,39 @@ export class About extends Component {
                 </p>
                 <div className="card-icon-container">
                   <a href="#">
-                    <i class="fab fa-linkedin-in" />
+                    <i className="fab fa-linkedin-in" />
                   </a>
                   <a href="#">
-                    <i class="fab fa-facebook-square" />
+                    <i className="fab fa-facebook-square" />
                   </a>
                   <a href="#">
-                    <i class="fab fa-instagram" />
+                    <i className="fab fa-instagram" />
+                  </a>
+                </div>
+                <p>
+                  <button className="contact-button">contact</button>
+                </p>
+              </div>
+              <div className="people-card">
+                <img
+                  className="card-image"
+                  src="../../../document/about_profile/eunsu.jpg"
+                  alt="profile"
+                />
+                <h1 className="card-name">Kim Eunsu</h1>
+                <p className="title">Fullstack Developer</p>
+                <p className="description">
+                  프로그래밍과 커피, 게임을 좋아하는 대학생
+                </p>
+                <div className="card-icon-container">
+                  <a href="#">
+                    <i className="fab fa-linkedin-in" />
+                  </a>
+                  <a href="#">
+                    <i className="fab fa-facebook-square" />
+                  </a>
+                  <a href="#">
+                    <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <p>
@@ -54,6 +81,7 @@ export class About extends Component {
                 <img
                   className="card-image"
                   src="../../../document/about_profile/eunsu.jpg"
+                  alt="profile"
                 />
                 <h1 className="card-name">Kim Eunsu</h1>
                 <p className="title">Fullstack Developer</p>
@@ -62,13 +90,13 @@ export class About extends Component {
                 </p>
                 <div className="card-icon-container">
                   <a href="#">
-                    <i class="fab fa-linkedin-in" />
+                    <i className="fab fa-linkedin-in" />
                   </a>
                   <a href="#">
-                    <i class="fab fa-facebook-square" />
+                    <i className="fab fa-facebook-square" />
                   </a>
                   <a href="#">
-                    <i class="fab fa-instagram" />
+                    <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <p>
@@ -79,6 +107,7 @@ export class About extends Component {
                 <img
                   className="card-image"
                   src="../../../document/about_profile/eunsu.jpg"
+                  alt="profile"
                 />
                 <h1 className="card-name">Kim Eunsu</h1>
                 <p className="title">Fullstack Developer</p>
@@ -87,38 +116,13 @@ export class About extends Component {
                 </p>
                 <div className="card-icon-container">
                   <a href="#">
-                    <i class="fab fa-linkedin-in" />
+                    <i className="fab fa-linkedin-in" />
                   </a>
                   <a href="#">
-                    <i class="fab fa-facebook-square" />
+                    <i className="fab fa-facebook-square" />
                   </a>
                   <a href="#">
-                    <i class="fab fa-instagram" />
-                  </a>
-                </div>
-                <p>
-                  <button>contact</button>
-                </p>
-              </div>
-              <div className="people-card">
-                <img
-                  className="card-image"
-                  src="../../../document/about_profile/eunsu.jpg"
-                />
-                <h1 className="card-name">Kim Eunsu</h1>
-                <p className="title">Fullstack Developer</p>
-                <p className="description">
-                  프로그래밍과 커피, 게임을 좋아하는 대학생
-                </p>
-                <div className="card-icon-container">
-                  <a href="#">
-                    <i class="fab fa-linkedin-in" />
-                  </a>
-                  <a href="#">
-                    <i class="fab fa-facebook-square" />
-                  </a>
-                  <a href="#">
-                    <i class="fab fa-instagram" />
+                    <i className="fab fa-instagram" />
                   </a>
                 </div>
                 <p>

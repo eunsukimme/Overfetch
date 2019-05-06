@@ -32,36 +32,36 @@ export class Detail extends Component {
    * @dev 주어진 한글 챔피언 이름을 영어로 변환한다
    */
   convertChampionName(name) {
-    if (name == "아나") return "ana";
-    else if (name == "애쉬") return "ashe";
-    else if (name == "바티스트") return "baptiste";
-    else if (name == "바스티온") return "bastion";
-    else if (name == "브리기테") return "brigitte";
-    else if (name == "D-Va") return "dva";
-    else if (name == "둠피스트") return "doomfist";
-    else if (name == "겐지") return "genji";
-    else if (name == "한조") return "hanzo";
-    else if (name == "정크랫") return "junkrat";
-    else if (name == "루시우") return "lucio";
-    else if (name == "맥크리") return "mccree";
-    else if (name == "메이") return "mei";
-    else if (name == "메르시") return "mercy";
-    else if (name == "모이라") return "moira";
-    else if (name == "오리사") return "orisa";
-    else if (name == "파라") return "pharah";
-    else if (name == "리퍼") return "reaper";
-    else if (name == "라인하르트") return "reinhardt";
-    else if (name == "로드호그") return "roadhog";
-    else if (name == "솔저") return "soldier-76";
-    else if (name == "솜브라") return "sombra";
-    else if (name == "시메트라") return "symmetra";
-    else if (name == "토르비욘") return "torbjorn";
-    else if (name == "트레이서") return "tracer";
-    else if (name == "위도우메이커") return "widowmaker";
-    else if (name == "윈스턴") return "winston";
-    else if (name == "레킹볼") return "wrecking-ball";
-    else if (name == "자리야") return "zarya";
-    else if (name == "젠야타") return "zenyatta";
+    if (name === "아나") return "ana";
+    else if (name === "애쉬") return "ashe";
+    else if (name === "바티스트") return "baptiste";
+    else if (name === "바스티온") return "bastion";
+    else if (name === "브리기테") return "brigitte";
+    else if (name === "D-Va") return "dva";
+    else if (name === "둠피스트") return "doomfist";
+    else if (name === "겐지") return "genji";
+    else if (name === "한조") return "hanzo";
+    else if (name === "정크랫") return "junkrat";
+    else if (name === "루시우") return "lucio";
+    else if (name === "맥크리") return "mccree";
+    else if (name === "메이") return "mei";
+    else if (name === "메르시") return "mercy";
+    else if (name === "모이라") return "moira";
+    else if (name === "오리사") return "orisa";
+    else if (name === "파라") return "pharah";
+    else if (name === "리퍼") return "reaper";
+    else if (name === "라인하르트") return "reinhardt";
+    else if (name === "로드호그") return "roadhog";
+    else if (name === "솔저") return "soldier-76";
+    else if (name === "솜브라") return "sombra";
+    else if (name === "시메트라") return "symmetra";
+    else if (name === "토르비욘") return "torbjorn";
+    else if (name === "트레이서") return "tracer";
+    else if (name === "위도우메이커") return "widowmaker";
+    else if (name === "윈스턴") return "winston";
+    else if (name === "레킹볼") return "wrecking-ball";
+    else if (name === "자리야") return "zarya";
+    else if (name === "젠야타") return "zenyatta";
   }
 
   /**
@@ -114,7 +114,7 @@ export class Detail extends Component {
       // 치른 게임 수가 0 이라면 해당 레코드는 가져오지 않는다
       let play = this.props.data.rankplay.record[el].게임["치른 게임"];
       let champion_info = this.props.data.rankplay.record[el].영웅별;
-      if (play == 0 || champion_info == undefined) {
+      if (play === 0 || champion_info === undefined) {
         return;
       }
 
@@ -122,8 +122,8 @@ export class Detail extends Component {
       // 이때, 랭크 정보가 포함되지 않은 유저는 전 랭크에 대해서 가져온다
       let rankInfo;
       if (
-        this.props.data.rank.val == undefined ||
-        this.props.data.rank.val == null
+        this.props.data.rank.val === undefined ||
+        this.props.data.rank.val === null
       ) {
         rankInfo = "alltier";
       } else {
@@ -177,13 +177,17 @@ export class Detail extends Component {
         el
       )}/icon-portrait.png`;
       return (
-        <div className="champion-button">
+        <div className="champion-button" key={el}>
           <Link
             className="champion-button-link"
             to={`${this.props.match.url}/${el}`}
             //            onClick={this.scrollToChampionRef}
           >
-            <img className="champion-button-image" src={image_src} />
+            <img
+              className="champion-button-image"
+              src={image_src}
+              alt={`${el}`}
+            />
             <p>{el}</p>
           </Link>
         </div>
@@ -194,7 +198,6 @@ export class Detail extends Component {
     /* 현재 날짜와 최근 업데이트 시각을 비교한다 */
     const now = Date.now();
     const last_update = new Date(this.props.data.update).getTime();
-    console.log(`last update: ${last_update}`);
     const diff_millisec = now - last_update;
     let diff_hour = diff_millisec / 1000 / 60 / 60;
 
@@ -214,14 +217,13 @@ export class Detail extends Component {
    */
   async getMostRecord() {
     const mosts = this.props.data.rankplay.mostChampion;
-    console.log(mosts);
     // most_criteria는 모든 모스트 기준을 저장한다
     const most_criteria = Object.keys(mosts);
 
     const sorted = []; // 플레이 시간 기준 상위 챔피언을 순서대로 정렬해 저장하는 배열
     // 각 기준을 돌면서 플레이 시간 기준을 찾는다
     await most_criteria.some(el => {
-      if (el == "byPlaytime") {
+      if (el === "byPlaytime") {
         // 해당하는 키(영웅이름)의 값(플레이시간)을 배열에 저장한다
         for (let key in mosts[el]) {
           sorted.push([key, mosts[el][key]]);
@@ -232,7 +234,7 @@ export class Detail extends Component {
         });
       }
       // 순회 종료
-      return el == "byPlaytime";
+      return el === "byPlaytime";
     });
     this.setState({
       most: sorted
@@ -410,7 +412,6 @@ export class Detail extends Component {
     else if (damage.includes(champion_name)) return "damage";
     else if (support.includes(champion_name)) return "support";
     else {
-      console.log(champion_name);
       return -1;
     }
   }
@@ -423,7 +424,6 @@ export class Detail extends Component {
    */
   async accumulateChampionValue(criteria, avg = false) {
     const keys = Object.keys(this.props.data.rankplay.mostChampion[criteria]);
-    console.log(keys);
 
     // 해당 영웅의 플레이 시간을 세 범주(돌격, 공격, 지원)로 나누어 저장한다
     let tank = 0;
@@ -440,13 +440,13 @@ export class Detail extends Component {
       ];
       const champion_type = this.getChampionType(champion_name);
       // 영웅의 타입에 해당하는 변수에 시간을 누적한다
-      if (champion_type == "tank") {
+      if (champion_type === "tank") {
         tank += champion_value;
         tank_count += 1;
-      } else if (champion_type == "damage") {
+      } else if (champion_type === "damage") {
         damage += champion_value;
         damage_count += 1;
-      } else if (champion_type == "support") {
+      } else if (champion_type === "support") {
         support += champion_value;
         support_count += 1;
       } else {
@@ -463,9 +463,9 @@ export class Detail extends Component {
     await Promise.all(result);
 
     return new Promise(resolve => {
-      if (avg == false) {
+      if (avg === false) {
         resolve([tank, damage, support]);
-      } else if (avg == true) {
+      } else if (avg === true) {
         resolve([
           tank / tank_count,
           damage / damage_count,
@@ -522,7 +522,6 @@ export class Detail extends Component {
 
     // 데이터를 기반으로 각도를 계산한다
     const arcs = pie(data);
-    console.log(arcs);
 
     // svg를 그린다
     const svg = d3
@@ -598,15 +597,15 @@ export class Detail extends Component {
           return d.value;
         } else if (criteria === "byHitRate") {
           return d.value.toFixed(1);
-        } else if (criteria == "byWinRate") {
+        } else if (criteria === "byWinRate") {
           return d.value.toFixed(1);
-        } else if (criteria == "byKD") {
+        } else if (criteria === "byKD") {
           return d.value.toFixed(2);
-        } else if (criteria == "byCriticalHitRate") {
+        } else if (criteria === "byCriticalHitRate") {
           return d.value.toFixed(1);
-        } else if (criteria == "byMultiKill") {
+        } else if (criteria === "byMultiKill") {
           return d.value;
-        } else if (criteria == "byMissionContributeKill") {
+        } else if (criteria === "byMissionContributeKill") {
           return d.value;
         }
       });
@@ -644,7 +643,7 @@ export class Detail extends Component {
     const keys = Object.keys(this.props.data.rankplay.mostChampion[criteria]);
     // 각 영웅 이름들을 순회하면서 그래프를 그린다
     let max = 100;
-    if (where == "kd") max = 5;
+    if (where === "kd") max = 5;
     const championYScale = d3
       .scaleLinear()
       .domain([0, max])
@@ -660,17 +659,17 @@ export class Detail extends Component {
       // 라인하르트, 브리기테, 모이라, 윈스턴은 명중률에 대한 정보가 존재하지 않는다
       // 이처럼 존재하지 않는 값에 대해 참조하면 오류가 발생하므로
       // 바로 리턴해버린다
-      if (rate_info[el] == null) {
+      if (rate_info[el] === null) {
         return;
       }
       // 또, 해당 기준에서 값이 0인 영웅은 의미 없으므로 포함시키지 않는다
-      else if (my_val == 0) {
+      else if (my_val === 0) {
         return;
       }
       // 마지막으로 해당 영웅의 플레이 수가 0이면 포함시키지 않는다
       else if (
-        this.props.data.rankplay.record[el] == undefined ||
-        this.props.data.rankplay.record[el].게임["치른 게임"] == 0
+        this.props.data.rankplay.record[el] === undefined ||
+        this.props.data.rankplay.record[el].게임["치른 게임"] === 0
       ) {
         return;
       }
@@ -717,7 +716,7 @@ export class Detail extends Component {
         .attr("class", "text")
         .html(() => {
           let play = this.props.data.rankplay.record[el].게임["치른 게임"];
-          if (play == undefined || play == 0) {
+          if (play === undefined || play === 0) {
             return `게임 수: 0`;
           }
           return `게임 수: ${play}`;
@@ -740,10 +739,10 @@ export class Detail extends Component {
         .attr("height", 5)
         .attr("y", (d, i) => height / 3 - 30 * i + 34)
         .style("fill", (d, i) => {
-          if (i == 0) return "#10316b";
-          else if (i == 1) return "#0b8457";
-          else if (i == 2) return "#eac100";
-          else if (i == 3) return "#d65a31";
+          if (i === 0) return "#10316b";
+          else if (i === 1) return "#0b8457";
+          else if (i === 2) return "#eac100";
+          else if (i === 3) return "#d65a31";
         });
       reference_g
         .append("text")
@@ -762,7 +761,7 @@ export class Detail extends Component {
         .enter()
         .append("g")
         .attr("class", (d, i) => {
-          if (i == 0) return "bar my_bar";
+          if (i === 0) return "bar my_bar";
           return "bar";
         })
         .attr("transform", `translate(${width / 2 - bar_width / 2} , 0)`);
@@ -772,21 +771,21 @@ export class Detail extends Component {
         .append("rect")
         .attr("width", bar_width)
         .attr("y", (d, i) => {
-          if (i == 0) {
+          if (i === 0) {
             return height - championYScale(d[0]);
           }
           return height - championYScale(d);
         })
         .style("fill", (d, i) => {
-          if (i == 0) return "#10316b";
-          else if (i == 1) return "#0b8457";
-          else if (i == 2) return "#eac100";
-          else if (i == 3) return "#d65a31";
+          if (i === 0) return "#10316b";
+          else if (i === 1) return "#0b8457";
+          else if (i === 2) return "#eac100";
+          else if (i === 3) return "#d65a31";
         })
         .transition()
         .duration(1500)
         .attr("height", (d, i) => {
-          if (i == 0) {
+          if (i === 0) {
             return championYScale(d[0]);
           }
           return 5;
@@ -796,21 +795,21 @@ export class Detail extends Component {
       bar_g
         .append("text")
         .text((d, i) => {
-          if (i == 0) return d[0];
+          if (i === 0) return d[0];
           return d;
         })
         .attr("y", (d, i) => {
-          if (i == 0) return height - championYScale(d[0]) + 10;
+          if (i === 0) return height - championYScale(d[0]) + 10;
           return height - championYScale(d) + 10;
         })
         .attr("x", (d, i) => {
-          if (i == 0) {
+          if (i === 0) {
             return -30;
           }
           return 60;
         })
         .attr("class", (d, i) => {
-          if (i == 0) return "my_text text";
+          if (i === 0) return "my_text text";
           return "text";
         })
         .style("text-anchor", "left");
@@ -818,8 +817,7 @@ export class Detail extends Component {
       function mouseOver(d) {
         d3.select(this).style("stroke", "white");
 
-        if (typeof d === "object" && d[1] != undefined) {
-          const my_val = Number(d[0]);
+        if (typeof d === "object" && d[1] !== undefined) {
           const per = d[1].toFixed(0);
 
           d3.select(this.parentNode)
@@ -842,6 +840,8 @@ export class Detail extends Component {
         .selectAll("rect")
         .on("mouseover", mouseOver)
         .on("mouseout", mouseOut);
+
+      return;
     });
   }
 
@@ -850,7 +850,7 @@ export class Detail extends Component {
    */
   async getPlaytimeRecord() {
     const champions = await this.accumulateChampionValue("byPlaytime");
-    if (champions == -1) {
+    if (champions === -1) {
       alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
       return;
     }
@@ -866,7 +866,7 @@ export class Detail extends Component {
    */
   async getWinGameRecord() {
     const champions = await this.accumulateChampionValue("byWinGame");
-    if (champions == -1) {
+    if (champions === -1) {
       alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
       return;
     }
@@ -884,7 +884,7 @@ export class Detail extends Component {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
     {
-      if (rank == undefined) {
+      if (rank === undefined) {
         rank = "alltier";
       } else if (rank < 1500) {
         rank = "bronze";
@@ -915,7 +915,7 @@ export class Detail extends Component {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
     {
-      if (rank == undefined) {
+      if (rank === undefined) {
         rank = "alltier";
       } else if (rank < 1500) {
         rank = "bronze";
@@ -946,7 +946,7 @@ export class Detail extends Component {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
     {
-      if (rank == undefined) {
+      if (rank === undefined) {
         rank = "alltier";
       } else if (rank < 1500) {
         rank = "bronze";
@@ -977,7 +977,7 @@ export class Detail extends Component {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
     {
-      if (rank == undefined) {
+      if (rank === undefined) {
         rank = "alltier";
       } else if (rank < 1500) {
         rank = "bronze";
@@ -1006,7 +1006,7 @@ export class Detail extends Component {
    */
   async getMultiKillRecord() {
     const champions = await this.accumulateChampionValue("byMultiKill");
-    if (champions == -1) {
+    if (champions === -1) {
       alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
       return;
     }
@@ -1024,7 +1024,7 @@ export class Detail extends Component {
     const champions = await this.accumulateChampionValue(
       "byMissionContributeKill"
     );
-    if (champions == -1) {
+    if (champions === -1) {
       alert("잘못된 타입의 영웅이 입력되었습니다. 프로필 정보를 갱신해 주세요");
       return;
     }
@@ -1047,11 +1047,9 @@ export class Detail extends Component {
    * @dev 갱신 버튼을 눌렸을 때 유저 정보를 새로 가져온 뒤 그려준다
    */
   async handleClick(e) {
-    console.log("updating...");
     this.setState({ loading: true });
     await this.props.onClick();
     this.setState({ loading: false });
-    console.log(this.props);
   }
 
   /**
@@ -1129,7 +1127,11 @@ export class Detail extends Component {
           <div className="user-detail-top">
             <div className="user-detail-card-container">
               <div className="user-detail-card">
-                <img className="user-icon" src={this.props.data.icon} />
+                <img
+                  className="user-icon"
+                  src={this.props.data.icon}
+                  alt="icon"
+                />
                 <h1 className="user-data user-name">{this.props.data.name}</h1>
                 <h3 className="user-data">Lv. {this.props.data.level}</h3>
                 <h4 className="user-data">
@@ -1138,6 +1140,7 @@ export class Detail extends Component {
                 <img
                   className="user-data user-rank-image"
                   src={this.props.data.rank.imageSrc}
+                  alt="rank icon"
                 />
                 <h2 className="user-data">rank. {this.props.data.rank.val}</h2>
                 <button

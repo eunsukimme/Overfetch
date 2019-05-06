@@ -3,22 +3,22 @@ import { Link } from "react-router-dom";
 import "./css/user.css";
 
 export class User extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <tr
         className={
-          this.props.type == "odd" ? "user-card odd" : "user-card even"
+          this.props.type === "odd" ? "user-card odd" : "user-card even"
         }
       >
         <td className="user-card-order">
           <h1>{this.props.order}</h1>
         </td>
         <td>
-          <img className="user-card-image" src={this.props.icon_image} />
+          <img
+            className="user-card-image"
+            src={this.props.icon_image}
+            alt="icon"
+          />
         </td>
         <td>
           <Link
@@ -32,7 +32,11 @@ export class User extends Component {
           <h3 className="user-card-level">{this.props.level}</h3>
         </td>
         <td>
-          <img className="user-card-icon" src={this.props.rank.imageSrc} />
+          <img
+            className="user-card-icon"
+            src={this.props.rank.imageSrc}
+            alt="icon"
+          />
         </td>
         <td>
           <h3 className="user-card-rank">{this.props.rank.val}</h3>
