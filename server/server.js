@@ -34,10 +34,6 @@ app.use(express.static(path.join(__dirname, "client/build")));
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 }
-//build mode
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/public/index.html"));
-});
 
 app.use(morgan("tiny"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -49,6 +45,11 @@ app.use(express.static("../"));
 app.use("/search", searchRoute);
 app.use("/users", usersRoute);
 app.use("/avg", avgRoute);
+
+//build mode
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+});
 
 /* server run */
 app.listen(PORT, () => {

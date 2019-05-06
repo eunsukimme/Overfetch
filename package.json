@@ -9,7 +9,10 @@
     "concurrently": "^4.1.0"
   },
   "scripts": {
-    "start": "concurrently -k \"cd server && nodemon server.js\" \"cd client && yarn start\""
+    "heroku-postbuild": "cd client && yarn && yarn build",
+    "server": "cd server && nodemon server.js",
+    "client": "cd client && yarn start",
+    "dev": "concurrently -k \"yarn server\" \"yarn client\""
   },
   "keywords": [
     "example",
