@@ -68,7 +68,7 @@ export class Search extends React.Component {
           </video>
         </div>
         <h1 className="intro" style={{ color: "white" }}>
-          Welcome to OVERFETCH
+          OVERFETCH
         </h1>
         <div className="search-content">
           <form onSubmit={this.handleSubmit}>

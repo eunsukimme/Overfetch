@@ -4,6 +4,7 @@ import { Header } from "./Header";
 import { Search } from "./Search";
 import { Profile } from "./Profile";
 import { Users } from "./Users";
+import { Statistics } from "./Statistics";
 import { About } from "./About";
 import { Footer } from "./Footer";
 import { GlobalStyle } from "../globalStyles";
@@ -19,6 +20,7 @@ export class Home extends Component {
           <Route path="/profile//" component={Search} />
           <Route path="/profile/:name/:tag" component={Profile} />
           <Route path="/users" component={Users} />
+          <Route path="/statistics" component={Statistics} />
           <Route path="/about" component={About} />
           <Footer />
         </main>

@@ -36,13 +36,16 @@ export class Header extends Component {
           </div>
           <div className={this.state.button_click ? "menu-show" : "menu-hide"}>
             <NavLink to="/" exact className="menu" activeClassName="active">
-              Home
+              홈
             </NavLink>
             <NavLink to="/users" className="menu" activeClassName="active">
-              Users
+              리더보드
+            </NavLink>
+            <NavLink to="/statistics" className="menu" activeClassName="active">
+              영웅 통계
             </NavLink>
             <NavLink to="/about" className="menu" activeClassName="active">
-              About
+              소개
             </NavLink>
           </div>
         </nav>

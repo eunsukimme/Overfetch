@@ -24,7 +24,7 @@
 
 .search .intro {
   text-align: center;
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: bold;
   padding-top: 10%;
 }
@@ -70,6 +70,10 @@
 }
 
 @media screen and (max-width: 500px) {
+  .search .intro {
+    padding-top: 20%;
+  }
+
   .search-content input[type="text"] {
     width: 100%;
     margin: 0 auto;

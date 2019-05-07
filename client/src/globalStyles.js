@@ -19,6 +19,7 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
   }
   main{
+    font-family: 'Noto Sans KR', sans-serif;
     background-color: #222222;
     height: 100%;
   }

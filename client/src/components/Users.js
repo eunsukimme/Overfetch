@@ -25,9 +25,7 @@ export class Users extends Component {
    */
   async componentDidMount() {
     this.scrollToTop();
-    const url = `/users/${this.state.criteria}/${this.state.page}`;
 
-    console.log(url);
     await this.fetchData();
     await this.updateUserComponents();
     await this.addButtons();
@@ -262,7 +260,7 @@ export class Users extends Component {
     return (
       <div className="leaderboard">
         <div className="leaderboard-top">
-          <p>Leaderboard</p>
+          <p>리더보드</p>
           <select
             name="criteria"
             value={this.state.criteria}
@@ -277,10 +275,10 @@ export class Users extends Component {
           <table className="leaderboard-bottom-table">
             <tbody className="leaderboard-bottom-table-body">
               <tr className="leaderboard-bottom-table-header">
-                <th className="table-header-order">Rank</th>
-                <th colSpan="2">Userinfo</th>
-                <th>Level</th>
-                <th colSpan="2">Points</th>
+                <th className="table-header-order">순위</th>
+                <th colSpan="2">유저 정보</th>
+                <th>레벨</th>
+                <th colSpan="2">경쟁전 점수</th>
               </tr>
               {this.state.userComponents}
             </tbody>
