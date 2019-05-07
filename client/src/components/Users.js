@@ -25,12 +25,12 @@ export class Users extends Component {
    */
   async componentDidMount() {
     this.scrollToTop();
+    // 스크롤 함수 바인딩
+    window.addEventListener("scroll", this.handleScroll);
 
     await this.fetchData();
     await this.updateUserComponents();
     await this.addButtons();
-    // 스크롤 함수 바인딩
-    window.addEventListener("scroll", this.handleScroll);
   }
 
   // 컴포넌트 언마운트 시 스크롤 이벤트 리스너 제거한다

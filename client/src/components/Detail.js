@@ -69,9 +69,9 @@ export class Detail extends Component {
    */
   async componentDidMount() {
     this.scrollToTop();
-    await this.fetchData();
     // 스크롤 함수 바인딩
     window.addEventListener("scroll", this.handleScroll);
+    await this.fetchData();
   }
 
   componentWillUnmount() {

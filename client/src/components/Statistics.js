@@ -23,11 +23,11 @@ export class Statistics extends Component {
    */
   async componentDidMount() {
     this.scrollToTop();
+    // 스크롤 함수 바인딩
+    window.addEventListener("scroll", this.handleScroll);
 
     await this.fetchData();
     await this.updateChampionComponent();
-    // 스크롤 함수 바인딩
-    window.addEventListener("scroll", this.handleScroll);
   }
 
   componentWillUnmount() {

@@ -37,13 +37,19 @@ export class About extends Component {
                   프로그래밍과 커피, 게임을 좋아하는 대학생
                 </p>
                 <div className="card-icon-container">
-                  <a href="#">
+                  <a
+                    href="https://www.linkedin.com/in/eunsukimme/"
+                    target="_blank"
+                  >
                     <i className="fab fa-linkedin-in" />
                   </a>
-                  <a href="#">
+                  <a
+                    href="https://www.facebook.com/profile.php?id=100003647254099"
+                    target="_blank"
+                  >
                     <i className="fab fa-facebook-square" />
                   </a>
-                  <a href="#">
+                  <a href="https://www.instagram.com/eunsu_wag" target="_blank">
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
@@ -54,22 +60,14 @@ export class About extends Component {
               <div className="people-card">
                 <img
                   className="card-image"
-                  src="../../../document/about_profile/eunsu.jpg"
+                  src="../../../document/about_profile/taeyeong.png"
                   alt="profile"
                 />
-                <h1 className="card-name">Kim Eunsu</h1>
-                <p className="title">Fullstack Developer</p>
-                <p className="description">
-                  프로그래밍과 커피, 게임을 좋아하는 대학생
-                </p>
+                <h1 className="card-name">An TaeYeong</h1>
+                <p className="title">Content Designer</p>
+                <p className="description">블리자드 게임을 좋아하는 대학생</p>
                 <div className="card-icon-container">
-                  <a href="#">
-                    <i className="fab fa-linkedin-in" />
-                  </a>
-                  <a href="#">
-                    <i className="fab fa-facebook-square" />
-                  </a>
-                  <a href="#">
+                  <a href="https://www.instagram.com/a_tae_o/" target="_blank">
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
