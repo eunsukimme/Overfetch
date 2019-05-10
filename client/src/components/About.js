@@ -121,7 +121,7 @@ export class About extends Component {
                 <h1 className="card-name">Yoon Hyunjun </h1>
                 <p className="title">Prop and Background Modeler, Artist</p>
                 <p className="description">
-                  프롭 및 백그라운드 모델러, 아티스트
+                  적합한 아름다움을 창조하고자 하는 사람
                 </p>
                 <div className="card-icon-container">
                   <a href="https://www.artstation.com/teneath" target="_blank">
