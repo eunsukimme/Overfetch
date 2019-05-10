@@ -1084,13 +1084,15 @@ export class Detail extends Component {
   handleScroll(e) {
     // 스크롤을 100 이상 하면
     const topButton = document.getElementById("leaderboard-button-to-top");
-    if (
-      document.body.scrollTop > 500 ||
-      document.documentElement.scrollTop > 500
-    ) {
-      topButton.style.display = "block";
-    } else {
-      topButton.style.display = "none";
+    if (topButton !== null) {
+      if (
+        document.body.scrollTop > 500 ||
+        document.documentElement.scrollTop > 500
+      ) {
+        topButton.style.display = "block";
+      } else {
+        topButton.style.display = "none";
+      }
     }
   }
 

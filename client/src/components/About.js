@@ -38,7 +38,7 @@ export class About extends Component {
                 </p>
                 <div className="card-icon-container">
                   <a href="https://gamsungcoding.tistory.com" target="_blank">
-                    <i class="fab fa-blogger" />
+                    <i className="fab fa-blogger" />
                   </a>
                   <a
                     href="https://www.linkedin.com/in/eunsukimme/"
@@ -85,7 +85,7 @@ export class About extends Component {
                   alt="profile"
                 />
                 <h1 className="card-name">Jang Yunhui</h1>
-                <p className="title">Project Manager</p>
+                <p className="title">Data Scientist</p>
                 <p className="description">
                   데이터 마이닝과 프로세스 마이닝으로 세상을 변하게 하고 싶은
                   사람
@@ -93,7 +93,7 @@ export class About extends Component {
 
                 <div className="card-icon-container">
                   <a href="https://process-mining.tistory.com" target="_blank">
-                    <i class="fab fa-blogger" />
+                    <i className="fab fa-blogger" />
                   </a>
                   <a
                     href="https://www.linkedin.com/in/%EC%9C%A4%ED%9D%AC-%EC%9E%A5-268458147/"
@@ -115,23 +115,17 @@ export class About extends Component {
               <div className="people-card">
                 <img
                   className="card-image"
-                  src="../../../document/about_profile/eunsu.jpg"
+                  src="../../../document/about_profile/hyunjun.jpg"
                   alt="profile"
                 />
-                <h1 className="card-name">Kim Eunsu</h1>
-                <p className="title">Fullstack Developer</p>
+                <h1 className="card-name">Yoon Hyunjun </h1>
+                <p className="title">Prop and Background Modeler, Artist</p>
                 <p className="description">
-                  프로그래밍과 커피, 게임을 좋아하는 대학생
+                  프롭 및 백그라운드 모델러, 아티스트
                 </p>
                 <div className="card-icon-container">
-                  <a href="#">
-                    <i className="fab fa-linkedin-in" />
-                  </a>
-                  <a href="#">
-                    <i className="fab fa-facebook-square" />
-                  </a>
-                  <a href="#">
-                    <i className="fab fa-instagram" />
+                  <a href="https://www.artstation.com/teneath" target="_blank">
+                    <i className="fab fa-artstation" />
                   </a>
                 </div>
                 <p>
