@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-// path: /feedback/메이
-// 고드름 명중률
 router.get(`/${encodeURI("보조 발사 적중률")}/low`, (req, res, next) => {
   res.json({
     feedback: `님의 고드름 명중률은 비슷한 다른 플레이어의 평균보다 떨어지는 편입니다.

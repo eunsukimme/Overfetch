@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-// path: /feedback/메이
-// 고드름 명중률
 router.get(`/${encodeURI("용검으로 처치")}/low`, (req, res, next) => {
   res.json({
     feedback: `님의 궁극기로 처치한 적은 비슷한 다른 유저들보다 낮습니다.

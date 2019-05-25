@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-// path: /feedback/메이
-// 고드름 명중률
 router.get(`/${encodeURI("황야의 무법자로 처치")}/low`, (req, res, next) => {
   res.json({
     feedback: `님의 궁극기 처치는 다른 플레이어의 처치량보다 낮습니다.
