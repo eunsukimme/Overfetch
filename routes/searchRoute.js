@@ -8,6 +8,7 @@ const User = require("../models/user");
 
 // path: /search
 // GET user info
+
 router.get("/", async (req, res, next) => {
   // if query string exists
   if (req.query.name && req.query.tag) {

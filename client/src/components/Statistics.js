@@ -8,6 +8,7 @@ export class Statistics extends Component {
     this.state = {
       loading: false,
       error: false,
+      errorMsg: "",
       data: [],
       count: 0,
       criteria: "win_rate",
@@ -96,6 +97,14 @@ export class Statistics extends Component {
     await fetch(url)
       .then(res => res.json())
       .then(data => {
+        if (data.error) {
+          this.setState({
+            error: true,
+            loading: false,
+            errorMsg: data.error
+          });
+          return alert(data.error);
+        }
         this.setState({
           data: data[0]
         });
@@ -108,6 +117,7 @@ export class Statistics extends Component {
         });
       })
       .catch(error => {
+        console.log(error);
         this.setState({
           loading: false,
           error: true
@@ -214,10 +224,7 @@ export class Statistics extends Component {
     if (error) {
       return (
         <div className="error">
-          <p>error!!!</p>
-          <button id="statistics-button-to-top" onClick={this.scrollToTop}>
-            Top
-          </button>
+          <p>{this.state.errorMsg}</p>
         </div>
       );
     } else if (loading) {

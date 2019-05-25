@@ -5,6 +5,9 @@ import "./champion.css";
 export class Champion extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      feedbacks: []
+    };
     this.championRef = React.createRef();
   }
 
@@ -56,6 +59,20 @@ export class Champion extends Component {
       const min = data[el]["min"].toFixed(2);
       const avg = data[el]["avg"].toFixed(2);
       const max = data[el]["max"].toFixed(2);
+      // 평균값과 비교해줘서 피드백을 가져온다
+      /*if(avg < min){
+        const url = `/feedback/${this.props.championName}/${field}/low`;
+        fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          const feedback = data[feedback];
+          this.setState({
+            feedbacks: [...this.state.feedbacks, feedback]
+          });
+          console.log(feedback);
+        });
+
+      }*/
 
       const value = this.props.userData.rankplay.record[
         `${this.props.championName}`
@@ -276,6 +293,15 @@ export class Champion extends Component {
           </div>
         </div>
         <div id="viz" ref={this.championRef} />
+        <div className="section-header-container">
+          <div className="section-header">
+            <div className="header-bar" />
+            <div className="header-parahgraph">영웅 공략</div>
+          </div>
+        </div>
+        <div id="feedback-container">
+          <div className="feedback">hi</div>
+        </div>
       </div>
     );
   }

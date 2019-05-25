@@ -10,13 +10,10 @@ const app = express();
 const searchRoute = require("./routes/searchRoute");
 const usersRoute = require("./routes/usersRoute");
 const avgRoute = require("./routes/avgRoute");
+const feedbackRoute = require("./routes/feedbackRoute");
 const PORT = process.env.PORT || 5000;
+
 ///////               몽고 DB 연결                 /////
-const db = mongoose.connection;
-db.on("error", console.error);
-db.once("open", () => {
-  console.log("Connected to mongod server");
-});
 // MongoDB Atlas 연결
 mongoose.connect(
   "mongodb+srv://test:temppwd@overfetch-beta-release-noxxr.mongodb.net/test?retryWrites=true",
@@ -26,6 +23,13 @@ mongoose.connect(
 /*mongoose.connect("mongodb://localhost:27017/overfetch", {
   useNewUrlParser: true
 });*/
+const db = mongoose.connection;
+db.on("error", () => {
+  console.log("Can't connect to mongodb server");
+});
+db.on("open", () => {
+  console.log("Connected to mongod server");
+});
 /////////////////////////////////////////////////////
 
 //production mode
@@ -43,9 +47,10 @@ app.use(express.static(path.join(__dirname)));
 app.use("/search", searchRoute);
 app.use("/users", usersRoute);
 app.use("/avg", avgRoute);
+app.use("/feedback", feedbackRoute);
 
 //build mode
-app.get("/", (req, res) => {
+app.get("/", (req, res, next) => {
   res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 

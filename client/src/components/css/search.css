@@ -22,18 +22,25 @@
   min-height: 100%;
 }
 
-.search .intro {
+.search-title-container {
   text-align: center;
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: bold;
-  padding-top: 10%;
+  width: 100%;
+}
+.search-title-text {
+  display: none;
+}
+.search-title {
+  width: 800px;
+  height: 500px;
+  color: white;
 }
 
 .search-content {
   position: relative;
   width: 80%;
   height: auto;
-  top: 20%;
   margin: 0 auto;
 }
 
@@ -72,6 +79,16 @@
 @media screen and (max-width: 500px) {
   .search .intro {
     padding-top: 20%;
+  }
+  .search-title-text {
+    text-align: center;
+    width: 90%;
+    margin: 0 auto;
+    padding: 80px 0;
+    display: block;
+  }
+  .search-title {
+    display: none;
   }
 
   .search-content input[type="text"] {

@@ -1,7 +1,7 @@
 .section-header-container {
   width: 80%;
-  margin: 10px auto;
-  padding: 10px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .section-header-container.main-header {

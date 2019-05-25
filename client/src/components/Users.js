@@ -12,7 +12,8 @@ export class Users extends Component {
       page: 1,
       buttonComponets: [],
       loading: false,
-      error: false
+      error: false,
+      errorMsg: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
@@ -52,6 +53,14 @@ export class Users extends Component {
     await fetch(url)
       .then(res => res.json())
       .then(_data => {
+        if (_data.error) {
+          this.setState({
+            error: true,
+            loading: false,
+            errorMsg: _data.error
+          });
+          return alert(_data.error);
+        }
         this.setState({ data: _data });
         this.setState({
           loading: false
@@ -242,10 +251,7 @@ export class Users extends Component {
     if (error) {
       return (
         <div className="error">
-          <p>error!!!</p>
-          <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
-            Top
-          </button>
+          <p>{this.state.errorMsg}</p>
         </div>
       );
     } else if (loading) {
