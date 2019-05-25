@@ -16,6 +16,26 @@ export class Champion extends Component {
     this.visualizeData();
   }
 
+  fetchFeedback(field, status) {
+    console.log(field);
+    const url = `/feedback/${this.props.championName}/${field}/${status}`;
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const feedback = (
+          <div className="feedback-description">
+            {this.props.userData.name} {data["feedback"]}
+          </div>
+        );
+        this.setState({
+          feedbacks: [...this.state.feedbacks, feedback]
+        });
+      })
+      .catch(error => {
+        console.log("존재하지 않는 피드백 요청입니다: " + field);
+      });
+  }
+
   async visualizeData() {
     const data = this.props.championData[0];
     const keys = Object.keys(data);
@@ -59,20 +79,6 @@ export class Champion extends Component {
       const min = data[el]["min"].toFixed(2);
       const avg = data[el]["avg"].toFixed(2);
       const max = data[el]["max"].toFixed(2);
-      // 평균값과 비교해줘서 피드백을 가져온다
-      /*if(avg < min){
-        const url = `/feedback/${this.props.championName}/${field}/low`;
-        fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          const feedback = data[feedback];
-          this.setState({
-            feedbacks: [...this.state.feedbacks, feedback]
-          });
-          console.log(feedback);
-        });
-
-      }*/
 
       const value = this.props.userData.rankplay.record[
         `${this.props.championName}`
@@ -94,6 +100,20 @@ export class Champion extends Component {
         percentage = bottomPercentageScale(my_val);
       } else if (Number(my_val) >= Number(avg)) {
         percentage = topPercentageScale(my_val);
+      }
+
+      // 평균값과 비교해줘서 피드백을 가져온다
+      // low
+      if (percentage < 45) {
+        this.fetchFeedback(field, "high");
+      }
+      // middle
+      else if (percentage >= 45 && percentage <= 55) {
+        this.fetchFeedback(field, "middle");
+      }
+      // high
+      else if (percentage > 55) {
+        this.fetchFeedback(field, "low");
       }
 
       const dataSet = [min, [my_val, percentage], avg, max];
@@ -300,7 +320,15 @@ export class Champion extends Component {
           </div>
         </div>
         <div id="feedback-container">
-          <div className="feedback">hi</div>
+          <div className="feedback">
+            {this.state.feedbacks.length > 0 ? (
+              this.state.feedbacks
+            ) : (
+              <div className="feedback-description">
+                제공해드릴 영웅 공략이 존재하지 않습니다
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

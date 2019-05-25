@@ -26,11 +26,21 @@
   width: 80%;
   margin: 0 auto;
 }
+.feedback-description {
+  text-align: center;
+  font-size: 1.4rem;
+  line-height: 160%;
+  border: 1px solid #444444;
+  padding: 40px;
+}
 
 @media screen and (max-width: 500px) {
   #viz .svg-graph {
     width: 100%;
     margin: 20px auto;
     padding-left: 20px;
+  }
+  .feedback-description {
+    font-size: 1.6rem;
   }
 }
