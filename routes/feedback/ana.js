@@ -1,12 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-router.get(`/${encodeURI("게임당_재운_적")}/low`, (req, res, next) => {
-  res.json({ feedback: "hello low ana!" });
+router.get(`/${encodeURI("재운 적")}/low`, (req, res, next) => {
+  res.json({
+    feedback: `님의 재운 적 수는 평균보다 낮습니다. 아나의 수면총은 끌어친다는 느낌으로 활용해야 합니다. 특히 용검을 
+  든 겐지가 올 때 아나의 역할은 더욱 중요해지는데요, 대부분의 겐지가 질풍참을 사용하며 오기 
+  때문에 정면을 맞추기보다 살짝 옆을 노린다는 느낌으로 사용하는 것이 좋습니다. 또한 먼 
+  거리의 적을 맞추기보다 최대한 가까운 적을 우선적으로 노려보세요. 수면총의 적중률이 조금 더 
+  높아질 것입니다.`
+  });
 });
 
-router.get(`/${encodeURI("게임당_재운_적")}/high`, (req, res, next) => {
-  res.json({ feedback: "hello high ana!" });
+router.get(`/${encodeURI("나노 강화제 도움")}/low`, (req, res, next) => {
+  res.json({
+    feedback: `님의 나노 강화제 도움 횟수는 평균보다 낮습니다. 나노강화제의 
+  도움이 낮다고 너무 낙심하지 마세요.나노강화제의 우선 순위는 궁극기가 있는 딜러 혹은 
+  체력이 낮은 탱커에게 주는 것이 가장 이상적입니다. 이 순위를 생각하면서 플레이한다면 
+  자연스럽게 많은 어시스트를 올리게 될 것입니다.`
+  });
 });
 
 module.exports = router;
