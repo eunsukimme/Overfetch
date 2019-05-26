@@ -14,6 +14,10 @@ const zaryaFeedback = require("./feedback/zarya");
 const sombraFeedback = require("./feedback/sombra");
 const widowmakerFeedback = require("./feedback/widowmaker");
 const torbjornFeedback = require("./feedback/torbjorn");
+const asheFeedback = require("./feedback/ashe");
+const junkratFeedback = require("./feedback/junkrat");
+const tracerFeedback = require("./feedback/tracer");
+const hanzoFeedback = require("./feedback/hanzo");
 
 // path: /feedback
 router.use(`/${encodeURI("아나")}`, anaFeedback);
@@ -30,5 +34,9 @@ router.use(`/${encodeURI("자리야")}`, zaryaFeedback);
 router.use(`/${encodeURI("솜브라")}`, sombraFeedback);
 router.use(`/${encodeURI("위도우메이커")}`, widowmakerFeedback);
 router.use(`/${encodeURI("토르비욘")}`, torbjornFeedback);
+router.use(`/${encodeURI("애쉬")}`, asheFeedback);
+router.use(`/${encodeURI("정크랫")}`, junkratFeedback);
+router.use(`/${encodeURI("트레이서")}`, tracerFeedback);
+router.use(`/${encodeURI("한조")}`, hanzoFeedback);
 
 module.exports = router;

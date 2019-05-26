@@ -20,7 +20,15 @@
   font-size: 25px;
   font-weight: bold;
 }
-
+.header .menu.logo .logo-icon {
+  width: 28px;
+  position: absolute;
+  left: 30px;
+}
+.header .menu.logo .logo-title {
+  position: relative;
+  padding-left: 28px;
+}
 .header .menu:hover {
   background-color: gray;
   color: black;

@@ -21,7 +21,8 @@ export class Header extends Component {
     return (
       <header className="header">
         <Link to="/" className="menu logo">
-          OVERFETCH
+          <img className="logo-icon" src="../../../document/header_logo.png" />
+          <h1 className="logo-title">OVERFETCH</h1>
         </Link>
         <nav className="header-right">
           <div
