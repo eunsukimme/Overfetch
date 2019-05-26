@@ -81,15 +81,9 @@
   .search .intro {
     padding-top: 20%;
   }
-  .search-title-text {
-    text-align: center;
-    width: 90%;
-    margin: 0 auto;
-    padding: 80px 0;
-    display: block;
-  }
   .search-title {
-    display: none;
+    width: 80%;
+    height: 300px;
   }
 
   .search-content input[type="text"] {
