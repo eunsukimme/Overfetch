@@ -5,6 +5,10 @@ const mongoose = require("mongoose");
 const User = require("../models/user");
 
 // path: /users
+router.get("/", (req, res, next) => {
+  res.redirect("/rank/1");
+});
+
 router.get("/:sort/:page", (req, res, next) => {
   // sort는 level 혹은 rank(default)이다
   let sort = req.params.sort;

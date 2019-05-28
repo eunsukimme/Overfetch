@@ -8,32 +8,10 @@ const User = require("../models/user");
 
 // path: /search
 // GET user info
-router.get("/:name/:tag", (req, res, next) => {
-  const _name = req.params.name;
-  const _tag = req.params.tag;
 
-  // DB 내 유저 검색
-  User.findOne({ name: _name, tag: _tag }, (err, user) => {
-    if (err) return res.status(500).json({ error: err });
-    if (!user) {
-      console.log("유저 정보 못 찾음...");
-      next();
-    }
-    if (user) {
-      if (_update == "true" || _genesis == "true") {
-        console.log("유저 정보 갱신 중...");
-        next();
-      } else {
-        console.log("유저 찾음. 정보 전달 후 종료함");
-        return res.json(user);
-      }
-    }
-  });
-});
-
-router.get("/", async (req, res, next) => {
+router.get("/:name/:tag", async (req, res, next) => {
   // if query string exists
-  if (req.query.name && req.query.tag) {
+  if (req.params.name && req.params.tag) {
     next();
   } else {
     console.log("유저 이름과 배틀태그를 넘겨주세요");
@@ -41,9 +19,9 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/", (req, res, next) => {
-  const _name = req.query.name;
-  const _tag = req.query.tag;
+router.get("/:name/:tag", (req, res, next) => {
+  const _name = req.params.name;
+  const _tag = req.params.tag;
   const _update = req.query.update;
   const _genesis = req.query.genesis;
   // DB 내 유저 검색
@@ -64,11 +42,12 @@ router.get("/", (req, res, next) => {
     }
   });
 });
+
 router.get(
-  "/",
+  "/:name/:tag",
   asyncHandler(async (req, res, next) => {
-    const _name = req.query.name;
-    const _tag = req.query.tag;
+    const _name = req.params.name;
+    const _tag = req.params.tag;
     const _update = req.query.update;
     const _genesis = req.query.genesis;
 
