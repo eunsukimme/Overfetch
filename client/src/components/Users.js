@@ -46,9 +46,7 @@ export class Users extends Component {
     this.setState({
       loading: true
     });
-    const url = `${this.props.match.path}/${this.state.criteria}/${
-      this.state.page
-    }`;
+    const url = `/users/${this.state.criteria}/${this.state.page}`;
 
     await fetch(url)
       .then(res => res.json())
