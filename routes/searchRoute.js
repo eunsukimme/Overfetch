@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler");
 const FetchManager = require("../fetchData/fetchData");
 const User = require("../models/user");
 
-// path: /search
+// path: /profile
 // GET user info
 
 router.get("/:name/:tag", async (req, res, next) => {

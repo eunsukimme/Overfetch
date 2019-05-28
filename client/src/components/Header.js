@@ -39,7 +39,11 @@ export class Header extends Component {
             <NavLink to="/" exact className="menu" activeClassName="active">
               홈
             </NavLink>
-            <NavLink to="/users" className="menu" activeClassName="active">
+            <NavLink
+              to="/users/rank/1"
+              className="menu"
+              activeClassName="active"
+            >
               리더보드
             </NavLink>
             <NavLink to="/statistics" className="menu" activeClassName="active">

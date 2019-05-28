@@ -19,7 +19,7 @@ export class Home extends Component {
           <Route path="/" exact component={Search} />
           <Route path="/profile//" component={Search} />
           <Route path="/profile/:name/:tag" component={Profile} />
-          <Route path="/users" component={Users} />
+          <Route path="/users/:sort/:page" component={Users} />
           <Route path="/statistics" component={Statistics} />
           <Route path="/about" component={About} />
           <Footer />

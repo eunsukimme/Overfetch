@@ -44,7 +44,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname)));
 
 /* router split */
-app.use("/search", searchRoute);
+app.use("/profile", searchRoute);
 app.use("/users", usersRoute);
 app.use("/avg", avgRoute);
 app.use("/feedback", feedbackRoute);
