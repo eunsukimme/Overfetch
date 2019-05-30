@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
 
@@ -8,8 +9,10 @@ const User = require("../models/user");
 
 // path: /profile
 // GET user info
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: false }));
 
-router.get("/:name/:tag", async (req, res, next) => {
+router.all("/:name/:tag", async (req, res, next) => {
   // if query string exists
   if (req.params.name && req.params.tag) {
     next();
@@ -19,11 +22,17 @@ router.get("/:name/:tag", async (req, res, next) => {
   }
 });
 
-router.get("/:name/:tag", (req, res, next) => {
+router.all("/:name/:tag", (req, res, next) => {
   const _name = req.params.name;
   const _tag = req.params.tag;
-  const _update = req.query.update;
-  const _genesis = req.query.genesis;
+  let _update;
+  if (req.body && req.body.update) {
+    _update = req.body.update;
+  }
+  let _genesis;
+  if (req.body && req.body.genesis) {
+    _genesis = req.body.genesis;
+  }
   // DB 내 유저 검색
   User.findOne({ name: _name, tag: _tag }, (err, user) => {
     if (err) return res.status(500).json({ error: err });
@@ -43,13 +52,19 @@ router.get("/:name/:tag", (req, res, next) => {
   });
 });
 
-router.get(
+router.all(
   "/:name/:tag",
   asyncHandler(async (req, res, next) => {
     const _name = req.params.name;
     const _tag = req.params.tag;
-    const _update = req.query.update;
-    const _genesis = req.query.genesis;
+    let _update;
+    if (req.body && req.body.update) {
+      _update = req.body.update;
+    }
+    let _genesis;
+    if (req.body && req.body.genesis) {
+      _genesis = req.body.genesis;
+    }
 
     try {
       const userInfo = await FetchManager.fetchData(_name, _tag);
