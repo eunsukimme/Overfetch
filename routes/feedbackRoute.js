@@ -24,6 +24,7 @@ const moiraFeedback = require("./feedback/moira");
 const baptisteFeedback = require("./feedback/baptiste");
 const zenyattaFeedback = require("./feedback/zenyatta");
 const brigitteFeedback = require("./feedback/brigitte");
+const pharahFeedback = require("./feedback/pharah");
 
 // path: /feedback
 router.use(`/${encodeURI("아나")}`, anaFeedback);
@@ -50,5 +51,6 @@ router.use(`/${encodeURI("모이라")}`, moiraFeedback);
 router.use(`/${encodeURI("바티스트")}`, baptisteFeedback);
 router.use(`/${encodeURI("젠야타")}`, zenyattaFeedback);
 router.use(`/${encodeURI("브리기테")}`, brigitteFeedback);
+router.use(`/${encodeURI("파라")}`, pharahFeedback);
 
 module.exports = router;
