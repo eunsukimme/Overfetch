@@ -1,5 +1,3 @@
-<center>![로고](<https://github.com/eunsukimme/Overfetch/blob/master/document/readme/overfetch_git_logo.png>)</center>
-
 # 오버페치(Overfetch): 오버워치 게임 데이터 시각화 프로젝트
 
 한국장학재단이 주관하고 블리자드 엔터테인먼트(Blizzard Entertainment)가 지원하는 푸른등대 기부장학금 수혜 대학생이 만든 오버워치 게임 데이터 시각화 서비스 입니다.
