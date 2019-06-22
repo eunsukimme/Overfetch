@@ -1,4 +1,4 @@
-<center>![상위 영웅](https://github.com/eunsukimme/Overfetch/blob/master/document/readme/overfetch_git_logo.png)</center>
+<center>![로고](<https://github.com/eunsukimme/Overfetch/blob/master/document/readme/overfetch_git_logo.png>)</center>
 
 # 오버페치(Overfetch): 오버워치 게임 데이터 시각화 프로젝트
 
