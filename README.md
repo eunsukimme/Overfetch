@@ -6,7 +6,9 @@
 
 오버워치 공식 홈페이지(https://playoverwatch.com/ko-kr/) 에서는 유저들의 게임 플레이 데이터를 볼 수 있는 서비스를 제공합니다. 해당 서비스에서 유저들은 여러 기준으로 모스트 챔피언을 확인할 수 있고, 각 영웅들의 플레이 도중 축적된 여러 게임 데이터들을 확인할 수 있습니다.
 
-(사진)
+![상위 영웅](https://github.com/eunsukimme/Overfetch/blob/master/document/readme/playoverwatch_analysis2.PNG)
+
+![통계](https://github.com/eunsukimme/Overfetch/blob/master/document/readme/playoverwatch_analysis.PNG)
 
 하지만 이 기록들을 사용자들이 볼 때 그다지 유의미한 결과를 도출해 내지 못 합니다. 통계 화면에서 나타나는 데이터들은 양이 너무 많아 난잡한 느낌이 들고, 시각화가 되지 않은 로우 데이터 값들은 사용자가 보고 이해하는데 어려운 요인으로 작용합니다.
 
@@ -42,7 +44,7 @@
 
 저희는 다음과 같이 오버워치 게임 데이터 시각화 웹 서비스 '오버페치(Overfetch)'를 제작하였습니다.
 
-(GIF)
+![알파(DEMO) 서비스 시연](https://github.com/eunsukimme/Overfetch/blob/master/document/readme/play.gif)
 
 유투브 시연 영상
 
@@ -56,8 +58,10 @@ https://overfetch.herokuapp.com
 
 오버페치는 푸른등대 기부장학생들의 블리자드 역량강화 프로그램에서 최우수상을 수상하였습니다.
 
-(사진)
+![수상 단체사진(좌측)](https://github.com/eunsukimme/Overfetch/blob/master/document/readme/first_prize.jpg)
 
 관련 기사
 
 http://news.zum.com/articles/52898873
+
+좋은 분들과 너무나 소중한 추억을 만들 수 있도록 지원해주신 한국장학재단과 블리자드 엔터테인먼트에 다시 한 번 큰 감사를 드립니다.
