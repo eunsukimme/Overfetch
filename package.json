@@ -13,7 +13,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-async-handler": "^1.1.4",
-    "mongoose": "^5.4.8",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "path": "^0.12.7",
     "nodemon": "^1.19.0"
