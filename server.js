@@ -54,6 +54,11 @@ app.get("/", (req, res, next) => {
   res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
+// heroku dyno를 5분 주기로 계속 깨우는 Interval 설정
+setInterval(function() {
+  http.get("http://cbound.herokuapp.com");
+}, 1000 * 60 * 5);
+
 /* server run */
 app.listen(PORT, () => {
   console.log(`Server is listening at port ${PORT}`);
