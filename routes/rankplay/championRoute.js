@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../../models/user");
 const anaRouter = require("./champion/ana");
 const asheRouter = require("./champion/ashe");
 const baptisteRouter = require("./champion/Baptiste");

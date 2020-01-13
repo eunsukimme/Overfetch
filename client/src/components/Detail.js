@@ -108,16 +108,16 @@ export class Detail extends Component {
     this.setState({ loading: true });
 
     // 유저의 경쟁전 플레이 영웅이름을 가져온다
-    const keys = Object.keys(this.props.data.rankplay.record);
-    const except = keys.indexOf("모든영웅");
-    keys.splice(except, 1); // 모든영웅 필드 제거
+    const heros = Object.keys(this.props.data.rankplay.record);
+    const except = heros.indexOf("모든영웅");
+    heros.splice(except, 1); // 모든영웅 필드 제거
 
     // 경쟁전 플레이 영웅별로 시각화할 레코드를 가져온다
-    const result = await keys.map(async el => {
+    const result = await heros.map(async hero => {
       // 해당 영웅의 플레이 정보(영웅별)가 존재하지 않거나
       // 치른 게임 수가 0 이라면 해당 레코드는 가져오지 않는다
-      let play = this.props.data.rankplay.record[el].게임["치른 게임"];
-      let champion_info = this.props.data.rankplay.record[el].영웅별;
+      let play = this.props.data.rankplay.record[hero].게임["치른 게임"];
+      let champion_info = this.props.data.rankplay.record[hero].영웅별;
       if (play === 0 || champion_info === undefined) {
         return;
       }
@@ -133,23 +133,24 @@ export class Detail extends Component {
       } else {
         rankInfo = this.props.data.rank.val;
       }
-      const url = "/avg/rankplay/champion/" + el + "?rank=" + rankInfo;
+      const url = "/api/avg/rankplay/champion/" + hero + "?rank=" + rankInfo;
       const result = await fetch(url)
         .then(res => res.json())
         .then(data => {
+          console.log(hero, data);
           this.setState(prevState => ({
             champions: {
               ...prevState.champions,
-              [el]: el
+              [hero]: hero
             }
           }));
 
           this.setState(prevState => ({
             championComponents: {
               ...prevState.championComponents,
-              [el]: (
+              [hero]: (
                 <Champion
-                  championName={el}
+                  championName={hero}
                   userData={this.props.data}
                   championData={data}
                 />
@@ -627,7 +628,7 @@ export class Detail extends Component {
    * @param {기준 지표} criteria
    */
   async createBarChart(rank, where, criteria) {
-    const url = `/avg/rankplay/${where}?tier=${rank}`;
+    const url = `/api/avg/rankplay/${where}?tier=${rank}`;
 
     let rate_info;
     await fetch(url)

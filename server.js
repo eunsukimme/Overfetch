@@ -7,10 +7,7 @@ const cors = require("cors");
 const path = require("path");
 const http = require("http");
 const app = express();
-const profileRouter = require("./routes/profileRouter");
-const usersRouter = require("./routes/usersRouter");
-const avgRouter = require("./routes/avgRouter");
-const feedbackRouter = require("./routes/feedbackRouter");
+const apiRouter = require("./routes/apiRouter");
 require("dotenv").config();
 const PORT = process.env.PORT || 5000;
 const username = process.env.MONGODB_USERNAME;
@@ -47,10 +44,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname)));
 
 /* router split */
-app.use("/profile", profileRouter);
-app.use("/users", usersRouter);
-app.use("/avg", avgRouter);
-app.use("/feedback", feedbackRouter);
+app.use("/api", apiRouter);
 
 //build mode
 app.get("/", (req, res, next) => {

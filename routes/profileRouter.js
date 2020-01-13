@@ -1,12 +1,11 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const FetchManager = require("../fetchData/fetchData");
 const User = require("../models/user");
 
-// path: /profile
+// path: /api/profile
 // GET user info
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));

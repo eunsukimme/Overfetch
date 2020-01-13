@@ -91,7 +91,7 @@ export class Statistics extends Component {
     this.setState({
       loading: true
     });
-    const url = `/avg/rankplay/${this.state.criteria}?tier=${this.state.tier}`;
+    const url = `/api/avg/rankplay/${this.state.criteria}?tier=${this.state.tier}`;
     console.log(url);
 
     await fetch(url)

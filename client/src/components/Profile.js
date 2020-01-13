@@ -18,7 +18,7 @@ export class Profile extends React.Component {
   async componentDidMount() {
     this.scrollToTop();
 
-    const url = `/profile/${this.props.match.params.name}/${this.props.match.params.tag}`;
+    const url = `/api/profile/${this.props.match.params.name}/${this.props.match.params.tag}`;
 
     await this.fetchData(url);
   }
@@ -67,7 +67,7 @@ export class Profile extends React.Component {
   }
 
   async handleClick() {
-    const url = `/profile/${this.props.match.params.name}/${this.props.match.params.tag}`;
+    const url = `/api/profile/${this.props.match.params.name}/${this.props.match.params.tag}`;
 
     await this.fetchData(url, "true");
   }

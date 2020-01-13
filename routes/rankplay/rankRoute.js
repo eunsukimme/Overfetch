@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/user");
 const championRouter = require("./championRoute");
-const mongoose = require("mongoose");
 
 router.use("/champion", championRouter);
 

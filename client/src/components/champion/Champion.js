@@ -18,12 +18,12 @@ export class Champion extends Component {
 
   fetchFeedback(field, status) {
     console.log(field);
-    const url = `/feedback/${this.props.championName}/${field}/${status}`;
+    const url = `/api/feedback/${this.props.championName}/${field}/${status}`;
     fetch(url)
       .then(res => res.json())
       .then(data => {
         const feedback = (
-          <div className="feedback-description">
+          <div className="feedback-description" key={this.props.userData.name}>
             {this.props.userData.name} {data["feedback"]}
           </div>
         );
@@ -38,6 +38,10 @@ export class Champion extends Component {
 
   async visualizeData() {
     const data = this.props.championData[0];
+    // data의 수가 적어서 존재하지 않을 수 있다
+    if (data == undefined) {
+      return alert("게임 데이터가 부족합니다. 관리자에게 문의를 남겨주세요.");
+    }
     const keys = Object.keys(data);
 
     // 현재 챔피언 플레이 수
