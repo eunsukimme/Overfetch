@@ -62,6 +62,7 @@ export class Detail extends Component {
     else if (name === "레킹볼") return "wrecking-ball";
     else if (name === "자리야") return "zarya";
     else if (name === "젠야타") return "zenyatta";
+    else if (name === "시그마") return "sigma";
   }
 
   /**
@@ -380,7 +381,8 @@ export class Detail extends Component {
       "로드호그",
       "윈스턴",
       "레킹볼",
-      "자리야"
+      "자리야",
+      "시그마"
     ];
     const damage = [
       "애쉬",
@@ -663,18 +665,18 @@ export class Detail extends Component {
       // 이처럼 존재하지 않는 값에 대해 참조하면 오류가 발생하므로
       // 바로 리턴해버린다
       if (rate_info[el] === null) {
-        return;
+        return false;
       }
       // 또, 해당 기준에서 값이 0인 영웅은 의미 없으므로 포함시키지 않는다
       else if (my_val === 0) {
-        return;
+        return false;
       }
       // 마지막으로 해당 영웅의 플레이 수가 0이면 포함시키지 않는다
       else if (
         this.props.data.rankplay.record[el] === undefined ||
         this.props.data.rankplay.record[el].게임["치른 게임"] === 0
       ) {
-        return;
+        return false;
       }
       const avg = rate_info[el].toFixed(1);
 
@@ -844,7 +846,7 @@ export class Detail extends Component {
         .on("mouseover", mouseOver)
         .on("mouseout", mouseOut);
 
-      return;
+      return true;
     });
   }
 
@@ -886,26 +888,25 @@ export class Detail extends Component {
   async getHitRateRecord() {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
-    {
-      if (rank === undefined) {
-        rank = "alltier";
-      } else if (rank < 1500) {
-        rank = "bronze";
-      } else if (rank < 2000) {
-        rank = "silver";
-      } else if (rank < 2500) {
-        rank = "gold";
-      } else if (rank < 3000) {
-        rank = "platinum";
-      } else if (rank < 3500) {
-        rank = "diamond";
-      } else if (rank < 4000) {
-        rank = "master";
-      } else if (rank < 5000) {
-        rank = "grand_master";
-      } else {
-        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
-      }
+
+    if (rank === undefined) {
+      rank = "alltier";
+    } else if (rank < 1500) {
+      rank = "bronze";
+    } else if (rank < 2000) {
+      rank = "silver";
+    } else if (rank < 2500) {
+      rank = "gold";
+    } else if (rank < 3000) {
+      rank = "platinum";
+    } else if (rank < 3500) {
+      rank = "diamond";
+    } else if (rank < 4000) {
+      rank = "master";
+    } else if (rank < 5000) {
+      rank = "grand_master";
+    } else {
+      return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
     }
 
     this.createBarChart(rank, "hit_rate", "byHitRate");
@@ -917,26 +918,25 @@ export class Detail extends Component {
   async getWinRateRecord() {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
-    {
-      if (rank === undefined) {
-        rank = "alltier";
-      } else if (rank < 1500) {
-        rank = "bronze";
-      } else if (rank < 2000) {
-        rank = "silver";
-      } else if (rank < 2500) {
-        rank = "gold";
-      } else if (rank < 3000) {
-        rank = "platinum";
-      } else if (rank < 3500) {
-        rank = "diamond";
-      } else if (rank < 4000) {
-        rank = "master";
-      } else if (rank < 5000) {
-        rank = "grand_master";
-      } else {
-        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
-      }
+
+    if (rank === undefined) {
+      rank = "alltier";
+    } else if (rank < 1500) {
+      rank = "bronze";
+    } else if (rank < 2000) {
+      rank = "silver";
+    } else if (rank < 2500) {
+      rank = "gold";
+    } else if (rank < 3000) {
+      rank = "platinum";
+    } else if (rank < 3500) {
+      rank = "diamond";
+    } else if (rank < 4000) {
+      rank = "master";
+    } else if (rank < 5000) {
+      rank = "grand_master";
+    } else {
+      return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
     }
 
     this.createBarChart(rank, "win_rate", "byWinRate");
@@ -948,26 +948,25 @@ export class Detail extends Component {
   async getKDRecord() {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
-    {
-      if (rank === undefined) {
-        rank = "alltier";
-      } else if (rank < 1500) {
-        rank = "bronze";
-      } else if (rank < 2000) {
-        rank = "silver";
-      } else if (rank < 2500) {
-        rank = "gold";
-      } else if (rank < 3000) {
-        rank = "platinum";
-      } else if (rank < 3500) {
-        rank = "diamond";
-      } else if (rank < 4000) {
-        rank = "master";
-      } else if (rank < 5000) {
-        rank = "grand_master";
-      } else {
-        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
-      }
+
+    if (rank === undefined) {
+      rank = "alltier";
+    } else if (rank < 1500) {
+      rank = "bronze";
+    } else if (rank < 2000) {
+      rank = "silver";
+    } else if (rank < 2500) {
+      rank = "gold";
+    } else if (rank < 3000) {
+      rank = "platinum";
+    } else if (rank < 3500) {
+      rank = "diamond";
+    } else if (rank < 4000) {
+      rank = "master";
+    } else if (rank < 5000) {
+      rank = "grand_master";
+    } else {
+      return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
     }
 
     this.createBarChart(rank, "kd", "byKD");
@@ -979,26 +978,25 @@ export class Detail extends Component {
   async getCriticalHitRateRecord() {
     let rank = this.props.data.rank.val;
     // 랭크 값을 티어로 변환하여 해당 구간 승률을 가져온다
-    {
-      if (rank === undefined) {
-        rank = "alltier";
-      } else if (rank < 1500) {
-        rank = "bronze";
-      } else if (rank < 2000) {
-        rank = "silver";
-      } else if (rank < 2500) {
-        rank = "gold";
-      } else if (rank < 3000) {
-        rank = "platinum";
-      } else if (rank < 3500) {
-        rank = "diamond";
-      } else if (rank < 4000) {
-        rank = "master";
-      } else if (rank < 5000) {
-        rank = "grand_master";
-      } else {
-        return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
-      }
+
+    if (rank === undefined) {
+      rank = "alltier";
+    } else if (rank < 1500) {
+      rank = "bronze";
+    } else if (rank < 2000) {
+      rank = "silver";
+    } else if (rank < 2500) {
+      rank = "gold";
+    } else if (rank < 3000) {
+      rank = "platinum";
+    } else if (rank < 3500) {
+      rank = "diamond";
+    } else if (rank < 4000) {
+      rank = "master";
+    } else if (rank < 5000) {
+      rank = "grand_master";
+    } else {
+      return alert("잘못된 유저 랭크 정보입니다. 유저 정보를 갱신해 주세요");
     }
 
     this.createBarChart(rank, "critical_hit_rate", "byCriticalHitRate");

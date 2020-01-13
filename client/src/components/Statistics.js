@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Static_col } from "./Static_col";
+import { StaticCol } from "./StaticCol";
 import "./css/statistics.css";
 
 export class Statistics extends Component {
@@ -159,7 +159,7 @@ export class Statistics extends Component {
         champion_value = 0;
       }
       return (
-        <Static_col
+        <StaticCol
           key={i + 1}
           type={i % 2 === 0 ? "even" : "odd"}
           order={i + 1}

@@ -37,22 +37,32 @@ export class About extends Component {
                   프로그래밍과 커피, 게임을 좋아하는 대학생
                 </p>
                 <div className="card-icon-container">
-                  <a href="https://gamsungcoding.tistory.com" target="_blank">
+                  <a
+                    href="https://gamsungcoding.tistory.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <i className="fab fa-blogger" />
                   </a>
                   <a
                     href="https://www.linkedin.com/in/eunsukimme/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <i className="fab fa-linkedin-in" />
                   </a>
                   <a
                     href="https://www.facebook.com/profile.php?id=100003647254099"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <i className="fab fa-facebook-square" />
                   </a>
-                  <a href="https://www.instagram.com/eunsu_wag" target="_blank">
+                  <a
+                    href="https://www.instagram.com/eunsu_wag"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
@@ -70,7 +80,11 @@ export class About extends Component {
                 <p className="title">Content Designer</p>
                 <p className="description">블리자드 게임을 좋아하는 대학생</p>
                 <div className="card-icon-container">
-                  <a href="https://www.instagram.com/a_tae_o/" target="_blank">
+                  <a
+                    href="https://www.instagram.com/a_tae_o/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <i className="fab fa-instagram" />
                   </a>
                 </div>
@@ -92,18 +106,24 @@ export class About extends Component {
                 </p>
 
                 <div className="card-icon-container">
-                  <a href="https://process-mining.tistory.com" target="_blank">
+                  <a
+                    href="https://process-mining.tistory.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <i className="fab fa-blogger" />
                   </a>
                   <a
                     href="https://www.linkedin.com/in/%EC%9C%A4%ED%9D%AC-%EC%9E%A5-268458147/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <i className="fab fa-linkedin-in" />
                   </a>
                   <a
                     href="https://www.instagram.com/travel_unii"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <i className="fab fa-instagram" />
                   </a>
@@ -124,7 +144,11 @@ export class About extends Component {
                   적합한 아름다움을 창조하고자 하는 사람
                 </p>
                 <div className="card-icon-container">
-                  <a href="https://www.artstation.com/teneath" target="_blank">
+                  <a
+                    href="https://www.artstation.com/teneath"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <i className="fab fa-artstation" />
                   </a>
                 </div>

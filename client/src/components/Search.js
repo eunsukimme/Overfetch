@@ -69,7 +69,11 @@ export class Search extends React.Component {
         </div>
         <div className="search-title-container" style={{ color: "white" }}>
           <h1 className="search-title-text">OVERFETCH</h1>
-          <img className="search-title" src="../../../document/logo.png" />
+          <img
+            className="search-title"
+            src="../../../document/logo.png"
+            alt="search-title"
+          />
         </div>
         <div className="search-content">
           <form onSubmit={this.handleSubmit}>

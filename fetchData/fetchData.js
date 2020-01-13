@@ -11,7 +11,8 @@ const ERROR_RESULT = {
   API_SERVER_ERROR: -4,
   PRIVATE_USER: -5,
   TCP_CONNECTION_ERROR: -6,
-  UNKNOWN_ERROR: -7
+  UNKNOWN_ERROR: -7,
+  DATABASE_ERROR: -8
 };
 
 const CHAMPION_DROPDOWN_VALUE = {
@@ -45,7 +46,8 @@ const CHAMPION_DROPDOWN_VALUE = {
   "0x02E0000000000009": "윈스턴",
   "0x02E00000000001CA": "레킹볼",
   "0x02E0000000000068": "자리야",
-  "0x02E0000000000020": "젠야타"
+  "0x02E0000000000020": "젠야타",
+  "0x02E000000000023B": "시그마"
 };
 
 const getLevel = async (_name, _tag) => {
@@ -56,34 +58,12 @@ const getLevel = async (_name, _tag) => {
     "?access_token=" +
     token;
   let urlencoded = encodeURI(url);
-  const result = await axios
+  const users = await axios
     .get(urlencoded, {
       origin: "",
       validateStatus: status => true
     })
     .then(res => res.data)
-    .then(users => {
-      if (users.error) {
-        return "INTERNALL_SERVER_ERROR";
-      } else {
-        // 주어지 이름으로 찾은 users 중 tag에 해당하는 유저를 식별한다
-        let level = "PROFILE_NOT_FOUND";
-        users.some(el => {
-          // tag에 해당하는 유저 찾았으면
-          if (el.name.includes(_tag)) {
-            // 만약 그 유저가 비공개라면
-            if (el.isPublic == false) {
-              level = "PRIVATE_USER";
-            } else {
-              level = el.level;
-            }
-          }
-          return el.name.includes(_tag);
-        });
-        // 여기까지 오면 유저를 못 찾은 거임
-        return level;
-      }
-    })
     .catch(error => {
       if (error in ERROR_RESULT) {
         return error;
@@ -102,15 +82,59 @@ const getLevel = async (_name, _tag) => {
         return ERROR_RESULT.UNKNOWN_ERROR;
       }
     });
-  console.log("level Promise result : " + result);
+  // 만약 users가 에러라면 바로 리턴한다
+  if (users.error) {
+    return "INTERNALL_SERVER_ERROR";
+  }
+  // users를 순회하면서 _tag와 일치하는 유처를 찾는다
+  let level = "PROFILE_NOT_FOUND";
+  await users.some(user => {
+    // tag에 해당하는 유저 찾았으면
+    user.name.includes(_tag)
+      ? // 만약 그 유저가 공개라면
+        user.isPublic === true
+        ? (level = user.level) // level 정보를 가져온다
+        : (level = "PRIVATE_USER") // 그렇지 않으면 비공개 유저이다
+      : undefined;
+
+    // tag에 해당하는 유저 찾으면 바로 종료
+    return user.name.includes(_tag);
+  });
+
+  console.log(`level of ${_name}#${_tag}: ${level}`);
   return new Promise(resolve => {
-    resolve(result);
+    resolve(level);
   });
 };
 
-const fetchData = async (_name, _tag, _level = -1) => {
+const CheckError = $ => {
+  // 만약 유저 프로필을 찾았다면 body의 클래스는 career-detail 이다
+  // 만약 유저 프로필을 못 찾았다면 body의 클래스는 ErrorPage 이다
+  return $("body")
+    .attr("class")
+    .includes("ErrorPage")
+    ? ERROR_RESULT.PROFILE_NOT_FOUND
+    : // 블리자드 내부 서버 오류로 인해 안 보여지는 경우
+    // table 내에 h5 내용이 'overwatch.page.career.stats.undefined' 이다
+    $("body")
+        .find(".card-stat-block > table")
+        .find("h5")
+        .text()
+        .includes("overwatch.page.career.stats.undefined")
+    ? ERROR_RESULT.INTERNALL_SERVER_ERROR
+    : // 만약 사용자의 프로필이 비공개인 경우
+    // 클래스가 masthead-permission-level-text 인 p 태그의 내용은 '비공개 프로필' 이다.
+    $("body")
+        .find(".masthead-permission-level-text")
+        .text()
+        .includes("비공개")
+    ? ERROR_RESULT.PRIVATE_USER
+    : true;
+};
+
+const fetchData = async (_name, _tag, _level = undefined) => {
   // level이 주어지지 않으면 가져온다
-  if (_level == -1) {
+  if (_level == undefined) {
     _level = await getLevel(_name, _tag);
     // level을 가져오는 중 오류가 발생하였다면 그대로 돌려준다
     if (_level in ERROR_RESULT) {
@@ -119,88 +143,12 @@ const fetchData = async (_name, _tag, _level = -1) => {
   }
   const url = "https://playoverwatch.com/ko-kr/career/pc/" + _name + "-" + _tag;
   const urlencoded = encodeURI(url);
-
-  const result = await axios
+  const userData = await axios
     .get(urlencoded, {
       origin: "",
       validateStatus: status => true
     })
     .then(res => res.data)
-    .catch(error => {
-      throw "TCP_CONNECTION_ERROR";
-    })
-    .then(body => {
-      console.log(_name + "#" + _tag + " 의 전적을 가져오는 중...");
-      const $ = cheerio.load(body);
-      // 만약 유저 프로필을 찾았다면 body의 클래스는 career-detail 이다
-      // 만약 유저 프로필을 못 찾았다면 body의 클래스는 ErrorPage 이다
-      if (
-        $("body")
-          .attr("class")
-          .includes("ErrorPage")
-      ) {
-        return ERROR_RESULT.PROFILE_NOT_FOUND;
-      }
-      // 블리자드 내부 서버 오류로 인해 안 보여지는 경우
-      // table 내에 h5 내용이 'overwatch.page.career.stats.undefined' 이다
-      if (
-        $("body")
-          .find(".card-stat-block > table")
-          .find("h5")
-          .text()
-          .includes("overwatch.page.career.stats.undefined")
-      ) {
-        return ERROR_RESULT.INTERNALL_SERVER_ERROR;
-      }
-      // 만약 사용자의 프로필이 비공개인 경우
-      // 클래스가 masthead-permission-level-text 인 p 태그의 내용은 '비공개 프로필' 이다.
-      if (
-        $("body")
-          .find(".masthead-permission-level-text")
-          .text()
-          .includes("비공개")
-      ) {
-        return ERROR_RESULT.PRIVATE_USER;
-      }
-
-      // 사용자 게임 데이터 생성
-      const userInfo = new User();
-
-      /* 크롤링 시작 */
-      // 유저 랭크 가져옴
-      const _rank = $(".masthead-player-progression")
-        .find(".competitive-rank > div")
-        .html();
-      // 유저 랭크 아이콘 링크 가져옴
-      const _rankImage = $(".masthead-player-progression")
-        .find(".competitive-rank > img")
-        .attr("src");
-      // 유저 아이콘 링크 가져옴
-      const _icon = $(".masthead-player")
-        .find("img")
-        .attr("src");
-
-      // 빠른대전 정보 가져옴
-      const _quick_play = getQuickPlayData($);
-
-      // 경쟁전 정보 가져옴
-      const _rank_play = getRankPlayData($);
-
-      // 크롤링 데이터를 DB 스키마에 저장
-      userInfo.quickplay = _quick_play;
-      userInfo.rankplay = _rank_play;
-      userInfo.name = _name;
-      userInfo.tag = _tag;
-      userInfo.icon = _icon;
-      let rank = {};
-      rank.val = _rank;
-      rank.imageSrc = _rankImage;
-      userInfo.rank = rank;
-      userInfo.level = _level;
-      userInfo.update = new Date().toString();
-      console.log(_name + "#" + _tag + " 의 전적 수집 완료");
-      return userInfo;
-    })
     .catch(error => {
       if (error in ERROR_RESULT) {
         return ERROR_RESULT[error];
@@ -220,10 +168,52 @@ const fetchData = async (_name, _tag, _level = -1) => {
         return ERROR_RESULT.UNKNOWN_ERROR;
       }
     });
+  console.log(_name + "#" + _tag + " 의 전적을 가져오는 중...");
+  const $ = cheerio.load(userData);
 
-  return new Promise(resolve => {
-    resolve(result);
-  });
+  // 먼저 ERROR_RESULT 에 포함되는지 확인한다
+  const checkError = CheckError($);
+  if (checkError in ERROR_RESULT) {
+    return ERROR_RESULT[checkError];
+  }
+
+  // 사용자 게임 데이터 생성
+  const userInfo = new User();
+
+  /* 크롤링 시작 */
+  // 유저 랭크 가져옴
+  const _rank = $(".masthead-player-progression")
+    .find(".competitive-rank > div")
+    .html();
+  // 유저 랭크 아이콘 링크 가져옴
+  const _rankImage = $(".masthead-player-progression")
+    .find(".competitive-rank > img")
+    .attr("src");
+  // 유저 아이콘 링크 가져옴
+  const _icon = $(".masthead-player")
+    .find("img")
+    .attr("src");
+
+  // 빠른대전 정보 가져옴
+  const _quick_play = await getQuickPlayData($);
+
+  // 경쟁전 정보 가져옴
+  const _rank_play = await getRankPlayData($);
+
+  // 크롤링 데이터를 DB 스키마에 저장
+  userInfo.quickplay = _quick_play;
+  userInfo.rankplay = _rank_play;
+  userInfo.name = _name;
+  userInfo.tag = _tag;
+  userInfo.icon = _icon;
+  let rank = {};
+  rank.val = _rank;
+  rank.imageSrc = _rankImage;
+  userInfo.rank = rank;
+  userInfo.level = _level;
+  userInfo.update = new Date().toString();
+  console.log(_name + "#" + _tag + " 의 전적 수집 완료");
+  return userInfo;
 };
 
 const makeValueNumeric = async championValue => {
@@ -266,7 +256,7 @@ const convertTimeToSec = time => {
   });
 };
 
-const getQuickPlayData = _$ => {
+const getQuickPlayData = async _$ => {
   //console.log('fetching quickplay data...');
   const $ = _$;
 
@@ -373,7 +363,7 @@ const getQuickPlayData = _$ => {
   return _quickplay;
 };
 
-const getRankPlayData = _$ => {
+const getRankPlayData = async _$ => {
   //console.log('fetch rankplay data...');
   const $ = _$;
 

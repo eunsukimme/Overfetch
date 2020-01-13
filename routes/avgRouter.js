@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const rankRouter = require("./rankplay/rankRoute");
-const quickRouter = require("./quickRoute");
+const quickRouter = require("./quickRouter");
 
 // path: /avg
 router.use("/rankplay", rankRouter);

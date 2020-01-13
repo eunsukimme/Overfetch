@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import * as d3 from "d3";
 import "./css/statistics_col.css";
 
-export class Static_col extends Component {
+export class StaticCol extends Component {
   componentDidMount() {
     this.visualization();
   }
@@ -98,9 +98,8 @@ export class Static_col extends Component {
         <td>
           <img
             className="statistics-card-image"
-            src={`https://d1u1mce87gyfbn.cloudfront.net/hero/${
-              this.props.en_name
-            }/icon-portrait.png`}
+            src={`https://d1u1mce87gyfbn.cloudfront.net/hero/${this.props.en_name}/icon-portrait.png`}
+            alt="statistics-card"
           />
         </td>
         <td className="statistics-card-name">{this.props.name}</td>

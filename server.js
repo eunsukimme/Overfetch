@@ -7,16 +7,19 @@ const cors = require("cors");
 const path = require("path");
 const http = require("http");
 const app = express();
-const searchRoute = require("./routes/searchRoute");
-const usersRoute = require("./routes/usersRoute");
-const avgRoute = require("./routes/avgRoute");
-const feedbackRoute = require("./routes/feedbackRoute");
+const profileRouter = require("./routes/profileRouter");
+const usersRouter = require("./routes/usersRouter");
+const avgRouter = require("./routes/avgRouter");
+const feedbackRouter = require("./routes/feedbackRouter");
+require("dotenv").config();
 const PORT = process.env.PORT || 5000;
+const username = process.env.MONGODB_USERNAME;
+const password = process.env.MONGODB_PASSWORD;
 
 ///////               몽고 DB 연결                 /////
 // MongoDB Atlas 연결
 mongoose.connect(
-  "mongodb+srv://test:temppwd@overfetch-beta-release-noxxr.mongodb.net/test?retryWrites=true",
+  `mongodb+srv://${username}:${password}@overfetch-noxxr.mongodb.net/test?retryWrites=true&w=majority`,
   { useNewUrlParser: true }
 );
 // 로컬 DB 연결
@@ -44,10 +47,10 @@ app.use(cors());
 app.use(express.static(path.join(__dirname)));
 
 /* router split */
-app.use("/profile", searchRoute);
-app.use("/users", usersRoute);
-app.use("/avg", avgRoute);
-app.use("/feedback", feedbackRoute);
+app.use("/profile", profileRouter);
+app.use("/users", usersRouter);
+app.use("/avg", avgRouter);
+app.use("/feedback", feedbackRouter);
 
 //build mode
 app.get("/", (req, res, next) => {
@@ -56,7 +59,7 @@ app.get("/", (req, res, next) => {
 
 // heroku dyno를 5분 주기로 계속 깨우는 Interval 설정
 setInterval(function() {
-  http.get("https://overfetch.herokuapp.com");
+  http.get("http://overfetch.herokuapp.com");
 }, 1000 * 60 * 5);
 
 /* server run */
