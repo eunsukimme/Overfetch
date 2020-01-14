@@ -16,7 +16,7 @@ const password = process.env.MONGODB_PASSWORD;
 ///////               몽고 DB 연결                 /////
 // MongoDB Atlas 연결
 mongoose.connect(
-  `mongodb+srv://${username}:${password}@overfetch-noxxr.mongodb.net/test?retryWrites=true&w=majority`,
+  `mongodb+srv://${username}:${password}@overfetch-noxxr.mongodb.net/main?retryWrites=true&w=majority`,
   { useNewUrlParser: true }
 );
 // 로컬 DB 연결

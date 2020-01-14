@@ -5,6 +5,7 @@ const usersRouter = require("./usersRouter");
 const avgRouter = require("./avgRouter");
 const feedbackRouter = require("./feedbackRouter");
 
+// path: ~/api
 router.use("/profile", profileRouter);
 router.use("/users", usersRouter);
 router.use("/avg", avgRouter);

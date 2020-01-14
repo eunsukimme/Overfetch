@@ -31,7 +31,7 @@ const wreckingballRouter = require("./champion/Wreckingball");
 const zaryaRouter = require("./champion/Zarya");
 const zenyattaRouter = require("./champion/Zenyatta");
 
-// path: /avg/rankplay/champion
+// path: /api/avg/rankplay/champion
 router.use(`/${encodeURI("D-Va")}`, dvaRouter);
 router.use(`/${encodeURI("아나")}`, anaRouter);
 router.use(`/${encodeURI("애쉬")}`, asheRouter);

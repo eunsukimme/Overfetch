@@ -183,12 +183,9 @@ const fetchData = async (_name, _tag, _level = undefined) => {
   /* 크롤링 시작 */
   // 유저 랭크 가져옴
   const _rank = $(".masthead-player-progression")
-    .find(".competitive-rank > div")
-    .html();
-  // 유저 랭크 아이콘 링크 가져옴
-  const _rankImage = $(".masthead-player-progression")
-    .find(".competitive-rank > img")
-    .attr("src");
+    .find(".competitive-rank-level")
+    .first()
+    .text();
   // 유저 아이콘 링크 가져옴
   const _icon = $(".masthead-player")
     .find("img")
@@ -208,7 +205,6 @@ const fetchData = async (_name, _tag, _level = undefined) => {
   userInfo.icon = _icon;
   let rank = {};
   rank.val = _rank;
-  rank.imageSrc = _rankImage;
   userInfo.rank = rank;
   userInfo.level = _level;
   userInfo.update = new Date().toString();
