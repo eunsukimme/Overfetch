@@ -39,7 +39,7 @@ export class Champion extends Component {
   async visualizeData() {
     const data = this.props.championData[0];
     // data의 수가 적어서 존재하지 않을 수 있다
-    if (data == undefined) {
+    if (data === undefined) {
       return alert("게임 데이터가 부족합니다. 관리자에게 문의를 남겨주세요.");
     }
     const keys = Object.keys(data);

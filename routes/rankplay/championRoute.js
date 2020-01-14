@@ -30,6 +30,7 @@ const winstonRouter = require("./champion/Winston");
 const wreckingballRouter = require("./champion/Wreckingball");
 const zaryaRouter = require("./champion/Zarya");
 const zenyattaRouter = require("./champion/Zenyatta");
+const sigmaRouter = require("./champion/Sigma");
 
 // path: /api/avg/rankplay/champion
 router.use(`/${encodeURI("D-Va")}`, dvaRouter);
@@ -62,5 +63,6 @@ router.use(`/${encodeURI("윈스턴")}`, winstonRouter);
 router.use(`/${encodeURI("레킹볼")}`, wreckingballRouter);
 router.use(`/${encodeURI("자리야")}`, zaryaRouter);
 router.use(`/${encodeURI("젠야타")}`, zenyattaRouter);
+router.use(`/${encodeURI("시그마")}`, sigmaRouter);
 
 module.exports = router;

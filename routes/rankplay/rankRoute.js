@@ -5,7 +5,7 @@ const championRouter = require("./championRoute");
 
 router.use("/champion", championRouter);
 
-// path: /avg/rankplay
+// path: /api/avg/rankplay
 router.get("/win_rate", (req, res, next) => {
   const tier = req.query.tier;
   console.log(tier);
@@ -62,6 +62,7 @@ router.get("/win_rate", (req, res, next) => {
         "rankplay.record.브리기테.게임.승률": 1,
         "rankplay.record.솔저.게임.승률": 1,
         "rankplay.record.솜브라.게임.승률": 1,
+        "rankplay.record.시그마.게임.승률": 1,
         "rankplay.record.시메트라.게임.승률": 1,
         "rankplay.record.아나.게임.승률": 1,
         "rankplay.record.애쉬.게임.승률": 1,
@@ -138,6 +139,9 @@ router.get("/win_rate", (req, res, next) => {
         },
         솜브라: {
           $avg: "$rankplay.record.솜브라.게임.승률"
+        },
+        시그마: {
+          $avg: "$rankplay.record.시그마.게임.승률"
         },
         시메트라: {
           $avg: "$rankplay.record.시메트라.게임.승률"
@@ -244,6 +248,7 @@ router.get("/hit_rate", (req, res, next) => {
         "rankplay.record.브리기테.전투.명중률": 1,
         "rankplay.record.솔저.전투.명중률": 1,
         "rankplay.record.솜브라.전투.명중률": 1,
+        "rankplay.record.시그마.전투.명중률": 1,
         "rankplay.record.시메트라.전투.명중률": 1,
         "rankplay.record.아나.전투.명중률": 1,
         "rankplay.record.애쉬.전투.명중률": 1,
@@ -320,6 +325,9 @@ router.get("/hit_rate", (req, res, next) => {
         },
         솜브라: {
           $avg: "$rankplay.record.솜브라.전투.명중률"
+        },
+        시그마: {
+          $avg: "$rankplay.record.시그마.전투.명중률"
         },
         시메트라: {
           $avg: "$rankplay.record.시메트라.전투.명중률"
@@ -426,6 +434,7 @@ router.get("/kd", (req, res, next) => {
         "rankplay.record.브리기테.전투.죽음": 1,
         "rankplay.record.솔저.전투.죽음": 1,
         "rankplay.record.솜브라.전투.죽음": 1,
+        "rankplay.record.시그마.전투.죽음": 1,
         "rankplay.record.시메트라.전투.죽음": 1,
         "rankplay.record.아나.전투.죽음": 1,
         "rankplay.record.애쉬.전투.죽음": 1,
@@ -457,6 +466,7 @@ router.get("/kd", (req, res, next) => {
         "rankplay.record.브리기테.전투.처치": 1,
         "rankplay.record.솔저.전투.처치": 1,
         "rankplay.record.솜브라.전투.처치": 1,
+        "rankplay.record.시그마.전투.처치": 1,
         "rankplay.record.시메트라.전투.처치": 1,
         "rankplay.record.아나.전투.처치": 1,
         "rankplay.record.애쉬.전투.처치": 1,
@@ -616,6 +626,14 @@ router.get("/kd", (req, res, next) => {
             $divide: [
               "$rankplay.record.솜브라.전투.처치",
               "$rankplay.record.솜브라.전투.죽음"
+            ]
+          }
+        },
+        시그마: {
+          $avg: {
+            $divide: [
+              "$rankplay.record.시그마.전투.처치",
+              "$rankplay.record.시그마.전투.죽음"
             ]
           }
         },
@@ -789,6 +807,7 @@ router.get("/critical_hit_rate", (req, res, next) => {
         "rankplay.record.브리기테.전투.치명타 명중률": 1,
         "rankplay.record.솔저.전투.치명타 명중률": 1,
         "rankplay.record.솜브라.전투.치명타 명중률": 1,
+        "rankplay.record.시그마.전투.치명타 명중률": 1,
         "rankplay.record.시메트라.전투.치명타 명중률": 1,
         "rankplay.record.아나.전투.치명타 명중률": 1,
         "rankplay.record.애쉬.전투.치명타 명중률": 1,
@@ -865,6 +884,9 @@ router.get("/critical_hit_rate", (req, res, next) => {
         },
         솜브라: {
           $avg: "$rankplay.record.솜브라.전투.치명타 명중률"
+        },
+        시그마: {
+          $avg: "$rankplay.record.시그마.전투.치명타 명중률"
         },
         시메트라: {
           $avg: "$rankplay.record.시메트라.전투.치명타 명중률"

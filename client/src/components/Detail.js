@@ -137,7 +137,6 @@ export class Detail extends Component {
       const result = await fetch(url)
         .then(res => res.json())
         .then(data => {
-          console.log(hero, data);
           this.setState(prevState => ({
             champions: {
               ...prevState.champions,
@@ -645,7 +644,7 @@ export class Detail extends Component {
     // 반환된 값은 배열이다. 첫 번째 값을 참조하여 data에 접근한다
     rate_info = rate_info[0];
 
-    // 승률 기준 모스트 챔피언 레코드으 키(영웅 이름)들을 가져온다
+    // 승률 기준 모스트 챔피언 레코드의 키(영웅 이름)들을 가져온다
     const keys = Object.keys(this.props.data.rankplay.mostChampion[criteria]);
     // 각 영웅 이름들을 순회하면서 그래프를 그린다
     let max = 100;
