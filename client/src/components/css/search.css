@@ -29,9 +29,11 @@
   font-weight: bold;
   width: 100%;
 }
+
 .search-title-text {
   display: none;
 }
+
 .search-title {
   width: 800px;
   height: 500px;
@@ -81,6 +83,7 @@
   .search .intro {
     padding-top: 20%;
   }
+
   .search-title {
     width: 80%;
     height: 300px;
@@ -90,12 +93,14 @@
     width: 100%;
     margin: 0 auto;
   }
+
   .search-content .button {
     float: none;
     display: inline-block;
     width: 100%;
     margin: 0 auto;
   }
+
   .background-video {
     display: none;
   }

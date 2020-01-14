@@ -17,7 +17,8 @@
     "mongoose": "^5.4.8",
     "morgan": "^1.9.1",
     "nodemon": "^1.19.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "styled-components": "^5.0.0"
   },
   "scripts": {
     "heroku-postbuild": "cd client && yarn && yarn build",

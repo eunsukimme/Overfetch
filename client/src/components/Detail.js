@@ -8,6 +8,24 @@ import "./css/detail/user-champions.css";
 import * as d3 from "d3";
 import { colorbrewer } from "../lib/colorbrewer";
 
+const GenerateRankIcon = rank => {
+  return rank < 1500
+    ? "Bronze"
+    : rank < 2000
+    ? "Silver"
+    : rank < 2500
+    ? "Gold"
+    : rank < 3000
+    ? "Platinum"
+    : rank < 3500
+    ? "Diamond"
+    : rank < 4000
+    ? "Master"
+    : rank < 5000
+    ? "Grandmaster"
+    : undefined;
+};
+
 export class Detail extends Component {
   constructor(props) {
     super(props);
@@ -1142,7 +1160,9 @@ export class Detail extends Component {
                 </h4>
                 <img
                   className="user-data user-rank-image"
-                  src={this.props.data.rank.imageSrc}
+                  src={`https://d1u1mce87gyfbn.cloudfront.net/game/rank-icons/rank-${GenerateRankIcon(
+                    this.props.data.rank.val
+                  )}Tier.png`}
                   alt="rank icon"
                 />
                 <h2 className="user-data">rank. {this.props.data.rank.val}</h2>
