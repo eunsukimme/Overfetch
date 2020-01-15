@@ -1,4 +1,4 @@
-.profile {
+/* .profile {
   position: relative;
   width: 100%;
   min-height: 100%;
@@ -23,6 +23,7 @@
   height: 64px;
   margin-top: 80px;
 }
+
 .lds-dual-ring:after {
   content: " ";
   display: block;
@@ -34,19 +35,22 @@
   border-color: #fff transparent #fff transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
 @media screen and (max-width: 500px) {
+
   .error,
   .loading {
     padding: 30px;
     line-height: 2rem;
   }
-}
+} */

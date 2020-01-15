@@ -7,6 +7,28 @@ import "./css/detail/user-detail-chart.css";
 import "./css/detail/user-champions.css";
 import * as d3 from "d3";
 import { colorbrewer } from "../lib/colorbrewer";
+import styled from "styled-components";
+
+const TopButton = styled.button`
+  display: none;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  background-color: white;
+  color: black;
+  z-index: 99;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  :hover {
+    border: 1px solid white;
+    background-color: #222222;
+    color: white;
+    transition-duration: 0.5s;
+  }
+`;
 
 const GenerateRankIcon = rank => {
   return rank < 1500
@@ -1332,6 +1354,10 @@ export class Detail extends Component {
             render={props => this.state.championComponents.솜브라}
           />
           <Route
+            path={`${this.props.match.url}/시그마`}
+            render={props => this.state.championComponents.시그마}
+          />
+          <Route
             path={`${this.props.match.url}/시메트라`}
             render={props => this.state.championComponents.시메트라}
           />
@@ -1364,9 +1390,9 @@ export class Detail extends Component {
             render={props => this.state.championComponents.젠야타}
           />
         </div>
-        <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
+        <TopButton id="leaderboard-button-to-top" onClick={this.scrollToTop}>
           Top
-        </button>
+        </TopButton>
       </Router>
     );
   }

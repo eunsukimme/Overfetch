@@ -13,6 +13,12 @@ const LeaderboardContainer = styled.div`
   background-color: #222222;
 `;
 
+const ErrorAndLoadingContainer = styled(LeaderboardContainer)`
+  padding-top: 80px;
+  text-align: center;
+  font-size: 1.5rem;
+`;
+
 const LeaderboardHead = styled.div`
   width: 60%;
   padding: 40px 0px;
@@ -97,6 +103,10 @@ const LeaderboardTh = styled.th`
   vertical-align: middle;
 `;
 const PageButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   padding: 30px;
 `;
 const PageButton = styled(Link)`
@@ -236,12 +246,7 @@ export class Users extends Component {
       const rank = user.rank;
       const level = user.level;
       const icon_image = user.icon;
-      let type; // 홀수 & 짝수 구분
-      if (i % 2 === 0) {
-        type = "even";
-      } else {
-        type = "odd";
-      }
+      let type = i % 2 === 0 ? "even" : "odd"; // 홀수 & 짝수 구분
       return (
         <User
           name={name}
@@ -367,19 +372,19 @@ export class Users extends Component {
 
     if (error) {
       return (
-        <LeaderboardContainer className="error">
+        <ErrorAndLoadingContainer className="error">
           <p>{this.state.errorMsg}</p>
-        </LeaderboardContainer>
+        </ErrorAndLoadingContainer>
       );
     } else if (loading) {
       return (
-        <LeaderboardContainer className="loading">
+        <ErrorAndLoadingContainer className="loading">
           <p>랭킹 데이터를 가져오는 중...</p>
           <div className="lds-dual-ring" />
           <TopButton id="leaderboard-button-to-top" onClick={this.scrollToTop}>
             Top
           </TopButton>
-        </LeaderboardContainer>
+        </ErrorAndLoadingContainer>
       );
     }
     return (

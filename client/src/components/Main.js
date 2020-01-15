@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import "./css/search.css";
 import styled from "styled-components";
 import OW_origin_logo from "../assets/img/OW_origin_logo_white.png";
 import video from "../assets/video/main_background.mp4";
@@ -108,7 +107,7 @@ const Input = styled.input`
   font-size: 1.4rem;
 `;
 
-const Button = styled.div`
+const Button = styled(Link)`
   width: 20%;
   height: 100%;
   display: flex;
@@ -193,46 +192,6 @@ export class Main extends React.Component {
           </Form>
         </SearchContainer>
       </MainContainer>
-      // <div className="search">
-      //   <div className="background-video-container">
-      //     <video
-      //       className="background-video"
-      //       autoPlay
-      //       loop
-      //       playsInline="playsinline"
-      //     >
-      //       <source
-      //         src="../../../document/main_background.mp4"
-      //         type="video/mp4"
-      //       />
-      //     </video>
-      //   </div>
-      //   <div className="search-title-container" style={{ color: "white" }}>
-      //     <h1 className="search-title-text">OVERFETCH</h1>
-      //     <img
-      //       className="search-title"
-      //       src="../../../document/logo.png"
-      //       alt="search-title"
-      //     />
-      //   </div>
-      //   <div className="search-content">
-      //     <form onSubmit={this.handleSubmit}>
-      //       <input
-      //         name="search"
-      //         type="text"
-      //         placeholder="name#tag"
-      //         onChange={this.handleChange}
-      //       />
-      //       <Link
-      //         onClick={this.handleSubmit}
-      //         className="button"
-      //         to={`/profile/${this.state.name}/${this.state.tag}`}
-      //       >
-      //         Fetch
-      //       </Link>
-      //     </form>
-      //   </div>
-      // </div>
     );
   }
 }

@@ -1,6 +1,25 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import "./css/user.css";
+import styled from "styled-components";
+
+const UserContainer = styled.tr`
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  height: 60px;
+  border: 1px solid #444444;
+  background-color: ${props => (props.type === "even" ? "#333333" : "none")};
+`;
+const StyledTd = styled.td`
+  color: white;
+  vertical-align: middle;
+  text-decoration: none;
+`;
+const StyledImage = styled.img`
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+`;
 
 const GenerateRankIcon = rank => {
   return rank < 1500
@@ -23,45 +42,30 @@ const GenerateRankIcon = rank => {
 export class User extends Component {
   render() {
     return (
-      <tr
-        className={
-          this.props.type === "odd" ? "user-card odd" : "user-card even"
-        }
-      >
-        <td className="user-card-order">
-          <p>{this.props.order}</p>
-        </td>
-        <td>
-          <img
-            className="user-card-image"
-            src={this.props.icon_image}
-            alt="icon"
-          />
-        </td>
-        <td>
+      <UserContainer type={this.props.type}>
+        <StyledTd>{this.props.order}</StyledTd>
+        <StyledTd>
+          <StyledImage src={this.props.icon_image} alt="icon" />
+        </StyledTd>
+        <StyledTd>
           <Link
-            className="user-name-container"
+            style={{ color: "white" }}
             to={`/profile/${this.props.name}/${this.props.tag}`}
           >
-            <p className="user-card-name">{this.props.name}</p>
+            {this.props.name}
           </Link>
-        </td>
-        <td>
-          <p className="user-card-level">{this.props.level}</p>
-        </td>
-        <td>
-          <img
-            className="user-card-icon"
+        </StyledTd>
+        <StyledTd>{this.props.level}</StyledTd>
+        <StyledTd>
+          <StyledImage
             src={`https://d1u1mce87gyfbn.cloudfront.net/game/rank-icons/rank-${GenerateRankIcon(
               this.props.rank.val
             )}Tier.png`}
             alt="icon"
           />
-        </td>
-        <td>
-          <p className="user-card-rank">{this.props.rank.val}</p>
-        </td>
-      </tr>
+        </StyledTd>
+        <StyledTd>{this.props.rank.val}</StyledTd>
+      </UserContainer>
     );
   }
 }

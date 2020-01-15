@@ -63,6 +63,7 @@ export class Statistics extends Component {
     else if (name === "로드호그") return "roadhog";
     else if (name === "솔저") return "soldier-76";
     else if (name === "솜브라") return "sombra";
+    else if (name === "시그마") return "sigma";
     else if (name === "시메트라") return "symmetra";
     else if (name === "토르비욘") return "torbjorn";
     else if (name === "트레이서") return "tracer";

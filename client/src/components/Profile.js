@@ -1,6 +1,20 @@
 import React from "react";
 import { Detail } from "./Detail";
-import "./css/profile.css";
+// import "./css/profile.css";
+import styled from "styled-components";
+
+const ProfileContainer = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  background-color: #222222;
+  color: white;
+`;
+
+const ErrorAndLoadingContainer = styled(ProfileContainer)`
+  padding-top: 80px;
+  text-align: center;
+  font-size: 1.5rem;
+`;
 
 export class Profile extends React.Component {
   constructor(props) {
@@ -83,17 +97,22 @@ export class Profile extends React.Component {
 
     if (error) {
       return (
-        <div className="error">
+        <ErrorAndLoadingContainer className="error">
           <p>{this.state.errorMsg}</p>
-        </div>
+        </ErrorAndLoadingContainer>
       );
     } else if (loading) {
       return (
-        <div className="loading">
+        <ErrorAndLoadingContainer className="loading">
           <p>유저 정보를 가져오는 중...</p>
           <div className="lds-dual-ring" />
-        </div>
+        </ErrorAndLoadingContainer>
       );
-    } else return <div className="profile">{this.state.detail}</div>;
+    } else
+      return (
+        <ProfileContainer className="profile">
+          {this.state.detail}
+        </ProfileContainer>
+      );
   }
 }
