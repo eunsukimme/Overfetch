@@ -4,7 +4,9 @@
   padding: 10px;
   height: 60px;
   border: 1px solid #444444;
+  font-size: 16px;
 }
+
 .even {
   background-color: #333333;
 }
@@ -31,7 +33,18 @@
   height: 60px;
 }
 
+@media screen and (max-width: 800px) {
+
+  .statistics-card {
+    font-size: 14px;
+  }
+}
+
 @media screen and (max-width: 500px) {
+  .statistics-card {
+    font-size: 12px;
+  }
+
   .statistics-card-image,
   .statistics-card-icon {
     margin: 0;

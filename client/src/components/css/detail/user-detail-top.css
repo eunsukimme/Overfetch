@@ -78,6 +78,7 @@
   min-width: 400px;
   height: 560px;
 }
+
 .user-detail-most-header {
   position: absolute;
   display: inline-block;
@@ -86,16 +87,32 @@
   font-size: 2rem;
   font-weight: bold;
 }
+
 .user-detail-most {
   margin-top: 3.5rem;
 }
+
 .user-detail-most .svg-most {
   margin-bottom: 10px;
   overflow: hidden;
 }
+
 .user-detail-most .svg-most .most-title {
   font-size: 1.8rem;
 }
+
 .user-detail-most .svg-most .most-kd {
   font-size: 1.2rem;
+}
+
+@media(max-width: 800px) {
+  .user-detail-card-container {
+    width: 80%;
+  }
+}
+
+@media(max-width: 500px) {
+  .user-detail-card-container {
+    width: 92%;
+  }
 }
