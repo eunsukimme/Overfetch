@@ -17,7 +17,7 @@ export class Home extends Component {
         <Header />
         <Route path="/" exact component={Main} />
         <Route path="/profile/:name/:tag" component={Profile} />
-        <Route path="/users/:sort/:page" component={Users} />
+        <Route path="/users/:criteria/:page" component={Users} />
         <Route path="/statistics" component={Statistics} />
         <Route path="/about" component={About} />
         <Footer />

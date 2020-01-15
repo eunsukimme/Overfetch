@@ -1,6 +1,138 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { User } from "./User";
-import "./css/users.css";
+// import "./css/users.css";
+import styled from "styled-components";
+
+const LeaderboardContainer = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #222222;
+`;
+
+const LeaderboardHead = styled.div`
+  width: 60%;
+  padding: 40px 0px;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 800px) {
+    padding: 30px 0px;
+    width: 80%;
+  }
+  @media (max-width: 500px) {
+    padding: 20px 0px;
+    width: 92%;
+  }
+`;
+
+const LeaderboardTitle = styled.div`
+  font-size: 3rem;
+  padding: 20px 0px;
+  color: white;
+
+  @media (max-width: 800px) {
+    font-size: 2.5rem;
+  }
+  @media (max-width: 500px) {
+    font-size: 2rem;
+  }
+`;
+const LeaderboardCriteriaButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+`;
+const CriteriaButton = styled(Link)`
+  width: 120px;
+  padding: 10px;
+  margin-right: 20px;
+
+  text-align: center;
+  color: white;
+  background-color: #444444;
+  border-radius: 2px;
+  @media (max-width: 800px) {
+    font-size: 14px;
+    width: 100px;
+  }
+  @media (max-width: 500px) {
+    font-size: 10px;
+    width: 80px;
+  }
+`;
+
+const LeaderboardMain = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const LeaderboardTable = styled.table`
+  width: 60%;
+  color: white;
+
+  @media (max-width: 800px) {
+    font-size: 14px;
+    width: 80%;
+  }
+  @media (max-width: 500px) {
+    font-size: 12px;
+    width: 92%;
+  }
+`;
+const LeaderboardThead = styled.thead``;
+const LeaderboardTbody = styled.tbody`
+  text-align: center;
+`;
+const StyledTr = styled.tr`
+  padding: 10px;
+  height: 60px;
+  border: 1px solid #444444;
+`;
+const LeaderboardTh = styled.th`
+  vertical-align: middle;
+`;
+const PageButtonContainer = styled.div`
+  padding: 30px;
+`;
+const PageButton = styled(Link)`
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 10px;
+  background-color: #222222;
+  color: white;
+  cursor: pointer;
+  :hover {
+    background-color: white;
+    color: #222222;
+    transition-duration: 0.5s;
+  }
+`;
+const TopButton = styled.button`
+  display: none;
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  background-color: white;
+  color: black;
+  z-index: 99;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  :hover {
+    border: 1px solid white;
+    background-color: #222222;
+    color: white;
+    transition-duration: 0.5s;
+  }
+`;
 
 export class Users extends Component {
   constructor(props) {
@@ -8,16 +140,34 @@ export class Users extends Component {
     this.state = {
       data: [],
       userComponents: [],
-      criteria: "rank",
-      page: 1,
+      criteria: this.props.match.params.criteria,
+      page: this.props.match.params.page,
       buttonComponets: [],
       loading: false,
       error: false,
       errorMsg: ""
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleClickNext = this.handleClickNext.bind(this);
-    this.handleClickBefore = this.handleClickBefore.bind(this);
+  }
+
+  async componentDidUpdate(prevProps) {
+    const {
+      match: {
+        params: { page, criteria }
+      }
+    } = this.props;
+    if (
+      prevProps.match.params.page !== page ||
+      prevProps.match.params.criteria !== criteria
+    ) {
+      await this.setState({
+        page: page,
+        criteria: criteria
+      });
+      await this.fetchData();
+      await this.updateUserComponents();
+      await this.addButtons();
+    }
   }
 
   /**
@@ -126,37 +276,43 @@ export class Users extends Component {
     // 뒤의 범주로 돌아가는(10~19 => 1~9) 버튼을 달아준다
     if (this.state.page >= 10) {
       buttons.push(
-        <button
+        <PageButton
           key="before"
           className="leaderboard-button"
-          onClick={this.handleClickBefore}
-        >{`<`}</button>
+          to={`/users/${this.state.criteria}/${(Math.floor(
+            this.state.page / 10
+          ) -
+            1) *
+            10 +
+            1}`}
+        >{`<`}</PageButton>
       );
     }
 
     for (startPage = Number(startPage); startPage < endPage; startPage++) {
       if (startPage === 0) continue;
       buttons.push(
-        <button
+        <PageButton
           className="leaderboard-button"
-          onClick={this.handleChange}
-          name="page"
+          to={`/users/${this.state.criteria}/${startPage}`}
           value={`${startPage}`}
           key={`${startPage}`}
         >
           {startPage}
-        </button>
+        </PageButton>
       );
     }
     // 다음 범위로 넘어가는 버튼을 생성한다
     buttons.push(
-      <button
+      <PageButton
         key="next"
         className="leaderboard-button"
-        onClick={this.handleClickNext}
+        to={`/users/${this.state.criteria}/${(Math.floor(this.state.page / 10) +
+          1) *
+          10}`}
       >
         >
-      </button>
+      </PageButton>
     );
 
     this.setState({
@@ -178,43 +334,6 @@ export class Users extends Component {
     await this.fetchData();
     await this.updateUserComponents();
     // 버튼은 업데이트 시키지 않는다
-  }
-
-  /**
-   *
-   * @param {event Object} e 다음 범주의 페이지로 넘어가는 버튼 클릭 이벤트
-   * @dev 다음 버튼을 누르면 다음 범주의 페이지(1~9 => 10~19)로 넘어간다
-   */
-  async handleClickNext(e) {
-    const next = (Math.floor(this.state.page / 10) + 1) * 10;
-    console.log(`the next start page is ${next}`);
-    await this.setState({
-      page: next
-    });
-
-    this.scrollToTop();
-    await this.fetchData();
-    await this.updateUserComponents();
-    await this.addButtons();
-  }
-
-  /**
-   *
-   * @param {event Object} e 이전 범주의 페이지로 넘어가는 버튼 클릭 이벤트
-   * @dev 이전 버튼을 누르면 이전 범주의 페이지(10~19 => 1~9)로 넘어간다
-   */
-  async handleClickBefore(e) {
-    let next = (Math.floor(this.state.page / 10) - 1) * 10;
-    if (next === 0) next = 1;
-    console.log(`the next start page is ${next}`);
-    await this.setState({
-      page: next
-    });
-
-    this.scrollToTop();
-    await this.fetchData();
-    await this.updateUserComponents();
-    await this.addButtons();
   }
 
   /**
@@ -248,55 +367,56 @@ export class Users extends Component {
 
     if (error) {
       return (
-        <div className="error">
+        <LeaderboardContainer className="error">
           <p>{this.state.errorMsg}</p>
-        </div>
+        </LeaderboardContainer>
       );
     } else if (loading) {
       return (
-        <div className="loading">
+        <LeaderboardContainer className="loading">
           <p>랭킹 데이터를 가져오는 중...</p>
           <div className="lds-dual-ring" />
-          <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
+          <TopButton id="leaderboard-button-to-top" onClick={this.scrollToTop}>
             Top
-          </button>
-        </div>
+          </TopButton>
+        </LeaderboardContainer>
       );
     }
     return (
-      <div className="leaderboard">
-        <div className="leaderboard-top">
-          <p>리더보드</p>
-          <select
-            name="criteria"
-            value={this.state.criteria}
-            onChange={this.handleChange}
-            className="leaderboard-top-dropdown"
-          >
-            <option value="rank">경쟁전 평점 순</option>
-            <option value="level">레벨 순</option>
-          </select>
-        </div>
-        <div className="leaderboard-bottom">
-          <table className="leaderboard-bottom-table">
-            <tbody className="leaderboard-bottom-table-body">
-              <tr className="leaderboard-bottom-table-header">
-                <th className="table-header-order">순위</th>
-                <th colSpan="2">유저 정보</th>
-                <th>레벨</th>
-                <th colSpan="2">경쟁전 점수</th>
-              </tr>
-              {this.state.userComponents}
-            </tbody>
-          </table>
-          <div className="leaderboard-bottom-buttons-container">
+      <LeaderboardContainer>
+        <LeaderboardHead>
+          <LeaderboardTitle>Leaderboard</LeaderboardTitle>
+          <LeaderboardCriteriaButtonContainer>
+            <CriteriaButton to={`/users/rank/${this.state.page}`}>
+              경쟁전 평점 순
+            </CriteriaButton>
+            <CriteriaButton to={`/users/level/${this.state.page}`}>
+              레벨 순
+            </CriteriaButton>
+          </LeaderboardCriteriaButtonContainer>
+        </LeaderboardHead>
+        <LeaderboardMain>
+          <LeaderboardTable>
+            <LeaderboardThead>
+              <StyledTr className="leaderboard-bottom-table-header">
+                <LeaderboardTh className="table-header-order">
+                  순위
+                </LeaderboardTh>
+                <LeaderboardTh colSpan="2">유저 정보</LeaderboardTh>
+                <LeaderboardTh>레벨</LeaderboardTh>
+                <LeaderboardTh colSpan="2">경쟁전 점수</LeaderboardTh>
+              </StyledTr>
+            </LeaderboardThead>
+            <LeaderboardTbody>{this.state.userComponents}</LeaderboardTbody>
+          </LeaderboardTable>
+          <PageButtonContainer className="leaderboard-bottom-buttons-container">
             {this.state.buttonComponets}
-          </div>
-        </div>
-        <button id="leaderboard-button-to-top" onClick={this.scrollToTop}>
+          </PageButtonContainer>
+        </LeaderboardMain>
+        <TopButton id="leaderboard-button-to-top" onClick={this.scrollToTop}>
           Top
-        </button>
-      </div>
+        </TopButton>
+      </LeaderboardContainer>
     );
   }
 }

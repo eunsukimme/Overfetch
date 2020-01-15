@@ -1,4 +1,4 @@
-.leaderboard {
+/* .leaderboard {
   color: white;
   text-align: center;
   width: 100%;
@@ -95,7 +95,7 @@
   text-align: center;
   font-size: 1.5rem;
   padding-top: 80px;
-}
+} */
 
 .lds-dual-ring {
   display: inline-block;
@@ -103,6 +103,7 @@
   height: 64px;
   margin-top: 80px;
 }
+
 .lds-dual-ring:after {
   content: " ";
   display: block;
@@ -114,15 +115,18 @@
   border-color: #fff transparent #fff transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
+/* 
 @media screen and (max-width: 500px) {
   .user-detail-card-container {
     width: 100%;
@@ -141,4 +145,4 @@
   .leaderboard-bottom-table-header .table-header-order {
     padding: 10px;
   }
-}
+} */

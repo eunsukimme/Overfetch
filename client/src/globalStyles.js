@@ -11,7 +11,4 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     font-family: 'Roboto', sans-serif;
   }
-  a{
-      color:inherit;
-  }
 `;

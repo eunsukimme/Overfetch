@@ -12,6 +12,7 @@
   padding: 20% 10%;
   font-size: 3rem;
 }
+
 .about-main-background {
   position: absolute;
   width: 100%;
@@ -22,6 +23,7 @@
   background-size: cover;
   opacity: 0.3;
 }
+
 .about-main-background2 {
   position: absolute;
   width: 100%;
@@ -32,6 +34,7 @@
   background-size: cover;
   opacity: 0.3;
 }
+
 .about-detail {
   width: 80%;
   margin: 0 auto;
@@ -61,6 +64,7 @@
 .card-name {
   padding: 10px;
 }
+
 .title {
   color: grey;
   font-size: 18px;
@@ -96,7 +100,6 @@
 
 a {
   text-decoration: none;
-  font-size: 22px;
   color: black;
 }
 

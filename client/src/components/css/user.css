@@ -1,10 +1,10 @@
 .user-card {
-  width: 80%;
   margin: 0 auto;
   padding: 10px;
   height: 60px;
   border: 1px solid #444444;
 }
+
 .even {
   background-color: #333333;
 }
@@ -15,7 +15,7 @@
 .user-card-level,
 .user-card-rank,
 .user-card-icon {
-  margin: 0 10px;
+  color: white;
   vertical-align: middle;
   text-decoration: none;
 }
@@ -33,6 +33,7 @@
 }
 
 @media screen and (max-width: 500px) {
+
   .user-card-image,
   .user-card-icon {
     margin: 0;

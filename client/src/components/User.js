@@ -29,7 +29,7 @@ export class User extends Component {
         }
       >
         <td className="user-card-order">
-          <h1>{this.props.order}</h1>
+          <p>{this.props.order}</p>
         </td>
         <td>
           <img
@@ -43,11 +43,11 @@ export class User extends Component {
             className="user-name-container"
             to={`/profile/${this.props.name}/${this.props.tag}`}
           >
-            <h2 className="user-card-name">{this.props.name}</h2>
+            <p className="user-card-name">{this.props.name}</p>
           </Link>
         </td>
         <td>
-          <h3 className="user-card-level">{this.props.level}</h3>
+          <p className="user-card-level">{this.props.level}</p>
         </td>
         <td>
           <img
@@ -59,7 +59,7 @@ export class User extends Component {
           />
         </td>
         <td>
-          <h3 className="user-card-rank">{this.props.rank.val}</h3>
+          <p className="user-card-rank">{this.props.rank.val}</p>
         </td>
       </tr>
     );
