@@ -50,13 +50,13 @@
 
 https://youtu.be/9-MuNmk0zeo
 
-실제 사이트(현재 서버 운영 중단)
+실제 사이트
 
 https://overfetch.herokuapp.com
 
 ## 후기
 
-오버페치는 푸른등대 기부장학생들의 블리자드 역량강화 프로그램에서 최우수상을 수상하였습니다.
+오버페치는 푸른등대 기부장학생들의 블리자드 역량강화 프로그램의 지원을 받아 성공적으로 마무리되었습니다.
 
 ![수상 단체사진(좌측)](https://github.com/eunsukimme/Overfetch/blob/master/document/readme/first_prize.jpg)
 
