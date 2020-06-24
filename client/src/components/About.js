@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+/*import React, { Component } from "react";
 import "./css/about.css";
 
 export class About extends Component {
@@ -162,4 +162,4 @@ export class About extends Component {
       </div>
     );
   }
-}
+}*/
