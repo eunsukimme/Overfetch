@@ -20,7 +20,7 @@ export class Footer extends Component {
   render() {
     return (
       <FooterContainer className="footer">
-        <Message>© 2019 Overfetch. Data based on playoverwatch.com</Message>
+        <Message>© Data based on playoverwatch.com</Message>
       </FooterContainer>
     );
   }
